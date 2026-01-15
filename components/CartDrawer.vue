@@ -23,7 +23,7 @@
         <!-- Header -->
         <div class="flex items-center justify-between p-6 border-b border-gray-100">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-[var(--color-primary)]/10 flex items-center justify-center">
+            <div class="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center">
               <ShoppingBag class="w-5 h-5 text-[var(--color-primary)]" />
             </div>
             <div>
