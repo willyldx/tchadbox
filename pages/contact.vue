@@ -33,7 +33,7 @@
             <h2 class="text-2xl font-bold text-[var(--color-text)] mb-6">Coordonnées</h2>
             <div class="space-y-6">
               <div class="flex items-start gap-4">
-                <div class="w-12 h-12 rounded-xl bg-[var(--color-primary)]/10 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center">
                   <Mail class="w-6 h-6 text-[var(--color-primary)]" />
                 </div>
                 <div>
@@ -42,7 +42,7 @@
                 </div>
               </div>
               <div class="flex items-start gap-4">
-                <div class="w-12 h-12 rounded-xl bg-[var(--color-primary)]/10 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center">
                   <Phone class="w-6 h-6 text-[var(--color-primary)]" />
                 </div>
                 <div>
@@ -51,7 +51,7 @@
                 </div>
               </div>
               <div class="flex items-start gap-4">
-                <div class="w-12 h-12 rounded-xl bg-[var(--color-primary)]/10 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center">
                   <MapPin class="w-6 h-6 text-[var(--color-primary)]" />
                 </div>
                 <div>
