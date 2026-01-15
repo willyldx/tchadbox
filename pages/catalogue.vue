@@ -145,5 +145,5 @@ useHead({ title: 'Catalogue' })
 <style scoped>
 .filter-btn { @apply flex items-center gap-3 px-4 py-3 rounded-xl text-[var(--color-text-secondary)] transition-all duration-200; }
 .filter-btn:hover { @apply bg-gray-50; }
-.filter-btn.active { @apply bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-medium; }
+.filter-btn.active { @apply bg-amber-500/10 text-amber-600 font-medium; }
 </style>
