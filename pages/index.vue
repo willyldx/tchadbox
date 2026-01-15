@@ -84,7 +84,7 @@
             class="hidden lg:flex justify-center relative"
           >
             <div class="relative">
-              <div class="absolute inset-0 bg-[var(--color-gold)]/20 rounded-full blur-[80px] animate-pulse-soft" />
+              <div class="absolute inset-0 bg-amber-400/20 rounded-full blur-[80px] animate-pulse-soft" />
               <img src="/logo.png" alt="TchadBox" class="w-80 h-auto relative z-10 drop-shadow-2xl animate-float" />
               
               <!-- Floating badges -->
@@ -185,7 +185,7 @@
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
-          <div class="hidden md:block absolute top-12 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-transparent via-[var(--color-primary)]/20 to-transparent" />
+          <div class="hidden md:block absolute top-12 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-transparent via-amber-500/20 to-transparent" />
           
           <div 
             v-for="(step, i) in steps" :key="i"
