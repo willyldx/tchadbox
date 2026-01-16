@@ -53,6 +53,7 @@ export default defineNuxtConfig({
       medusaUrl: process.env.MEDUSA_URL || 'http://31.97.114.49:9000',
       supabaseUrl: process.env.SUPABASE_URL || 'https://xoeybpypyghunujnlhpa.supabase.co',
       supabaseAnonKey: process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhvZXlicHlweWdodW51am5saHBhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc5MTk0NTYsImV4cCI6MjA4MzQ5NTQ1Nn0.E2qZdK3-8sis7yvX6-H8dMSJUuQO6sZ7zWq0KztKQV4',
+      siteUrl: process.env.SITE_URL || 'https://tchadbox.vercel.app',
     }
   },
 
