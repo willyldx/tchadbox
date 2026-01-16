@@ -1,36 +1,23 @@
-export default defineNuxtRouteMiddleware(async (to) => {
-  // Only run on client side
-  if (process.server) return
-
+export default defineNuxtRouteMiddleware((to, from) => {
   const authStore = useAuthStore()
   
-  // Check session if not already done
-  if (!authStore.sessionChecked) {
-    await authStore.checkSession()
+  // Pages that require authentication
+  const protectedRoutes = ['/compte', '/checkout']
+  
+  // Pages only for guests (redirect if logged in)
+  const guestOnlyRoutes = ['/auth/login', '/auth/register']
+  
+  // Check if current route needs protection
+  const isProtectedRoute = protectedRoutes.some(route => to.path.startsWith(route))
+  const isGuestOnlyRoute = guestOnlyRoutes.some(route => to.path.startsWith(route))
+  
+  // If route is protected and user is not authenticated
+  if (isProtectedRoute && !authStore.isAuthenticated) {
+    return navigateTo(`/auth/login?redirect=${to.fullPath}`)
   }
-
-  // Protected routes
-  const protectedRoutes = [
-    '/compte',
-    '/checkout',
-  ]
-
-  // Check if current route requires auth
-  const requiresAuth = protectedRoutes.some(route => to.path.startsWith(route))
-
-  if (requiresAuth && !authStore.isAuthenticated) {
-    // Store intended destination
-    const redirectTo = to.fullPath
-    
-    return navigateTo({
-      path: '/auth/login',
-      query: { redirect: redirectTo },
-    })
-  }
-
-  // Redirect authenticated users away from auth pages
-  const authRoutes = ['/auth/login', '/auth/register']
-  if (authRoutes.includes(to.path) && authStore.isAuthenticated) {
+  
+  // If route is guest-only and user is authenticated
+  if (isGuestOnlyRoute && authStore.isAuthenticated) {
     return navigateTo('/compte')
   }
 })
