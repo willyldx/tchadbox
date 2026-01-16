@@ -10,7 +10,14 @@ export const useSupabase = () => {
   if (!supabaseClient) {
     supabaseClient = createClient(
       config.public.supabaseUrl,
-      config.public.supabaseAnonKey
+      config.public.supabaseAnonKey,
+      {
+        auth: {
+          autoRefreshToken: true,
+          persistSession: true,
+          detectSessionInUrl: true,
+        },
+      }
     )
   }
 
