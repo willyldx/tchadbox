@@ -348,7 +348,7 @@ import {
   Search, ShoppingBag, Menu, X, Mail, Phone, MapPin, Truck,
   Home, Package, HelpCircle, MapPinned, MessageCircle,
   Facebook, Instagram, Twitter, Heart, User, ChevronDown,
-  LayoutDashboard, UserCircle, LogOut
+  LayoutDashboard, UserCircle, LogOut, UserPlus
 } from 'lucide-vue-next'
 import { useCartStore } from '~/stores/cart'
 import { useAuthStore } from '~/stores/auth'
