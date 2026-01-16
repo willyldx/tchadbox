@@ -183,19 +183,80 @@
         leave-to-class="opacity-0 -translate-y-2"
       >
         <div v-if="isMobileMenuOpen" class="lg:hidden bg-white border-t border-gray-100 shadow-lg">
-          <nav class="container-main py-4 space-y-1">
-            <NuxtLink 
-              v-for="link in navLinks" 
-              :key="link.to" 
-              :to="link.to"
-              class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
-              @click="isMobileMenuOpen = false"
-            >
-              <component :is="link.icon" class="w-5 h-5" />
-              {{ link.label }}
-            </NuxtLink>
-          </nav>
-        </div>
+  <nav class="container-main py-4 space-y-1">
+    <NuxtLink 
+      v-for="link in navLinks" 
+      :key="link.to" 
+      :to="link.to"
+      class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
+      @click="isMobileMenuOpen = false"
+    >
+      <component :is="link.icon" class="w-5 h-5" />
+      {{ link.label }}
+    </NuxtLink>
+    
+    <!-- Divider -->
+    <div class="border-t border-gray-100 my-2"></div>
+    
+    <!-- Favorites -->
+    <NuxtLink 
+      to="/favoris"
+      class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
+      @click="isMobileMenuOpen = false"
+    >
+      <Heart class="w-5 h-5" />
+      Favoris
+      <span v-if="favoritesStore.count > 0" class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+        {{ favoritesStore.count }}
+      </span>
+    </NuxtLink>
+    
+    <!-- Auth Section -->
+    <template v-if="authStore.isAuthenticated">
+      <NuxtLink 
+        to="/compte"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
+        @click="isMobileMenuOpen = false"
+      >
+        <User class="w-5 h-5" />
+        Mon compte
+      </NuxtLink>
+      <NuxtLink 
+        to="/compte/commandes"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
+        @click="isMobileMenuOpen = false"
+      >
+        <Package class="w-5 h-5" />
+        Mes commandes
+      </NuxtLink>
+      <button 
+        @click="handleLogout(); isMobileMenuOpen = false"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-colors w-full"
+      >
+        <LogOut class="w-5 h-5" />
+        Déconnexion
+      </button>
+    </template>
+    <template v-else>
+      <NuxtLink 
+        to="/auth/login"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-white font-medium transition-colors"
+        @click="isMobileMenuOpen = false"
+      >
+        <User class="w-5 h-5" />
+        Connexion
+      </NuxtLink>
+      <NuxtLink 
+        to="/auth/register"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
+        @click="isMobileMenuOpen = false"
+      >
+        <UserPlus class="w-5 h-5" />
+        Créer un compte
+      </NuxtLink>
+    </template>
+  </nav>
+</div>
       </Transition>
     </header>
 
@@ -269,9 +330,10 @@
         <div class="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p class="text-blue-200/70 text-sm">© {{ new Date().getFullYear() }} TchadBox. Tous droits réservés.</p>
           <div class="flex gap-6 text-sm text-blue-200/70">
-            <NuxtLink to="/mentions-legales" class="hover:text-white transition-colors">Mentions légales</NuxtLink>
-            <NuxtLink to="/confidentialite" class="hover:text-white transition-colors">Confidentialité</NuxtLink>
-          </div>
+  <NuxtLink to="/conditions" class="hover:text-white transition-colors">CGV</NuxtLink>
+  <NuxtLink to="/mentions-legales" class="hover:text-white transition-colors">Mentions légales</NuxtLink>
+  <NuxtLink to="/confidentialite" class="hover:text-white transition-colors">Confidentialité</NuxtLink>
+</div>
         </div>
       </div>
     </footer>
