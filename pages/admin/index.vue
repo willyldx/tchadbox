@@ -138,10 +138,7 @@ const recentActivity = ref<any[]>([])
 const fetchDashboardData = async () => {
   try {
     // Fetch pending orders
-    const { data: pending } = await client
-      .from('orders')
-      .select('*')
-      .eq('status', 'pending')
+const { data } = await client.rpc('get_all_profiles')
       .order('created_at', { ascending: false })
       .limit(5)
     
@@ -151,11 +148,7 @@ const fetchDashboardData = async () => {
     }
 
     // Fetch active deliveries
-    const { data: deliveries } = await client
-      .from('orders')
-      .select('*')
-      .in('fulfillment_status', ['fulfilled', 'shipped'])
-      .order('created_at', { ascending: false })
+    const { data } = await client.rpc('get_all_profiles')
       .limit(5)
     
     if (deliveries) {
