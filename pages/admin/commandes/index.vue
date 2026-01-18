@@ -246,9 +246,7 @@ const totalPages = computed(() => Math.ceil(filteredOrders.value.length / pageSi
 const fetchOrders = async () => {
   loading.value = true
   try {
-    const { data, error } = await client
-      .from('orders')
-      .select('*')
+    const { data, error } = await client.rpc('get_all_orders')
       .order('created_at', { ascending: false })
 
     if (error) throw error
@@ -264,10 +262,7 @@ const fetchOrders = async () => {
 
 const fetchLivreurs = async () => {
   try {
-    const { data } = await client
-      .from('profiles')
-      .select('id, first_name, last_name')
-      .eq('role', 'livreur')
+    const { data } = await client.rpc('get_profiles_by_role', { target_role: 'livreur' })
 
     if (data) {
       livreurs.value = data.map(l => ({
