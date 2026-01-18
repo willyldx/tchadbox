@@ -1,5 +1,13 @@
 // Types for TchadBox E-commerce
 
+// =============================================
+// USER ROLES
+// =============================================
+export type UserRole = 'client' | 'livreur' | 'admin' | 'super_admin'
+
+// =============================================
+// PRODUCTS
+// =============================================
 export interface Product {
   id: string
   title: string
@@ -39,6 +47,9 @@ export interface Category {
   children?: Category[]
 }
 
+// =============================================
+// CART
+// =============================================
 export interface CartItem {
   id: string
   productId: string
@@ -58,16 +69,37 @@ export interface Cart {
   itemCount: number
 }
 
+// =============================================
+// USERS & DELIVERY AGENTS
+// =============================================
 export interface Customer {
   id: string
   email: string
   firstName: string
   lastName: string
   phone?: string
+  role: UserRole
+  avatarUrl?: string
   addresses: Address[]
   orders?: Order[]
 }
 
+export interface DeliveryAgent {
+  id: string
+  userId: string
+  phone: string
+  zone: string
+  isActive: boolean
+  totalDeliveries: number
+  rating: number
+  createdAt: string
+  updatedAt: string
+  user?: Customer
+}
+
+// =============================================
+// ADDRESSES
+// =============================================
 export interface Address {
   id: string
   firstName: string
@@ -82,6 +114,9 @@ export interface Address {
   isDefault?: boolean
 }
 
+// =============================================
+// ORDERS
+// =============================================
 export interface Order {
   id: string
   displayId: string
@@ -89,7 +124,7 @@ export interface Order {
   paymentStatus: PaymentStatus
   fulfillmentStatus: FulfillmentStatus
   items: OrderItem[]
-  shippingAddress: Address
+  shippingAddress: Address | null
   billingAddress?: Address
   subtotal: number
   shippingTotal: number
@@ -97,12 +132,31 @@ export interface Order {
   currency: string
   createdAt: string
   updatedAt: string
+  // Delivery fields
+  assignedTo?: string
+  assignedAt?: string
+  pickedUpAt?: string
+  deliveredAt?: string
   deliveryPhoto?: string
+  trackingNumber?: string
+  // Customer info
+  email?: string
+  customerFirstName?: string
+  customerLastName?: string
+  customerPhone?: string
+  recipientName?: string
+  recipientPhone?: string
+  deliveryInstructions?: string
+  notes?: string
+  // Joined data
+  assignedAgent?: DeliveryAgent
   timeline?: OrderTimelineEvent[]
 }
 
 export interface OrderItem {
   id: string
+  productId?: string
+  variantId?: string
   title: string
   description?: string
   thumbnail?: string
@@ -113,16 +167,22 @@ export interface OrderItem {
 
 export interface OrderTimelineEvent {
   id: string
+  status?: string
   title: string
   description?: string
-  date: string
-  completed: boolean
+  location?: string
+  date?: string
+  createdAt?: string
+  completed?: boolean
 }
 
 export type OrderStatus = 'pending' | 'processing' | 'completed' | 'cancelled'
 export type PaymentStatus = 'awaiting' | 'captured' | 'refunded'
 export type FulfillmentStatus = 'not_fulfilled' | 'partially_fulfilled' | 'fulfilled' | 'shipped' | 'delivered'
 
+// =============================================
+// SHIPPING
+// =============================================
 export interface ShippingOption {
   id: string
   name: string
@@ -147,7 +207,9 @@ export interface Country {
   iso3: string
 }
 
-// API Response Types
+// =============================================
+// API RESPONSES
+// =============================================
 export interface ApiResponse<T> {
   data: T
   count?: number
@@ -163,7 +225,9 @@ export interface PaginatedResponse<T> {
   hasMore: boolean
 }
 
-// UI Types
+// =============================================
+// UI TYPES
+// =============================================
 export interface Toast {
   id: string
   type: 'success' | 'error' | 'warning' | 'info'
@@ -178,7 +242,22 @@ export interface BreadcrumbItem {
   icon?: string
 }
 
-// Form Types
+// =============================================
+// ADMIN STATS
+// =============================================
+export interface AdminStats {
+  totalOrders: number
+  pendingOrders: number
+  inDeliveryOrders: number
+  completedOrders: number
+  totalRevenue: number
+  todayOrders: number
+  todayRevenue: number
+}
+
+// =============================================
+// FORMS
+// =============================================
 export interface CheckoutForm {
   email: string
   firstName: string
