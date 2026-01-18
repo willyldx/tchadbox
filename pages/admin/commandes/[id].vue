@@ -18,15 +18,15 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div class="flex items-start justify-between mb-6">
             <div>
-              <h1 class="text-2xl font-bold text-gray-900">Commande #{{ order.displayId }}</h1>
-              <p class="text-gray-500 mt-1">{{ formatDateTime(order.createdAt) }}</p>
+              <h1 class="text-2xl font-bold text-gray-900">Commande #{{ order.display_id || order.id.slice(0, 8).toUpperCase() }}</h1>
+              <p class="text-gray-500 mt-1">{{ formatDateTime(order.created_at) }}</p>
             </div>
             <div class="flex items-center gap-2">
               <UBadge :color="getStatusColor(order.status)" variant="soft" size="lg">
                 {{ getStatusLabel(order.status) }}
               </UBadge>
-              <UBadge :color="getFulfillmentColor(order.fulfillmentStatus)" variant="soft" size="lg">
-                {{ getFulfillmentLabel(order.fulfillmentStatus) }}
+              <UBadge :color="getFulfillmentColor(order.fulfillment_status)" variant="soft" size="lg">
+                {{ getFulfillmentLabel(order.fulfillment_status) }}
               </UBadge>
             </div>
           </div>
@@ -34,7 +34,7 @@
           <!-- Quick Actions -->
           <div class="flex flex-wrap gap-3">
             <UButton 
-              v-if="order.fulfillmentStatus === 'not_fulfilled'"
+              v-if="order.fulfillment_status === 'not_fulfilled'"
               @click="updateFulfillment('fulfilled')"
               color="cyan"
               :loading="updating"
@@ -43,7 +43,7 @@
               Marquer prêt
             </UButton>
             <UButton 
-              v-if="order.fulfillmentStatus === 'fulfilled' && order.assignedTo"
+              v-if="order.fulfillment_status === 'fulfilled' && order.assigned_to"
               @click="updateFulfillment('shipped')"
               color="indigo"
               :loading="updating"
@@ -52,7 +52,7 @@
               En livraison
             </UButton>
             <UButton 
-              v-if="order.fulfillmentStatus === 'shipped'"
+              v-if="order.fulfillment_status === 'shipped'"
               @click="showDeliveryModal = true"
               color="green"
             >
@@ -60,7 +60,7 @@
               Marquer livré
             </UButton>
             <UButton 
-              v-if="!order.assignedTo"
+              v-if="!order.assigned_to"
               @click="showAssignModal = true"
               color="primary"
               variant="outline"
@@ -75,7 +75,7 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <h2 class="font-semibold text-gray-900 mb-4">Articles commandés</h2>
           <div class="space-y-4">
-            <div v-for="item in order.items" :key="item.id" class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+            <div v-for="item in orderItems" :key="item.id" class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
               <div class="w-16 h-16 bg-white rounded-lg overflow-hidden border border-gray-200">
                 <img v-if="item.thumbnail" :src="item.thumbnail" :alt="item.title" class="w-full h-full object-cover" />
                 <div v-else class="w-full h-full flex items-center justify-center">
@@ -88,7 +88,7 @@
               </div>
               <div class="text-right">
                 <p class="font-semibold text-gray-900">{{ formatPrice(item.total) }}</p>
-                <p class="text-xs text-gray-500">{{ formatPrice(item.unitPrice) }} / unité</p>
+                <p class="text-xs text-gray-500">{{ formatPrice(item.unit_price) }} / unité</p>
               </div>
             </div>
           </div>
@@ -101,7 +101,7 @@
             </div>
             <div class="flex justify-between text-sm">
               <span class="text-gray-500">Livraison</span>
-              <span class="text-gray-900">{{ formatPrice(order.shippingTotal) }}</span>
+              <span class="text-gray-900">{{ formatPrice(order.shipping_total) }}</span>
             </div>
             <div class="flex justify-between font-semibold text-lg pt-2 border-t border-gray-200">
               <span class="text-gray-900">Total</span>
@@ -111,11 +111,11 @@
         </div>
 
         <!-- Notes -->
-        <div v-if="order.notes || order.deliveryInstructions" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div v-if="order.notes || order.delivery_instructions" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <h2 class="font-semibold text-gray-900 mb-4">Notes</h2>
-          <div v-if="order.deliveryInstructions" class="mb-4">
+          <div v-if="order.delivery_instructions" class="mb-4">
             <p class="text-sm font-medium text-gray-700 mb-1">Instructions de livraison</p>
-            <p class="text-gray-600">{{ order.deliveryInstructions }}</p>
+            <p class="text-gray-600">{{ order.delivery_instructions }}</p>
           </div>
           <div v-if="order.notes">
             <p class="text-sm font-medium text-gray-700 mb-1">Notes internes</p>
@@ -135,13 +135,13 @@
                 <Icon name="lucide:user" class="w-5 h-5 text-primary-600" />
               </div>
               <div>
-                <p class="font-medium text-gray-900">{{ order.customerFirstName }} {{ order.customerLastName }}</p>
+                <p class="font-medium text-gray-900">{{ order.customer_first_name }} {{ order.customer_last_name }}</p>
                 <p class="text-sm text-gray-500">{{ order.email }}</p>
               </div>
             </div>
-            <div v-if="order.customerPhone" class="flex items-center gap-3 text-sm">
+            <div v-if="order.customer_phone" class="flex items-center gap-3 text-sm">
               <Icon name="lucide:phone" class="w-4 h-4 text-gray-400" />
-              <span class="text-gray-600">{{ order.customerPhone }}</span>
+              <span class="text-gray-600">{{ order.customer_phone }}</span>
             </div>
           </div>
         </div>
@@ -155,15 +155,15 @@
                 <Icon name="lucide:map-pin" class="w-5 h-5 text-green-600" />
               </div>
               <div>
-                <p class="font-medium text-gray-900">{{ order.recipientName || '-' }}</p>
-                <p class="text-sm text-gray-500">{{ order.recipientPhone || '-' }}</p>
+                <p class="font-medium text-gray-900">{{ order.recipient_name || '-' }}</p>
+                <p class="text-sm text-gray-500">{{ order.recipient_phone || '-' }}</p>
               </div>
             </div>
-            <div v-if="order.shippingAddress" class="pt-3 border-t border-gray-100">
+            <div v-if="order.shipping_address" class="pt-3 border-t border-gray-100">
               <p class="text-sm text-gray-600">
-                {{ order.shippingAddress.address_1 }}<br>
-                <span v-if="order.shippingAddress.address_2">{{ order.shippingAddress.address_2 }}<br></span>
-                {{ order.shippingAddress.city }}, {{ order.shippingAddress.country }}
+                {{ order.shipping_address.address_1 }}<br>
+                <span v-if="order.shipping_address.address_2">{{ order.shipping_address.address_2 }}<br></span>
+                {{ order.shipping_address.city }}, {{ order.shipping_address.country }}
               </p>
             </div>
           </div>
@@ -174,7 +174,7 @@
           <div class="flex items-center justify-between mb-4">
             <h2 class="font-semibold text-gray-900">Livreur assigné</h2>
             <UButton 
-              v-if="order.assignedTo" 
+              v-if="order.assigned_to" 
               @click="showAssignModal = true" 
               color="gray" 
               variant="ghost" 
@@ -188,7 +188,7 @@
               <Icon name="lucide:truck" class="w-5 h-5 text-indigo-600" />
             </div>
             <div>
-              <p class="font-medium text-gray-900">{{ assignedLivreur.firstName }} {{ assignedLivreur.lastName }}</p>
+              <p class="font-medium text-gray-900">{{ assignedLivreur.first_name }} {{ assignedLivreur.last_name }}</p>
               <p class="text-sm text-gray-500">{{ assignedLivreur.phone || 'Pas de téléphone' }}</p>
             </div>
           </div>
@@ -202,11 +202,11 @@
         </div>
 
         <!-- Delivery Photo -->
-        <div v-if="order.deliveryPhoto" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div v-if="order.delivery_photo" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <h2 class="font-semibold text-gray-900 mb-4">Photo de livraison</h2>
-          <img :src="order.deliveryPhoto" alt="Preuve de livraison" class="w-full rounded-lg" />
+          <img :src="order.delivery_photo" alt="Preuve de livraison" class="w-full rounded-lg" />
           <p class="text-xs text-gray-500 mt-2 text-center">
-            Livrée le {{ formatDateTime(order.deliveredAt) }}
+            Livrée le {{ formatDateTime(order.delivered_at) }}
           </p>
         </div>
       </div>
@@ -254,8 +254,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Order, Customer } from '~/types'
-
 definePageMeta({
   layout: 'admin',
   middleware: ['admin']
@@ -268,8 +266,9 @@ const toast = useToast()
 // State
 const loading = ref(true)
 const updating = ref(false)
-const order = ref<Order | null>(null)
-const assignedLivreur = ref<Customer | null>(null)
+const order = ref<any | null>(null)
+const orderItems = ref<any[]>([])
+const assignedLivreur = ref<any | null>(null)
 
 // Modals
 const showAssignModal = ref(false)
@@ -282,49 +281,26 @@ const deliveryPhoto = ref<File | null>(null)
 const fetchOrder = async () => {
   loading.value = true
   try {
-    const { data, error } = await client
-      .from('orders')
-      .select('*')
-      .eq('id', route.params.id)
-      .single()
+    // Récupérer toutes les commandes et filtrer
+    const { data: allOrders, error } = await client.rpc('get_all_orders')
 
     if (error) throw error
 
-    // Fetch order items
-    const { data: items } = await client
-      .from('order_items')
-      .select('*')
-      .eq('order_id', route.params.id)
+    order.value = allOrders?.find((o: any) => o.id === route.params.id) || null
 
-    order.value = mapOrder(data)
-    order.value.items = (items || []).map((i: any) => ({
-      id: i.id,
-      productId: i.product_id,
-      title: i.title,
-      thumbnail: i.thumbnail,
-      quantity: i.quantity,
-      unitPrice: Number(i.unit_price) || 0,
-      total: Number(i.total) || 0,
-    }))
-
-    // Fetch assigned livreur
-    if (data.assigned_to) {
-      const { data: livreur } = await client
-        .from('profiles')
+    if (order.value) {
+      // Fetch order items
+      const { data: items } = await client
+        .from('order_items')
         .select('*')
-        .eq('id', data.assigned_to)
-        .single()
+        .eq('order_id', route.params.id)
 
-      if (livreur) {
-        assignedLivreur.value = {
-          id: livreur.id,
-          email: livreur.email,
-          firstName: livreur.first_name,
-          lastName: livreur.last_name,
-          phone: livreur.phone,
-          role: livreur.role,
-          addresses: []
-        }
+      orderItems.value = items || []
+
+      // Fetch assigned livreur
+      if (order.value.assigned_to) {
+        const { data: livreurData } = await client.rpc('get_profiles_by_role', { target_role: 'livreur' })
+        assignedLivreur.value = livreurData?.find((l: any) => l.id === order.value.assigned_to) || null
       }
     }
   } catch (error) {
@@ -337,13 +313,10 @@ const fetchOrder = async () => {
 
 // Fetch livreurs
 const fetchLivreurs = async () => {
-  const { data } = await client
-    .from('profiles')
-    .select('id, first_name, last_name')
-    .eq('role', 'livreur')
+  const { data, error } = await client.rpc('get_profiles_by_role', { target_role: 'livreur' })
 
-  if (data) {
-    livreurs.value = data.map(l => ({
+  if (!error && data) {
+    livreurs.value = data.map((l: any) => ({
       label: `${l.first_name} ${l.last_name}`,
       value: l.id
     }))
@@ -366,7 +339,7 @@ const updateFulfillment = async (status: string) => {
 
     if (error) throw error
 
-    order.value.fulfillmentStatus = status as any
+    order.value.fulfillment_status = status
     toast.add({ title: 'Succès', description: 'Statut mis à jour', color: 'green' })
   } catch (error) {
     console.error('Error updating status:', error)
@@ -382,14 +355,10 @@ const assignLivreur = async () => {
   updating.value = true
 
   try {
-    const { error } = await client
-      .from('orders')
-      .update({
-        assigned_to: selectedLivreur.value,
-        assigned_at: new Date().toISOString(),
-        fulfillment_status: order.value.fulfillmentStatus === 'not_fulfilled' ? 'fulfilled' : order.value.fulfillmentStatus
-      })
-      .eq('id', order.value.id)
+    const { error } = await client.rpc('assign_delivery_agent', {
+      order_id: order.value.id,
+      agent_id: selectedLivreur.value
+    })
 
     if (error) throw error
 
@@ -448,38 +417,9 @@ const confirmDelivery = async () => {
   }
 }
 
-// Map order
-const mapOrder = (o: any): Order => ({
-  id: o.id,
-  displayId: o.display_id || o.id.slice(0, 8).toUpperCase(),
-  status: o.status,
-  paymentStatus: o.payment_status,
-  fulfillmentStatus: o.fulfillment_status,
-  items: [],
-  shippingAddress: o.shipping_address,
-  subtotal: Number(o.subtotal) || 0,
-  shippingTotal: Number(o.shipping_total) || 0,
-  total: Number(o.total) || 0,
-  currency: o.currency || 'EUR',
-  createdAt: o.created_at,
-  updatedAt: o.updated_at,
-  email: o.email,
-  customerFirstName: o.customer_first_name,
-  customerLastName: o.customer_last_name,
-  customerPhone: o.customer_phone,
-  recipientName: o.recipient_name,
-  recipientPhone: o.recipient_phone,
-  deliveryInstructions: o.delivery_instructions,
-  notes: o.notes,
-  assignedTo: o.assigned_to,
-  assignedAt: o.assigned_at,
-  deliveredAt: o.delivered_at,
-  deliveryPhoto: o.delivery_photo,
-})
-
 // Helpers
 const formatPrice = (amount: number) => {
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount)
+  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount || 0)
 }
 
 const formatDateTime = (date: string | undefined) => {
@@ -516,6 +456,6 @@ onMounted(() => {
 })
 
 useHead({
-  title: computed(() => order.value ? `Commande #${order.value.displayId} - Admin TchadBox` : 'Chargement...')
+  title: computed(() => order.value ? `Commande #${order.value.display_id || order.value.id.slice(0, 8).toUpperCase()} - Admin TchadBox` : 'Chargement...')
 })
 </script>
