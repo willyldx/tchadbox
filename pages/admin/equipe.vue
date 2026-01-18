@@ -46,13 +46,13 @@
             </div>
             <div class="flex-1">
               <div class="flex items-center gap-2">
-                <p class="font-medium text-gray-900">{{ admin.firstName }} {{ admin.lastName }}</p>
+                <p class="font-medium text-gray-900">{{ admin.first_name }} {{ admin.last_name }}</p>
                 <UBadge color="indigo" variant="soft" size="xs">🛡️ Admin</UBadge>
               </div>
               <p class="text-sm text-gray-500">{{ admin.email }}</p>
             </div>
             <div class="text-right text-sm text-gray-500">
-              Ajouté le {{ formatDate(admin.createdAt) }}
+              Ajouté le {{ formatDate(admin.created_at) }}
             </div>
             <UDropdown :items="getAdminActions(admin)" :popper="{ placement: 'bottom-end' }">
               <UButton color="gray" variant="ghost" icon="i-lucide-more-vertical" size="sm" />
@@ -149,27 +149,15 @@ const fetchTeam = async () => {
   loading.value = true
   try {
     // Fetch admins (not super_admin, which is you)
-    const { data: adminData } = await client
-      .from('profiles')
-      .select('*')
-      .eq('role', 'admin')
-      .order('created_at', { ascending: false })
+    const { data: adminData, error } = await client.rpc('get_profiles_by_role', { target_role: 'admin' })
 
-    admins.value = (adminData || []).map(a => ({
-      id: a.id,
-      email: a.email,
-      firstName: a.first_name,
-      lastName: a.last_name,
-      createdAt: a.created_at
-    }))
+    if (error) throw error
+
+    admins.value = adminData || []
 
     // Count livreurs
-    const { count } = await client
-      .from('delivery_agents')
-      .select('*', { count: 'exact', head: true })
-      .eq('is_active', true)
-
-    livreursCount.value = count || 0
+    const { data: livreurData } = await client.rpc('get_all_delivery_agents')
+    livreursCount.value = (livreurData || []).filter((l: any) => l.is_active).length
   } catch (error) {
     console.error('Error fetching team:', error)
   } finally {
@@ -179,16 +167,20 @@ const fetchTeam = async () => {
 
 // Fetch available users
 const fetchAvailableUsers = async () => {
-  const { data } = await client
-    .from('profiles')
-    .select('id, email, first_name, last_name')
-    .in('role', ['client', 'livreur'])
+  try {
+    const { data, error } = await client.rpc('get_all_profiles')
 
-  if (data) {
-    availableUsers.value = data.map(u => ({
+    if (error) throw error
+
+    // Filter users who can be promoted (client or livreur)
+    const promotable = (data || []).filter((u: any) => ['client', 'livreur'].includes(u.role))
+    
+    availableUsers.value = promotable.map((u: any) => ({
       label: `${u.first_name} ${u.last_name} (${u.email})`,
       value: u.id
     }))
+  } catch (error) {
+    console.error('Error fetching available users:', error)
   }
 }
 
@@ -198,10 +190,10 @@ const promoteToAdmin = async () => {
 
   saving.value = true
   try {
-    const { error } = await client
-      .from('profiles')
-      .update({ role: 'admin' })
-      .eq('id', selectedUser.value)
+    const { error } = await client.rpc('update_user_role', {
+      target_user_id: selectedUser.value,
+      new_role: 'admin'
+    })
 
     if (error) throw error
 
@@ -220,13 +212,13 @@ const promoteToAdmin = async () => {
 
 // Demote admin
 const demoteAdmin = async (admin: any) => {
-  if (!confirm(`Retirer les droits admin de ${admin.firstName} ${admin.lastName} ?`)) return
+  if (!confirm(`Retirer les droits admin de ${admin.first_name} ${admin.last_name} ?`)) return
 
   try {
-    const { error } = await client
-      .from('profiles')
-      .update({ role: 'client' })
-      .eq('id', admin.id)
+    const { error } = await client.rpc('update_user_role', {
+      target_user_id: admin.id,
+      new_role: 'client'
+    })
 
     if (error) throw error
 
@@ -250,7 +242,7 @@ const getAdminActions = (admin: any) => [
 
 // Helpers
 const getInitials = (user: any) => {
-  return ((user.firstName?.[0] || '') + (user.lastName?.[0] || '')).toUpperCase()
+  return ((user.first_name?.[0] || '') + (user.last_name?.[0] || '')).toUpperCase()
 }
 
 const formatDate = (date: string) => {
