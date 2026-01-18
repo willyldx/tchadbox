@@ -45,7 +45,7 @@
               <span class="text-sm font-semibold text-primary-700">{{ getInitials(row) }}</span>
             </div>
             <div>
-              <p class="font-medium text-gray-900">{{ row.firstName }} {{ row.lastName }}</p>
+              <p class="font-medium text-gray-900">{{ row.first_name }} {{ row.last_name }}</p>
               <p class="text-sm text-gray-500">{{ row.email }}</p>
             </div>
           </div>
@@ -58,28 +58,17 @@
 
         <!-- Orders Column -->
         <template #orders-data="{ row }">
-          <span class="font-medium text-gray-900">{{ row.totalOrders }}</span>
+          <span class="font-medium text-gray-900">{{ row.totalOrders || 0 }}</span>
         </template>
 
         <!-- Total Spent Column -->
         <template #spent-data="{ row }">
-          <span class="font-semibold text-gray-900">{{ formatPrice(row.totalSpent) }}</span>
+          <span class="font-semibold text-gray-900">{{ formatPrice(row.totalSpent || 0) }}</span>
         </template>
 
         <!-- Joined Column -->
         <template #joined-data="{ row }">
-          <span class="text-sm text-gray-500">{{ formatDate(row.createdAt) }}</span>
-        </template>
-
-        <!-- Actions Column -->
-        <template #actions-data="{ row }">
-          <UButton 
-            :to="`/admin/clients/${row.id}`" 
-            color="gray" 
-            variant="ghost" 
-            icon="i-lucide-eye" 
-            size="sm"
-          />
+          <span class="text-sm text-gray-500">{{ formatDate(row.created_at) }}</span>
         </template>
       </UTable>
     </div>
@@ -106,8 +95,7 @@ const columns = [
   { key: 'phone', label: 'Téléphone' },
   { key: 'orders', label: 'Commandes' },
   { key: 'spent', label: 'Total dépensé' },
-  { key: 'joined', label: 'Inscrit le' },
-  { key: 'actions', label: '' }
+  { key: 'joined', label: 'Inscrit le' }
 ]
 
 // Computed
@@ -115,8 +103,8 @@ const filteredClients = computed(() => {
   if (!search.value) return clients.value
   const s = search.value.toLowerCase()
   return clients.value.filter(c => 
-    c.firstName?.toLowerCase().includes(s) ||
-    c.lastName?.toLowerCase().includes(s) ||
+    c.first_name?.toLowerCase().includes(s) ||
+    c.last_name?.toLowerCase().includes(s) ||
     c.email?.toLowerCase().includes(s)
   )
 })
@@ -125,47 +113,37 @@ const newThisMonth = computed(() => {
   const firstOfMonth = new Date()
   firstOfMonth.setDate(1)
   firstOfMonth.setHours(0, 0, 0, 0)
-  return clients.value.filter(c => new Date(c.createdAt) >= firstOfMonth).length
+  return clients.value.filter(c => new Date(c.created_at) >= firstOfMonth).length
 })
 
 const activeClients = computed(() => {
-  return clients.value.filter(c => c.totalOrders > 0).length
+  return clients.value.filter(c => (c.totalOrders || 0) > 0).length
 })
 
 // Fetch clients
 const fetchClients = async () => {
   loading.value = true
   try {
-    // Fetch profiles with role = client
-    const { data: profiles, error } = await client
-      .from('profiles')
-      .select('*')
-      .eq('role', 'client')
-      .order('created_at', { ascending: false })
+    // Fetch profiles with role = client using RPC
+    const { data: profiles, error } = await client.rpc('get_profiles_by_role', { target_role: 'client' })
 
     if (error) throw error
 
-    // Fetch order stats for each client
-    const clientsWithStats = await Promise.all((profiles || []).map(async (p) => {
-      const { data: orders } = await client
-        .from('orders')
-        .select('total')
-        .eq('user_id', p.id)
+    // Fetch all orders to calculate stats
+    const { data: allOrders } = await client.rpc('get_all_orders')
 
-      const totalOrders = orders?.length || 0
-      const totalSpent = orders?.reduce((sum, o) => sum + (Number(o.total) || 0), 0) || 0
+    // Calculate stats per client
+    const clientsWithStats = (profiles || []).map((p: any) => {
+      const clientOrders = (allOrders || []).filter((o: any) => o.user_id === p.id)
+      const totalOrders = clientOrders.length
+      const totalSpent = clientOrders.reduce((sum: number, o: any) => sum + (Number(o.total) || 0), 0)
 
       return {
-        id: p.id,
-        email: p.email,
-        firstName: p.first_name,
-        lastName: p.last_name,
-        phone: p.phone,
-        createdAt: p.created_at,
+        ...p,
         totalOrders,
         totalSpent
       }
-    }))
+    })
 
     clients.value = clientsWithStats
   } catch (error) {
@@ -178,7 +156,7 @@ const fetchClients = async () => {
 
 // Helpers
 const getInitials = (client: any) => {
-  return ((client.firstName?.[0] || '') + (client.lastName?.[0] || '')).toUpperCase() || '?'
+  return ((client.first_name?.[0] || '') + (client.last_name?.[0] || '')).toUpperCase() || '?'
 }
 
 const formatPrice = (amount: number) => {
