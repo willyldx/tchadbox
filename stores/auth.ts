@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import type { Customer, Address } from '~/types'
+import type { Customer, Address, UserRole } from '~/types'
 
 interface AuthState {
   user: Customer | null
@@ -39,13 +39,52 @@ export const useAuthStore = defineStore('auth', {
     hasAddresses: (state): boolean => {
       return (state.user?.addresses?.length || 0) > 0
     },
+
+    // =============================================
+    // ROLE GETTERS
+    // =============================================
+    userRole: (state): UserRole => {
+      return state.user?.role || 'client'
+    },
+
+    isClient: (state): boolean => {
+      return state.user?.role === 'client'
+    },
+
+    isLivreur: (state): boolean => {
+      return state.user?.role === 'livreur'
+    },
+
+    isAdmin: (state): boolean => {
+      return state.user?.role === 'admin' || state.user?.role === 'super_admin'
+    },
+
+    isSuperAdmin: (state): boolean => {
+      return state.user?.role === 'super_admin'
+    },
+
+    canAccessAdmin: (state): boolean => {
+      return ['admin', 'super_admin'].includes(state.user?.role || '')
+    },
+
+    canAccessLivreur: (state): boolean => {
+      return ['livreur', 'admin', 'super_admin'].includes(state.user?.role || '')
+    },
+
+    canManageTeam: (state): boolean => {
+      return state.user?.role === 'super_admin'
+    },
+
+    canViewFinances: (state): boolean => {
+      return state.user?.role === 'super_admin'
+    },
   },
 
   actions: {
     async checkSession() {
       if (this.sessionChecked) return
       
-      const { getSession, getUser } = useSupabase()
+      const { getSession } = useSupabase()
       
       try {
         const { session } = await getSession()
@@ -76,7 +115,7 @@ export const useAuthStore = defineStore('auth', {
 
         if (data.user) {
           await this.fetchUserProfile(data.user.id)
-          return { success: true }
+          return { success: true, role: this.user?.role }
         }
 
         return { success: false, error: 'Erreur de connexion' }
@@ -117,7 +156,6 @@ export const useAuthStore = defineStore('auth', {
         }
 
         if (authData.user) {
-          // Create profile in profiles table
           const { error: profileError } = await client
             .from('profiles')
             .insert({
@@ -126,13 +164,13 @@ export const useAuthStore = defineStore('auth', {
               first_name: data.firstName,
               last_name: data.lastName,
               phone: data.phone,
+              role: 'client',
             })
 
           if (profileError) {
             console.error('Profile creation error:', profileError)
           }
 
-          // Fetch the created profile
           await this.fetchUserProfile(authData.user.id)
           
           return { success: true, requiresConfirmation: !authData.session }
@@ -172,6 +210,8 @@ export const useAuthStore = defineStore('auth', {
             firstName: profile.first_name,
             lastName: profile.last_name,
             phone: profile.phone,
+            role: profile.role || 'client',
+            avatarUrl: profile.avatar_url,
             addresses: (profile.addresses || []).map((a: any) => ({
               id: a.id,
               firstName: a.first_name,
@@ -218,7 +258,6 @@ export const useAuthStore = defineStore('auth', {
           return { success: false, error: error.message }
         }
 
-        // Update local state
         if (updates.firstName) this.user.firstName = updates.firstName
         if (updates.lastName) this.user.lastName = updates.lastName
         if (updates.phone) this.user.phone = updates.phone
@@ -231,13 +270,38 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    // =============================================
+    // ROLE MANAGEMENT (Super Admin only)
+    // =============================================
+    async updateUserRole(userId: string, newRole: UserRole) {
+      if (!this.isSuperAdmin) {
+        return { success: false, error: 'Permission refusée' }
+      }
+
+      const { client } = useSupabase()
+
+      try {
+        const { error } = await client
+          .from('profiles')
+          .update({ role: newRole, updated_at: new Date().toISOString() })
+          .eq('id', userId)
+
+        if (error) {
+          return { success: false, error: error.message }
+        }
+
+        return { success: true }
+      } catch (error: any) {
+        return { success: false, error: error.message }
+      }
+    },
+
     async addAddress(address: Omit<Address, 'id'>) {
       if (!this.user) return { success: false, error: 'Non connecté' }
       
       const { client } = useSupabase()
       
       try {
-        // If this is the default address, unset other defaults
         if (address.isDefault) {
           await client
             .from('addresses')
@@ -267,7 +331,6 @@ export const useAuthStore = defineStore('auth', {
           return { success: false, error: error.message }
         }
 
-        // Refresh profile to get updated addresses
         await this.fetchUserProfile(this.user.id)
         
         return { success: true, address: data }
@@ -348,11 +411,9 @@ export const useAuthStore = defineStore('auth', {
         this.isAuthenticated = false
         this.error = null
         
-        // Clear cart on logout
         const cartStore = useCartStore()
         cartStore.clearCart()
         
-        // Redirect to home
         navigateTo('/')
       }
     },
@@ -381,10 +442,26 @@ export const useAuthStore = defineStore('auth', {
     clearError() {
       this.error = null
     },
+
+    // =============================================
+    // REDIRECT HELPER
+    // =============================================
+    getRedirectPath(): string {
+      if (!this.user) return '/'
+      
+      switch (this.user.role) {
+        case 'super_admin':
+        case 'admin':
+          return '/admin'
+        case 'livreur':
+          return '/livreur'
+        default:
+          return '/compte'
+      }
+    },
   },
 })
 
-// Helper function to translate auth errors
 function translateAuthError(message: string): string {
   const translations: Record<string, string> = {
     'Invalid login credentials': 'Email ou mot de passe incorrect',
