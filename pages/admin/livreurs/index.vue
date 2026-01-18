@@ -49,8 +49,8 @@
         <div v-for="livreur in livreurs" :key="livreur.id" class="p-4 hover:bg-gray-50 transition-colors">
           <div class="flex items-center gap-4">
             <!-- Avatar -->
-            <div :class="['w-12 h-12 rounded-full flex items-center justify-center', livreur.isActive ? 'bg-green-100' : 'bg-gray-100']">
-              <span :class="['text-lg font-semibold', livreur.isActive ? 'text-green-700' : 'text-gray-500']">
+            <div :class="['w-12 h-12 rounded-full flex items-center justify-center', livreur.is_active ? 'bg-green-100' : 'bg-gray-100']">
+              <span :class="['text-lg font-semibold', livreur.is_active ? 'text-green-700' : 'text-gray-500']">
                 {{ getInitials(livreur) }}
               </span>
             </div>
@@ -58,9 +58,9 @@
             <!-- Info -->
             <div class="flex-1">
               <div class="flex items-center gap-2">
-                <p class="font-medium text-gray-900">{{ livreur.user?.firstName }} {{ livreur.user?.lastName }}</p>
-                <UBadge :color="livreur.isActive ? 'green' : 'gray'" variant="soft" size="xs">
-                  {{ livreur.isActive ? 'Actif' : 'Inactif' }}
+                <p class="font-medium text-gray-900">{{ livreur.first_name }} {{ livreur.last_name }}</p>
+                <UBadge :color="livreur.is_active ? 'green' : 'gray'" variant="soft" size="xs">
+                  {{ livreur.is_active ? 'Actif' : 'Inactif' }}
                 </UBadge>
               </div>
               <p class="text-sm text-gray-500">{{ livreur.phone }} · {{ livreur.zone }}</p>
@@ -68,17 +68,11 @@
 
             <!-- Stats -->
             <div class="text-right hidden sm:block">
-              <p class="text-sm font-medium text-gray-900">{{ livreur.totalDeliveries }} livraisons</p>
+              <p class="text-sm font-medium text-gray-900">{{ livreur.total_deliveries }} livraisons</p>
               <div class="flex items-center justify-end gap-1 text-amber-500">
                 <Icon name="lucide:star" class="w-4 h-4 fill-current" />
-                <span class="text-sm font-medium">{{ livreur.rating.toFixed(1) }}</span>
+                <span class="text-sm font-medium">{{ Number(livreur.rating).toFixed(1) }}</span>
               </div>
-            </div>
-
-            <!-- Current Delivery -->
-            <div v-if="livreur.currentDelivery" class="hidden lg:block px-4 py-2 bg-blue-50 rounded-lg">
-              <p class="text-xs text-blue-600 font-medium">En livraison</p>
-              <p class="text-sm text-blue-800">#{{ livreur.currentDelivery }}</p>
             </div>
 
             <!-- Actions -->
@@ -124,8 +118,6 @@
 </template>
 
 <script setup lang="ts">
-import type { DeliveryAgent, Customer } from '~/types'
-
 definePageMeta({
   layout: 'admin',
   middleware: ['admin']
@@ -138,7 +130,7 @@ const toast = useToast()
 // State
 const loading = ref(true)
 const saving = ref(false)
-const livreurs = ref<(DeliveryAgent & { user?: Customer; currentDelivery?: string })[]>([])
+const livreurs = ref<any[]>([])
 
 // Add modal
 const showAddModal = ref(false)
@@ -148,11 +140,11 @@ const newLivreurZone = ref("N'Djamena")
 const availableUsers = ref<{ label: string; value: string }[]>([])
 
 // Computed stats
-const activeLivreurs = computed(() => livreurs.value.filter(l => l.isActive).length)
-const monthlyDeliveries = computed(() => livreurs.value.reduce((sum, l) => sum + l.totalDeliveries, 0))
+const activeLivreurs = computed(() => livreurs.value.filter(l => l.is_active).length)
+const monthlyDeliveries = computed(() => livreurs.value.reduce((sum, l) => sum + (l.total_deliveries || 0), 0))
 const averageRating = computed(() => {
   if (livreurs.value.length === 0) return '0.0'
-  const total = livreurs.value.reduce((sum, l) => sum + l.rating, 0)
+  const total = livreurs.value.reduce((sum, l) => sum + Number(l.rating || 5), 0)
   return (total / livreurs.value.length).toFixed(1)
 })
 
@@ -160,37 +152,11 @@ const averageRating = computed(() => {
 const fetchLivreurs = async () => {
   loading.value = true
   try {
-    // Fetch delivery_agents with user info
-    const { data, error } = await client
-      .from('delivery_agents')
-      .select(`
-        *,
-        profiles:user_id (id, email, first_name, last_name, phone)
-      `)
-      .order('created_at', { ascending: false })
+    const { data, error } = await client.rpc('get_all_delivery_agents')
 
     if (error) throw error
 
-    livreurs.value = (data || []).map(d => ({
-      id: d.id,
-      userId: d.user_id,
-      phone: d.phone,
-      zone: d.zone,
-      isActive: d.is_active,
-      totalDeliveries: d.total_deliveries || 0,
-      rating: Number(d.rating) || 5,
-      createdAt: d.created_at,
-      updatedAt: d.updated_at,
-      user: d.profiles ? {
-        id: d.profiles.id,
-        email: d.profiles.email,
-        firstName: d.profiles.first_name,
-        lastName: d.profiles.last_name,
-        phone: d.profiles.phone,
-        role: 'livreur',
-        addresses: []
-      } : undefined
-    }))
+    livreurs.value = data || []
   } catch (error) {
     console.error('Error fetching livreurs:', error)
     toast.add({ title: 'Erreur', description: 'Impossible de charger les livreurs', color: 'red' })
@@ -201,13 +167,10 @@ const fetchLivreurs = async () => {
 
 // Fetch available users (clients who can be promoted to livreur)
 const fetchAvailableUsers = async () => {
-  const { data } = await client
-    .from('profiles')
-    .select('id, email, first_name, last_name')
-    .eq('role', 'client')
+  const { data, error } = await client.rpc('get_profiles_by_role', { target_role: 'client' })
 
-  if (data) {
-    availableUsers.value = data.map(u => ({
+  if (!error && data) {
+    availableUsers.value = data.map((u: any) => ({
       label: `${u.first_name} ${u.last_name} (${u.email})`,
       value: u.id
     }))
@@ -223,11 +186,13 @@ const addLivreur = async () => {
 
   saving.value = true
   try {
-    // Update user role to livreur
-    await client
-      .from('profiles')
-      .update({ role: 'livreur' })
-      .eq('id', selectedUser.value)
+    // Update user role to livreur via RPC
+    const { error: roleError } = await client.rpc('update_user_role', {
+      target_user_id: selectedUser.value,
+      new_role: 'livreur'
+    })
+
+    if (roleError) throw roleError
 
     // Create delivery_agent entry
     const { error } = await client
@@ -257,11 +222,11 @@ const addLivreur = async () => {
 }
 
 // Toggle livreur status
-const toggleStatus = async (livreur: DeliveryAgent) => {
+const toggleStatus = async (livreur: any) => {
   try {
     const { error } = await client
       .from('delivery_agents')
-      .update({ is_active: !livreur.isActive })
+      .update({ is_active: !livreur.is_active })
       .eq('id', livreur.id)
 
     if (error) throw error
@@ -275,15 +240,18 @@ const toggleStatus = async (livreur: DeliveryAgent) => {
 }
 
 // Remove livreur
-const removeLivreur = async (livreur: DeliveryAgent) => {
+const removeLivreur = async (livreur: any) => {
   if (!confirm('Êtes-vous sûr de vouloir retirer ce livreur ?')) return
 
   try {
     // Delete delivery_agent entry
     await client.from('delivery_agents').delete().eq('id', livreur.id)
     
-    // Revert user role to client
-    await client.from('profiles').update({ role: 'client' }).eq('id', livreur.userId)
+    // Revert user role to client via RPC
+    await client.rpc('update_user_role', {
+      target_user_id: livreur.user_id,
+      new_role: 'client'
+    })
 
     toast.add({ title: 'Succès', description: 'Livreur retiré', color: 'green' })
     fetchLivreurs()
@@ -295,10 +263,10 @@ const removeLivreur = async (livreur: DeliveryAgent) => {
 }
 
 // Get actions for dropdown
-const getLivreurActions = (livreur: DeliveryAgent) => [
+const getLivreurActions = (livreur: any) => [
   [{
-    label: livreur.isActive ? 'Désactiver' : 'Activer',
-    icon: livreur.isActive ? 'i-lucide-pause' : 'i-lucide-play',
+    label: livreur.is_active ? 'Désactiver' : 'Activer',
+    icon: livreur.is_active ? 'i-lucide-pause' : 'i-lucide-play',
     click: () => toggleStatus(livreur)
   }],
   [{
@@ -309,9 +277,8 @@ const getLivreurActions = (livreur: DeliveryAgent) => [
 ]
 
 // Helpers
-const getInitials = (livreur: DeliveryAgent) => {
-  if (!livreur.user) return '?'
-  return ((livreur.user.firstName?.[0] || '') + (livreur.user.lastName?.[0] || '')).toUpperCase()
+const getInitials = (livreur: any) => {
+  return ((livreur.first_name?.[0] || '') + (livreur.last_name?.[0] || '')).toUpperCase() || '?'
 }
 
 // Fetch on mount
