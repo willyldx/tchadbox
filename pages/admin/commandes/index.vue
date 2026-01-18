@@ -51,14 +51,14 @@
         <!-- ID Column -->
         <template #display_id-data="{ row }">
           <NuxtLink :to="`/admin/commandes/${row.id}`" class="font-medium text-primary-600 hover:text-primary-700">
-            #{{ row.displayId }}
+            #{{ row.display_id || row.id.slice(0, 8).toUpperCase() }}
           </NuxtLink>
         </template>
 
         <!-- Customer Column -->
         <template #customer-data="{ row }">
           <div>
-            <p class="font-medium text-gray-900">{{ row.customerFirstName }} {{ row.customerLastName }}</p>
+            <p class="font-medium text-gray-900">{{ row.customer_first_name }} {{ row.customer_last_name }}</p>
             <p class="text-xs text-gray-500">{{ row.email }}</p>
           </div>
         </template>
@@ -66,8 +66,8 @@
         <!-- Recipient Column -->
         <template #recipient-data="{ row }">
           <div>
-            <p class="font-medium text-gray-900">{{ row.recipientName || '-' }}</p>
-            <p class="text-xs text-gray-500">{{ row.recipientPhone || '-' }}</p>
+            <p class="font-medium text-gray-900">{{ row.recipient_name || '-' }}</p>
+            <p class="text-xs text-gray-500">{{ row.recipient_phone || '-' }}</p>
           </div>
         </template>
 
@@ -80,8 +80,8 @@
 
         <!-- Fulfillment Column -->
         <template #fulfillment-data="{ row }">
-          <UBadge :color="getFulfillmentColor(row.fulfillmentStatus)" variant="soft" size="sm">
-            {{ getFulfillmentLabel(row.fulfillmentStatus) }}
+          <UBadge :color="getFulfillmentColor(row.fulfillment_status)" variant="soft" size="sm">
+            {{ getFulfillmentLabel(row.fulfillment_status) }}
           </UBadge>
         </template>
 
@@ -92,12 +92,12 @@
 
         <!-- Date Column -->
         <template #date-data="{ row }">
-          <span class="text-sm text-gray-500">{{ formatDate(row.createdAt) }}</span>
+          <span class="text-sm text-gray-500">{{ formatDate(row.created_at) }}</span>
         </template>
 
         <!-- Assigned Column -->
         <template #assigned-data="{ row }">
-          <div v-if="row.assignedTo" class="flex items-center gap-2">
+          <div v-if="row.assigned_to" class="flex items-center gap-2">
             <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center">
               <Icon name="lucide:user" class="w-3 h-3 text-green-600" />
             </div>
@@ -128,7 +128,7 @@
       <div class="p-6">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">Assigner un livreur</h3>
         <p class="text-sm text-gray-500 mb-4">
-          Commande #{{ selectedOrder?.displayId }}
+          Commande #{{ selectedOrder?.display_id || selectedOrder?.id?.slice(0, 8).toUpperCase() }}
         </p>
         
         <USelectMenu
@@ -154,8 +154,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Order } from '~/types'
-
 definePageMeta({
   layout: 'admin',
   middleware: ['admin']
@@ -166,7 +164,7 @@ const toast = useToast()
 
 // State
 const loading = ref(true)
-const orders = ref<Order[]>([])
+const orders = ref<any[]>([])
 const search = ref('')
 const statusFilter = ref<string | null>(null)
 const fulfillmentFilter = ref<string | null>(null)
@@ -175,7 +173,7 @@ const pageSize = 20
 
 // Assign modal
 const showAssignModal = ref(false)
-const selectedOrder = ref<Order | null>(null)
+const selectedOrder = ref<any | null>(null)
 const selectedLivreur = ref<string | null>(null)
 const livreurs = ref<{ label: string; value: string }[]>([])
 const assigning = ref(false)
@@ -221,11 +219,11 @@ const filteredOrders = computed(() => {
   if (search.value) {
     const s = search.value.toLowerCase()
     result = result.filter(o => 
-      o.displayId.toLowerCase().includes(s) ||
+      (o.display_id || o.id)?.toLowerCase().includes(s) ||
       o.email?.toLowerCase().includes(s) ||
-      o.customerFirstName?.toLowerCase().includes(s) ||
-      o.customerLastName?.toLowerCase().includes(s) ||
-      o.recipientName?.toLowerCase().includes(s)
+      o.customer_first_name?.toLowerCase().includes(s) ||
+      o.customer_last_name?.toLowerCase().includes(s) ||
+      o.recipient_name?.toLowerCase().includes(s)
     )
   }
 
@@ -234,7 +232,7 @@ const filteredOrders = computed(() => {
   }
 
   if (fulfillmentFilter.value) {
-    result = result.filter(o => o.fulfillmentStatus === fulfillmentFilter.value)
+    result = result.filter(o => o.fulfillment_status === fulfillmentFilter.value)
   }
 
   return result
@@ -247,11 +245,10 @@ const fetchOrders = async () => {
   loading.value = true
   try {
     const { data, error } = await client.rpc('get_all_orders')
-      .order('created_at', { ascending: false })
 
     if (error) throw error
 
-    orders.value = (data || []).map(mapOrder)
+    orders.value = data || []
   } catch (error) {
     console.error('Error fetching orders:', error)
     toast.add({ title: 'Erreur', description: 'Impossible de charger les commandes', color: 'red' })
@@ -262,10 +259,12 @@ const fetchOrders = async () => {
 
 const fetchLivreurs = async () => {
   try {
-    const { data } = await client.rpc('get_profiles_by_role', { target_role: 'livreur' })
+    const { data, error } = await client.rpc('get_profiles_by_role', { target_role: 'livreur' })
+
+    if (error) throw error
 
     if (data) {
-      livreurs.value = data.map(l => ({
+      livreurs.value = data.map((l: any) => ({
         label: `${l.first_name} ${l.last_name}`,
         value: l.id
       }))
@@ -275,9 +274,9 @@ const fetchLivreurs = async () => {
   }
 }
 
-const openAssignModal = (order: Order) => {
+const openAssignModal = (order: any) => {
   selectedOrder.value = order
-  selectedLivreur.value = order.assignedTo || null
+  selectedLivreur.value = order.assigned_to || null
   showAssignModal.value = true
 }
 
@@ -286,14 +285,10 @@ const assignLivreur = async () => {
 
   assigning.value = true
   try {
-    const { error } = await client
-      .from('orders')
-      .update({
-        assigned_to: selectedLivreur.value,
-        assigned_at: new Date().toISOString(),
-        fulfillment_status: 'fulfilled'
-      })
-      .eq('id', selectedOrder.value.id)
+    const { error } = await client.rpc('assign_delivery_agent', {
+      order_id: selectedOrder.value.id,
+      agent_id: selectedLivreur.value
+    })
 
     if (error) throw error
 
@@ -308,7 +303,7 @@ const assignLivreur = async () => {
   }
 }
 
-const getRowActions = (row: Order) => [
+const getRowActions = (row: any) => [
   [{
     label: 'Voir détails',
     icon: 'i-lucide-eye',
@@ -327,32 +322,9 @@ const clearFilters = () => {
   fulfillmentFilter.value = null
 }
 
-// Map order from database
-const mapOrder = (o: any): Order => ({
-  id: o.id,
-  displayId: o.display_id || o.id.slice(0, 8).toUpperCase(),
-  status: o.status,
-  paymentStatus: o.payment_status,
-  fulfillmentStatus: o.fulfillment_status,
-  items: [],
-  shippingAddress: o.shipping_address,
-  subtotal: Number(o.subtotal) || 0,
-  shippingTotal: Number(o.shipping_total) || 0,
-  total: Number(o.total) || 0,
-  currency: o.currency || 'EUR',
-  createdAt: o.created_at,
-  updatedAt: o.updated_at,
-  email: o.email,
-  customerFirstName: o.customer_first_name,
-  customerLastName: o.customer_last_name,
-  recipientName: o.recipient_name,
-  recipientPhone: o.recipient_phone,
-  assignedTo: o.assigned_to,
-})
-
 // Helpers
 const formatPrice = (amount: number) => {
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount)
+  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount || 0)
 }
 
 const formatDate = (date: string) => {
