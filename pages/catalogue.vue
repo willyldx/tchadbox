@@ -58,10 +58,29 @@
             </div>
           </div>
 
-          <div v-if="filteredProducts.length > 0" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+          <!-- Loading state -->
+          <div v-if="isLoading" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div v-for="i in 6" :key="i" class="card p-4 animate-pulse">
+              <div class="aspect-square bg-gray-200 rounded-xl mb-4"></div>
+              <div class="h-4 bg-gray-200 rounded mb-2"></div>
+              <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+            </div>
+          </div>
+
+          <!-- Error state -->
+          <div v-else-if="error" class="card p-16 text-center">
+            <AlertCircle class="w-16 h-16 text-red-300 mx-auto mb-4" />
+            <h3 class="text-xl font-semibold text-[var(--color-text)] mb-2">Erreur de chargement</h3>
+            <p class="text-[var(--color-text-muted)] mb-6">{{ error }}</p>
+            <button @click="fetchProducts" class="btn-primary"><span>Réessayer</span></button>
+          </div>
+
+          <!-- Products grid -->
+          <div v-else-if="filteredProducts.length > 0" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
             <ProductCard v-for="(p, i) in filteredProducts" :key="p.id" :product="p" :delay="i * 50" />
           </div>
 
+          <!-- Empty state -->
           <div v-else class="card p-16 text-center">
             <SearchX class="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h3 class="text-xl font-semibold text-[var(--color-text)] mb-2">Aucun produit</h3>
@@ -75,11 +94,19 @@
 </template>
 
 <script setup lang="ts">
-import { ChevronRight, LayoutGrid, Package, Euro, RotateCcw, Search, SearchX, Wheat, BookOpen, Heart, Gift } from 'lucide-vue-next'
+import { ChevronRight, LayoutGrid, Package, Euro, RotateCcw, Search, SearchX, AlertCircle, Wheat, BookOpen, Heart, Gift } from 'lucide-vue-next'
 import ProductCard from '~/components/product/ProductCard.vue'
+import type { Product } from '~/types'
 
 const route = useRoute()
+const { getProducts, getCategories } = useMedusa()
 
+// State
+const products = ref<Product[]>([])
+const isLoading = ref(true)
+const error = ref<string | null>(null)
+
+// Categories (statiques pour les icônes, mais on peut les rendre dynamiques aussi)
 const categories = [
   { name: 'Alimentaire', handle: 'alimentaire', icon: Wheat },
   { name: 'Scolarité', handle: 'scolarite', icon: BookOpen },
@@ -94,50 +121,87 @@ const priceRanges = [
   { label: 'Plus de 60€', value: '60+' },
 ]
 
-const products = [
-  { id: '1', title: 'Sac de riz 25kg', handle: 'sac-riz-25kg', price: 35, category: 'Alimentaire', categoryHandle: 'alimentaire', subtitle: 'Qualité premium' },
-  { id: '2', title: 'Sac de riz 50kg', handle: 'sac-riz-50kg', price: 65, category: 'Alimentaire', categoryHandle: 'alimentaire', subtitle: 'Format familial' },
-  { id: '3', title: 'Huile végétale 5L', handle: 'huile-5l', price: 18, category: 'Alimentaire', categoryHandle: 'alimentaire', subtitle: 'Huile de cuisson' },
-  { id: '4', title: 'Huile végétale 20L', handle: 'huile-20l', price: 55, category: 'Alimentaire', categoryHandle: 'alimentaire', subtitle: 'Grande quantité' },
-  { id: '5', title: 'Sucre 10kg', handle: 'sucre-10kg', price: 22, category: 'Alimentaire', categoryHandle: 'alimentaire', subtitle: 'Sucre blanc' },
-  { id: '6', title: 'Sucre 25kg', handle: 'sucre-25kg', price: 45, category: 'Alimentaire', categoryHandle: 'alimentaire', subtitle: 'Format familial' },
-  { id: '7', title: 'Carton de lait', handle: 'carton-lait', price: 40, category: 'Alimentaire', categoryHandle: 'alimentaire', subtitle: '12 boîtes' },
-  { id: '8', title: 'Pack Familial', handle: 'pack-familial', price: 85, category: 'Alimentaire', categoryHandle: 'alimentaire', subtitle: 'Riz + Huile + Sucre' },
-  { id: '9', title: 'Kit Rentrée Primaire', handle: 'kit-primaire', price: 35, category: 'Scolarité', categoryHandle: 'scolarite', subtitle: 'École primaire' },
-  { id: '10', title: 'Kit Collège/Lycée', handle: 'kit-college', price: 50, category: 'Scolarité', categoryHandle: 'scolarite', subtitle: 'Fournitures complètes' },
-  { id: '11', title: 'Pack 10 cahiers', handle: 'pack-cahiers', price: 12, category: 'Scolarité', categoryHandle: 'scolarite', subtitle: 'Grand format' },
-  { id: '12', title: 'Pack fournitures', handle: 'pack-fournitures', price: 20, category: 'Scolarité', categoryHandle: 'scolarite', subtitle: 'Stylos, crayons...' },
-  { id: '13', title: 'Kit Médicaments', handle: 'kit-medicaments', price: 25, category: 'Santé & Bébé', categoryHandle: 'sante', subtitle: 'Pharmacie familiale' },
-  { id: '14', title: 'Kit Nouveau-né', handle: 'kit-nouveau-ne', price: 45, category: 'Santé & Bébé', categoryHandle: 'sante', subtitle: 'Pour bébé' },
-  { id: '15', title: 'Pack Hygiène', handle: 'pack-hygiene', price: 30, category: 'Santé & Bébé', categoryHandle: 'sante', subtitle: 'Produits d\'hygiène' },
-  { id: '16', title: 'Pack Ramadan', handle: 'pack-ramadan', price: 95, category: 'Fêtes', categoryHandle: 'fetes', subtitle: 'Mois sacré' },
-  { id: '17', title: 'Pack Tabaski', handle: 'pack-tabaski', price: 180, category: 'Fêtes', categoryHandle: 'fetes', subtitle: 'Fête du mouton' },
-  { id: '18', title: 'Pack Cadeau', handle: 'pack-cadeau', price: 100, category: 'Fêtes', categoryHandle: 'fetes', subtitle: 'Surprise' },
-]
-
 const selectedCategory = ref(route.query.categorie as string || '')
 const selectedPrice = ref('')
 const searchQuery = ref('')
 
+// Fetch products from Medusa
+const fetchProducts = async () => {
+  isLoading.value = true
+  error.value = null
+  
+  try {
+    const response = await getProducts({ limit: 100 })
+    
+    // Transformer les produits Medusa vers notre format
+    products.value = response.products.map(p => ({
+      id: p.id,
+      title: p.title,
+      handle: p.handle,
+      subtitle: p.subtitle || '',
+      description: p.description || '',
+      price: p.variants?.[0]?.prices?.[0]?.amount ? p.variants[0].prices[0].amount / 100 : 0,
+      thumbnail: p.thumbnail || p.images?.[0]?.url || '',
+      images: p.images?.map(img => img.url) || [],
+      category: p.categories?.[0]?.name || '',
+      categoryHandle: p.categories?.[0]?.handle || '',
+      inStock: p.variants?.[0]?.inventory_quantity > 0,
+      variants: p.variants || [],
+    }))
+  } catch (e: any) {
+    console.error('Error fetching products:', e)
+    error.value = 'Impossible de charger les produits. Vérifiez votre connexion.'
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// Filtrage
 const filteredProducts = computed(() => {
-  let result = [...products]
-  if (selectedCategory.value) result = result.filter(p => p.categoryHandle === selectedCategory.value)
+  let result = [...products.value]
+  
+  if (selectedCategory.value) {
+    result = result.filter(p => p.categoryHandle === selectedCategory.value)
+  }
+  
   if (selectedPrice.value) {
     const [min, max] = selectedPrice.value.split('-').map(Number)
-    result = max ? result.filter(p => p.price >= min && p.price <= max) : result.filter(p => p.price >= min)
+    result = max 
+      ? result.filter(p => p.price >= min && p.price <= max) 
+      : result.filter(p => p.price >= min)
   }
+  
   if (searchQuery.value) {
     const q = searchQuery.value.toLowerCase()
-    result = result.filter(p => p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q))
+    result = result.filter(p => 
+      p.title.toLowerCase().includes(q) || 
+      p.category?.toLowerCase().includes(q) ||
+      p.subtitle?.toLowerCase().includes(q)
+    )
   }
+  
   return result
 })
 
 const hasFilters = computed(() => selectedCategory.value || selectedPrice.value || searchQuery.value)
-const getCount = (handle: string) => products.filter(p => p.categoryHandle === handle).length
-const resetFilters = () => { selectedCategory.value = ''; selectedPrice.value = ''; searchQuery.value = '' }
 
-watch(() => route.query.categorie, (v) => { selectedCategory.value = v as string || '' }, { immediate: true })
+const getCount = (handle: string) => products.value.filter(p => p.categoryHandle === handle).length
+
+const resetFilters = () => { 
+  selectedCategory.value = ''
+  selectedPrice.value = ''
+  searchQuery.value = '' 
+}
+
+// Watch route query
+watch(() => route.query.categorie, (v) => { 
+  selectedCategory.value = v as string || '' 
+}, { immediate: true })
+
+// Fetch on mount
+onMounted(() => {
+  fetchProducts()
+})
 
 useHead({ title: 'Catalogue' })
 </script>
