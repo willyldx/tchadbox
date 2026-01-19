@@ -1,6 +1,5 @@
-import { useQuery, useMutation } from "@convex-vue/core";
-import { api } from "~/convex/_generated/api";
-import type { Id } from "~/convex/_generated/dataModel";
+import { ConvexClient } from "convex/browser";
+import type { FunctionReference } from "convex/server";
 
 const VISITOR_ID_KEY = "tchadbox_visitor_id";
 
@@ -16,20 +15,53 @@ function getVisitorId(): string {
 }
 
 export function useCart() {
-  const visitorId = ref(getVisitorId());
+  const config = useRuntimeConfig();
   const authStore = useAuthStore();
+  
+  // État local
+  const cart = ref<any>(null);
+  const isLoading = ref(false);
+  const convex = ref<ConvexClient | null>(null);
 
-  // Query réactive du panier
-  const cart = useQuery(api.cart.getCart, () => ({
-    visitorId: visitorId.value,
-  }));
+  // Initialiser le client Convex
+  onMounted(() => {
+    if (config.public.convexUrl) {
+      convex.value = new ConvexClient(config.public.convexUrl);
+      subscribeToCart();
+    }
+  });
 
-  // Mutations
-  const addItemMutation = useMutation(api.cart.addItem);
-  const updateQuantityMutation = useMutation(api.cart.updateQuantity);
-  const removeItemMutation = useMutation(api.cart.removeItem);
-  const clearCartMutation = useMutation(api.cart.clearCart);
-  const mergeCartMutation = useMutation(api.cart.mergeCartOnLogin);
+  onUnmounted(() => {
+    convex.value?.close();
+  });
+
+  // Subscription temps réel au panier
+  function subscribeToCart() {
+    if (!convex.value) return;
+
+    const visitorId = getVisitorId();
+    
+    convex.value.onUpdate(
+      "cart:getCart" as unknown as FunctionReference<"query">,
+      { visitorId },
+      (updatedCart) => {
+        cart.value = updatedCart;
+      }
+    );
+  }
+
+  // Charger le panier
+  async function fetchCart() {
+    if (!convex.value) return;
+    
+    isLoading.value = true;
+    try {
+      const visitorId = getVisitorId();
+      cart.value = await convex.value.query("cart:getCart" as unknown as FunctionReference<"query">, { visitorId });
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   // Ajouter au panier
   async function addItem(product: {
@@ -40,8 +72,10 @@ export function useCart() {
     price: number;
     quantity?: number;
   }) {
-    await addItemMutation({
-      visitorId: visitorId.value,
+    if (!convex.value) return;
+
+    await convex.value.mutation("cart:addItem" as unknown as FunctionReference<"mutation">, {
+      visitorId: getVisitorId(),
       productId: product.productId,
       variantId: product.variantId,
       title: product.title,
@@ -52,24 +86,39 @@ export function useCart() {
   }
 
   // Mettre à jour quantité
-  async function updateQuantity(itemId: Id<"cartItems">, quantity: number) {
-    await updateQuantityMutation({ itemId, quantity });
+  async function updateQuantity(itemId: string, quantity: number) {
+    if (!convex.value) return;
+
+    await convex.value.mutation("cart:updateQuantity" as unknown as FunctionReference<"mutation">, {
+      itemId,
+      quantity,
+    });
   }
 
   // Supprimer item
-  async function removeItem(itemId: Id<"cartItems">) {
-    await removeItemMutation({ itemId });
+  async function removeItem(itemId: string) {
+    if (!convex.value) return;
+
+    await convex.value.mutation("cart:removeItem" as unknown as FunctionReference<"mutation">, {
+      itemId,
+    });
   }
 
   // Vider le panier
   async function clearCart() {
-    await clearCartMutation({ visitorId: visitorId.value });
+    if (!convex.value) return;
+
+    await convex.value.mutation("cart:clearCart" as unknown as FunctionReference<"mutation">, {
+      visitorId: getVisitorId(),
+    });
   }
 
   // Merger au login
   async function mergeOnLogin(userId: string) {
-    await mergeCartMutation({
-      visitorId: visitorId.value,
+    if (!convex.value) return;
+
+    await convex.value.mutation("cart:mergeCartOnLogin" as unknown as FunctionReference<"mutation">, {
+      visitorId: getVisitorId(),
       userId,
     });
   }
@@ -86,6 +135,8 @@ export function useCart() {
     totalItems,
     totalPrice,
     isEmpty,
+    isLoading,
+    fetchCart,
     addItem,
     updateQuantity,
     removeItem,
