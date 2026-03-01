@@ -1,23 +1,24 @@
 <template>
   <div>
     <!-- Hero -->
-    <section class="relative py-20 bg-[var(--color-bg-warm)] overflow-hidden">
-      <div class="orb orb-amber w-80 h-80 -top-20 -left-20 opacity-10" />
+    <section class="relative py-24 overflow-hidden text-center">
+      <img src="/hero-contact.png" alt="" class="absolute inset-0 w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-[var(--color-primary)]/75" />
       
-      <div class="container-main relative text-center">
+      <div class="container-main relative z-10">
         <span 
           v-motion :initial="{ opacity: 0, y: 10 }" :enter="{ opacity: 1, y: 0 }"
-          class="label mb-4 block"
+          class="inline-block text-[var(--color-accent)] text-sm font-semibold tracking-wider uppercase mb-4"
         >Support</span>
         <h1 
           v-motion :initial="{ opacity: 0, y: 20 }" :enter="{ opacity: 1, y: 0, transition: { delay: 100 } }"
-          class="heading-section mb-4"
+          class="heading-section text-white mb-4"
         >
-          Contactez-<span class="text-gradient">nous</span>
+          Contactez-<span class="text-gradient-gold">nous</span>
         </h1>
         <p 
           v-motion :initial="{ opacity: 0, y: 20 }" :enter="{ opacity: 1, y: 0, transition: { delay: 200 } }"
-          class="text-lg text-[var(--color-text-muted)] max-w-lg mx-auto"
+          class="text-lg text-white/70 max-w-lg mx-auto"
         >
           Notre équipe est disponible pour répondre à toutes vos questions
         </p>

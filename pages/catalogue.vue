@@ -1,8 +1,10 @@
 <template>
   <div>
     <!-- Hero -->
-    <section class="hero-gradient text-white py-16">
-      <div class="container-main">
+    <section class="relative text-white py-20 overflow-hidden">
+      <img src="/hero-catalogue.png" alt="" class="absolute inset-0 w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-[var(--color-primary)]/80" />
+      <div class="container-main relative z-10">
         <div class="flex items-center gap-2 text-white/60 text-sm mb-4">
           <NuxtLink to="/" class="hover:text-white transition-colors">Accueil</NuxtLink>
           <ChevronRight class="w-4 h-4" />
