@@ -1,13 +1,13 @@
 <template>
-  <div class="min-h-screen bg-gray-100">
+  <div class="min-h-screen bg-stone-50">
     <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-200">
       <div class="px-4 py-3 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <NuxtLink to="/livreur" class="flex items-center gap-2">
             <img src="/logo.png" alt="TchadBox" class="h-8 w-auto" />
             <div>
-              <span class="font-bold text-gray-900">TchadBox</span>
+              <span class="font-bold text-stone-800">TchadBox</span>
               <span class="block text-xs text-green-600 font-medium">Livreur</span>
             </div>
           </NuxtLink>
@@ -16,7 +16,7 @@
         <div class="flex items-center gap-3">
           <!-- Status Toggle -->
           <div class="flex items-center gap-2">
-            <span class="text-sm text-gray-500">{{ isOnline ? 'En ligne' : 'Hors ligne' }}</span>
+            <span class="text-sm text-stone-500">{{ isOnline ? 'En ligne' : 'Hors ligne' }}</span>
             <UToggle v-model="isOnline" color="green" />
           </div>
           
@@ -36,7 +36,7 @@
     </main>
 
     <!-- Bottom Navigation -->
-    <nav class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 safe-area-bottom">
+    <nav class="fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-t border-stone-200 safe-area-bottom">
       <div class="flex items-center justify-around py-2">
         <NuxtLink 
           v-for="item in navItems" 
@@ -44,7 +44,7 @@
           :to="item.to"
           :class="[
             'flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-colors',
-            isActive(item.to) ? 'text-green-600' : 'text-gray-500'
+            isActive(item.to) ? 'text-green-600' : 'text-stone-400'
           ]"
         >
           <Icon :name="item.icon" class="w-6 h-6" />
