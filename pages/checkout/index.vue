@@ -210,6 +210,7 @@
             <div class="bg-white rounded-2xl border border-stone-100 overflow-hidden">
               <div class="p-6 border-b border-stone-100">
                 <h2 class="text-lg font-semibold text-stone-800">Mode de paiement</h2>
+                <p class="text-sm text-stone-500 mt-1">Paiement sécurisé via Paystack</p>
               </div>
               
               <div class="p-6 space-y-4">
@@ -236,53 +237,27 @@
                     <p class="text-sm text-stone-500">{{ method.description }}</p>
                   </div>
                 </label>
-              </div>
-            </div>
 
-            <!-- Payment Form (for card) -->
-            <div v-if="selectedPayment === 'card'" class="bg-white rounded-2xl border border-stone-100 overflow-hidden">
-              <div class="p-6 border-b border-stone-100">
-                <h2 class="text-lg font-semibold text-stone-800">Détails de la carte</h2>
-              </div>
-              
-              <div class="p-6 space-y-5">
-                <div>
-                  <label class="block text-sm font-medium text-stone-700 mb-2">Numéro de carte</label>
-                  <input
-                    type="text"
-                    placeholder="1234 5678 9012 3456"
-                    class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
-                  />
-                </div>
-                <div class="grid grid-cols-2 gap-4">
+                <!-- Paystack Security Info -->
+                <div class="bg-green-50 border border-green-100 rounded-xl p-4 flex items-start gap-3 mt-4">
+                  <ShieldCheckIcon class="w-5 h-5 text-green-600 mt-0.5 shrink-0" />
                   <div>
-                    <label class="block text-sm font-medium text-stone-700 mb-2">Expiration</label>
-                    <input
-                      type="text"
-                      placeholder="MM/YY"
-                      class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
-                    />
-                  </div>
-                  <div>
-                    <label class="block text-sm font-medium text-stone-700 mb-2">CVC</label>
-                    <input
-                      type="text"
-                      placeholder="123"
-                      class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
-                    />
+                    <p class="text-sm text-green-800 font-medium">Paiement 100% sécurisé</p>
+                    <p class="text-sm text-green-600 mt-1">
+                      Vos informations de paiement sont traitées de manière sécurisée par Paystack. 
+                      Nous ne stockons jamais vos données bancaires.
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Mobile Money Info -->
-            <div v-if="selectedPayment === 'mobile'" class="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3">
-              <InfoIcon class="w-5 h-5 text-blue-500 mt-0.5 shrink-0" />
+            <!-- Error display -->
+            <div v-if="paymentError" class="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+              <InfoIcon class="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
               <div>
-                <p class="text-sm text-blue-800 font-medium">Paiement Mobile Money</p>
-                <p class="text-sm text-blue-600 mt-1">
-                  Après confirmation, vous recevrez un SMS avec les instructions pour finaliser le paiement via Orange Money, MTN Money ou Wave.
-                </p>
+                <p class="text-sm text-red-800 font-medium">Erreur de paiement</p>
+                <p class="text-sm text-red-600 mt-1">{{ paymentError }}</p>
               </div>
             </div>
           </div>
@@ -452,6 +427,7 @@ import {
   User as UserIcon,
   CreditCard,
   Smartphone,
+  Banknote,
   Info as InfoIcon,
   Lock as LockIcon,
   ShieldCheck as ShieldCheckIcon,
@@ -471,6 +447,8 @@ useSeoMeta({
 const router = useRouter()
 const cartStore = useCartStore()
 const authStore = useAuthStore()
+const { client: supabase } = useSupabase()
+const { initializePayment, verifyPayment, generateReference, eurToXof } = usePaystack()
 
 // Redirect if cart is empty
 onMounted(() => {
@@ -509,22 +487,39 @@ const sameAsCustomer = ref(true)
 const selectedPayment = ref('card')
 const acceptTerms = ref(false)
 const isSubmitting = ref(false)
+const paymentError = ref<string | null>(null)
 
-// Payment methods
+// Payment methods (Paystack supported channels)
 const paymentMethods = [
   {
     id: 'card',
     label: 'Carte bancaire',
-    description: 'Visa, Mastercard, CB',
+    description: 'Visa, Mastercard — sécurisé via Paystack',
     icon: CreditCard,
   },
   {
-    id: 'mobile',
+    id: 'mobile_money',
     label: 'Mobile Money',
-    description: 'Orange Money, MTN, Wave',
+    description: 'MTN, Orange Money, Wave',
     icon: Smartphone,
   },
+  {
+    id: 'bank_transfer',
+    label: 'Virement bancaire',
+    description: 'Transfert direct depuis votre banque',
+    icon: Banknote,
+  },
 ]
+
+// Map selected payment to Paystack channels
+const paystackChannels = computed(() => {
+  const channelMap: Record<string, string[]> = {
+    card: ['card'],
+    mobile_money: ['mobile_money'],
+    bank_transfer: ['bank_transfer'],
+  }
+  return channelMap[selectedPayment.value] || ['card', 'mobile_money', 'bank_transfer']
+})
 
 // Computed
 const canProceed = computed(() => {
@@ -565,22 +560,136 @@ async function submitOrder() {
   if (!acceptTerms.value || isSubmitting.value) return
   
   isSubmitting.value = true
+  paymentError.value = null
 
   try {
-    // Simulate order creation
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    // 1. Generate payment reference
+    const reference = generateReference()
     
-    // Generate order ID
-    const orderId = 'TCB-' + Math.random().toString(36).substr(2, 9).toUpperCase()
-    
-    // Clear cart
-    cartStore.clearCart()
-    
-    // Redirect to confirmation
-    navigateTo(`/checkout/confirmation?order=${orderId}`)
-  } catch (error) {
+    // 2. Prepare order data
+    const recipientName = sameAsCustomer.value 
+      ? `${form.firstName} ${form.lastName}` 
+      : form.recipientName
+    const recipientPhone = sameAsCustomer.value 
+      ? form.phone 
+      : form.recipientPhone
+
+    // 3. Create the order in Supabase (status: pending, payment: awaiting)
+    const orderData = {
+      user_id: authStore.user?.id,
+      display_id: reference,
+      status: 'pending',
+      payment_status: 'awaiting',
+      fulfillment_status: 'not_fulfilled',
+      email: form.email,
+      customer_first_name: form.firstName,
+      customer_last_name: form.lastName,
+      customer_phone: form.phone,
+      recipient_name: recipientName,
+      recipient_phone: recipientPhone,
+      shipping_address_1: form.address.address1,
+      shipping_address_2: form.address.address2,
+      shipping_city: form.address.city,
+      shipping_country: form.address.country,
+      delivery_instructions: form.deliveryInstructions,
+      subtotal: cartStore.subtotal,
+      shipping_total: cartStore.shipping,
+      total: cartStore.total,
+      currency: 'EUR',
+      payment_reference: reference,
+      payment_method: selectedPayment.value,
+      items: cartStore.items.map(item => ({
+        product_id: item.productId,
+        title: item.title,
+        quantity: item.quantity,
+        unit_price: item.price,
+        total: item.price * item.quantity,
+        thumbnail: item.thumbnail,
+      })),
+    }
+
+    const { data: order, error: orderError } = await supabase
+      .from('orders')
+      .insert(orderData)
+      .select()
+      .single()
+
+    if (orderError) {
+      console.error('Order creation failed:', orderError)
+      paymentError.value = 'Erreur lors de la création de la commande. Veuillez réessayer.'
+      return
+    }
+
+    // 4. Convert amount to XOF (Franc CFA) for Paystack
+    const amountInXof = eurToXof(cartStore.total)
+
+    // 5. Open Paystack payment popup
+    await initializePayment({
+      email: form.email,
+      amount: amountInXof * 100, // Paystack expects amount in smallest unit (kobo/centimes)
+      currency: 'XOF',
+      reference,
+      channels: paystackChannels.value,
+      metadata: {
+        order_id: order.id,
+        customer_name: `${form.firstName} ${form.lastName}`,
+        recipient_name: recipientName,
+        custom_fields: [
+          {
+            display_name: 'Commande',
+            variable_name: 'order_ref',
+            value: reference,
+          },
+          {
+            display_name: 'Destinataire',
+            variable_name: 'recipient',
+            value: recipientName,
+          },
+        ],
+      },
+      onSuccess: async (response) => {
+        try {
+          // 6. Verify payment server-side
+          const verification = await verifyPayment(response.reference)
+          
+          if (verification.success) {
+            // 7. Update order status in Supabase
+            await supabase
+              .from('orders')
+              .update({
+                payment_status: 'captured',
+                status: 'processing',
+                paid_at: new Date().toISOString(),
+              })
+              .eq('id', order.id)
+
+            // 8. Clear cart and redirect to confirmation
+            cartStore.clearCart()
+            navigateTo(`/checkout/confirmation?order=${reference}`)
+          } else {
+            paymentError.value = verification.error || 'La vérification du paiement a échoué.'
+            // Mark order as payment failed
+            await supabase
+              .from('orders')
+              .update({ payment_status: 'failed' })
+              .eq('id', order.id)
+          }
+        } catch (err) {
+          console.error('Payment verification error:', err)
+          paymentError.value = 'Erreur lors de la vérification. Contactez le support avec la référence: ' + reference
+        } finally {
+          isSubmitting.value = false
+        }
+      },
+      onClose: () => {
+        // User closed the popup without completing payment
+        isSubmitting.value = false
+        paymentError.value = 'Paiement annulé. Votre commande est en attente de paiement.'
+      },
+    })
+  } catch (error: any) {
     console.error('Order failed:', error)
-  } finally {
+    paymentError.value = error.message || 'Une erreur est survenue. Veuillez réessayer.'
     isSubmitting.value = false
   }
 }

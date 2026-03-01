@@ -3,13 +3,13 @@
     <!-- Hero -->
     <section class="hero-gradient text-white py-16">
       <div class="container-main">
-        <div class="flex items-center gap-2 text-blue-200 text-sm mb-4">
+        <div class="flex items-center gap-2 text-white/60 text-sm mb-4">
           <NuxtLink to="/" class="hover:text-white transition-colors">Accueil</NuxtLink>
           <ChevronRight class="w-4 h-4" />
           <span class="text-white">Catalogue</span>
         </div>
         <h1 class="heading-section text-white">Notre Catalogue</h1>
-        <p class="text-blue-200 mt-2">{{ filteredProducts.length }} produits disponibles</p>
+        <p class="text-white/60 mt-2">{{ filteredProducts.length }} produits disponibles</p>
       </div>
     </section>
 
@@ -20,7 +20,7 @@
           <div class="card p-6 sticky top-28">
             <div class="mb-8">
               <h3 class="font-semibold text-[var(--color-text)] mb-4 flex items-center gap-2">
-                <LayoutGrid class="w-5 h-5 text-[var(--color-primary)]" />Catégories
+                <LayoutGrid class="w-5 h-5 text-[var(--color-accent-dark)]" />Catégories
               </h3>
               <div class="space-y-2">
                 <button @click="selectedCategory = ''" class="filter-btn w-full" :class="{ active: !selectedCategory }">
@@ -33,12 +33,12 @@
             </div>
             <div class="mb-8">
               <h3 class="font-semibold text-[var(--color-text)] mb-4 flex items-center gap-2">
-                <Euro class="w-5 h-5 text-[var(--color-primary)]" />Prix
+                <Euro class="w-5 h-5 text-[var(--color-accent-dark)]" />Prix
               </h3>
               <div class="space-y-2">
                 <label v-for="r in priceRanges" :key="r.value" class="flex items-center gap-3 py-2 cursor-pointer text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors">
                   <input type="radio" v-model="selectedPrice" :value="r.value" class="sr-only" />
-                  <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center" :class="selectedPrice === r.value ? 'border-[var(--color-primary)] bg-[var(--color-primary)]' : 'border-gray-300'">
+                  <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center" :class="selectedPrice === r.value ? 'border-[var(--color-accent)] bg-[var(--color-accent)]' : 'border-gray-300'">
                     <span v-if="selectedPrice === r.value" class="w-1.5 h-1.5 rounded-full bg-white" />
                   </span>
                   {{ r.label }}
@@ -208,6 +208,6 @@ useHead({ title: 'Catalogue' })
 
 <style scoped>
 .filter-btn { @apply flex items-center gap-3 px-4 py-3 rounded-xl text-[var(--color-text-secondary)] transition-all duration-200; }
-.filter-btn:hover { @apply bg-gray-50; }
-.filter-btn.active { @apply bg-amber-500/10 text-amber-600 font-medium; }
+.filter-btn:hover { @apply bg-amber-50; }
+.filter-btn.active { @apply bg-amber-500/10 text-amber-700 font-medium; }
 </style>

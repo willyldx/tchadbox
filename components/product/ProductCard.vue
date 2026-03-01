@@ -34,7 +34,7 @@
           <!-- Quick Add -->
           <button 
             @click.prevent="addToCart"
-            class="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-[var(--color-primary)] text-white flex items-center justify-center opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 hover:bg-[var(--color-gold)] hover:text-[var(--color-primary-dark)] shadow-lg"
+            class="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-[var(--color-accent)] text-white flex items-center justify-center opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 hover:bg-[var(--color-accent-dark)] shadow-lg"
           >
             <Plus class="w-5 h-5" />
           </button>
@@ -47,7 +47,7 @@
       <!-- Content -->
       <div class="p-5">
         <NuxtLink :to="`/produit/${product.handle || product.id}`">
-          <h3 class="font-semibold text-[var(--color-text)] text-lg mb-1 group-hover:text-[var(--color-primary)] transition-colors line-clamp-1">
+          <h3 class="font-semibold text-[var(--color-text)] text-lg mb-1 group-hover:text-[var(--color-accent-dark)] transition-colors line-clamp-1">
             {{ product.title }}
           </h3>
         </NuxtLink>
@@ -58,7 +58,7 @@
 
         <div class="flex items-end justify-between">
           <div>
-            <span class="text-2xl font-bold text-[var(--color-primary)]">
+            <span class="text-2xl font-bold text-[var(--color-text)]">
               {{ formatPrice(product.price) }}
             </span>
             <span class="block text-xs text-[var(--color-text-muted)] mt-0.5">
@@ -68,7 +68,7 @@
           
           <button 
             @click="addToCart"
-            class="btn-ghost flex items-center gap-2 text-[var(--color-primary)]"
+            class="btn-ghost flex items-center gap-2 text-[var(--color-accent-dark)]"
           >
             <ShoppingBag class="w-4 h-4" />
             <span class="text-sm font-medium hidden sm:inline">Ajouter</span>
