@@ -80,6 +80,7 @@ export interface Customer {
   phone?: string
   role: UserRole
   avatarUrl?: string
+  createdAt?: string
   addresses: Address[]
   orders?: Order[]
 }

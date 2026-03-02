@@ -3,18 +3,18 @@
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Breadcrumb -->
       <nav class="flex items-center gap-2 text-sm mb-6">
-        <NuxtLink to="/compte" class="text-stone-500 hover:text-amber-600">Mon compte</NuxtLink>
-        <ChevronRightIcon class="w-4 h-4 text-stone-400" />
-        <NuxtLink to="/compte/commandes" class="text-stone-500 hover:text-amber-600">Mes commandes</NuxtLink>
-        <ChevronRightIcon class="w-4 h-4 text-stone-400" />
-        <span class="text-stone-800 font-medium">{{ order?.displayId || 'Chargement...' }}</span>
+        <NuxtLink to="/compte" class="text-[var(--color-text-muted)] hover:text-[var(--color-accent-dark)]">Mon compte</NuxtLink>
+        <ChevronRightIcon class="w-4 h-4 text-[var(--color-text-muted)]" />
+        <NuxtLink to="/compte/commandes" class="text-[var(--color-text-muted)] hover:text-[var(--color-accent-dark)]">Mes commandes</NuxtLink>
+        <ChevronRightIcon class="w-4 h-4 text-[var(--color-text-muted)]" />
+        <span class="text-[var(--color-text)] font-medium">{{ order?.displayId || 'Chargement...' }}</span>
       </nav>
 
       <!-- Loading State -->
       <div v-if="isLoading" class="space-y-6">
-        <div class="bg-white rounded-2xl border border-stone-100 p-8 animate-pulse">
-          <div class="h-6 bg-stone-200 rounded w-48 mb-4"></div>
-          <div class="h-4 bg-stone-200 rounded w-32"></div>
+        <div class="bg-white rounded-2xl border border-[var(--color-border)] p-8 animate-pulse">
+          <div class="h-6 bg-gray-200 rounded w-48 mb-4"></div>
+          <div class="h-4 bg-gray-200 rounded w-32"></div>
         </div>
       </div>
 
@@ -23,8 +23,8 @@
         <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
           <AlertCircleIcon class="w-8 h-8 text-red-500" />
         </div>
-        <h3 class="font-semibold text-stone-800 mb-2">Commande introuvable</h3>
-        <p class="text-stone-500 mb-4">{{ error }}</p>
+        <h3 class="font-semibold text-[var(--color-text)] mb-2">Commande introuvable</h3>
+        <p class="text-[var(--color-text-muted)] mb-4">{{ error }}</p>
         <NuxtLink
           to="/compte/commandes"
           class="inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 font-medium"
@@ -37,11 +37,11 @@
       <!-- Order Content -->
       <div v-else-if="order" class="space-y-6">
         <!-- Header -->
-        <div class="bg-white rounded-2xl border border-stone-100 p-6">
+        <div class="bg-white rounded-2xl border border-[var(--color-border)] p-6">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div class="flex items-center gap-3 mb-2">
-                <h1 class="text-2xl font-bold text-stone-800">{{ order.displayId }}</h1>
+                <h1 class="text-2xl font-bold text-[var(--color-text)]">{{ order.displayId }}</h1>
                 <span
                   class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium"
                   :class="getStatusClass(order.fulfillmentStatus)"
@@ -50,21 +50,21 @@
                   {{ getStatusLabel(order.fulfillmentStatus) }}
                 </span>
               </div>
-              <p class="text-stone-500">
+              <p class="text-[var(--color-text-muted)]">
                 Commandé le {{ formatDate(order.createdAt) }}
               </p>
             </div>
             <div class="flex gap-3">
               <button
                 @click="downloadInvoice"
-                class="flex items-center gap-2 px-4 py-2 border border-stone-200 rounded-xl text-stone-700 hover:bg-stone-50 transition-colors"
+                class="flex items-center gap-2 px-4 py-2 border border-[var(--color-border)] rounded-xl text-[var(--color-text-secondary)] hover:bg-gray-50 transition-colors"
               >
                 <DownloadIcon class="w-4 h-4" />
                 Facture
               </button>
               <button
                 @click="contactSupport"
-                class="flex items-center gap-2 px-4 py-2 border border-stone-200 rounded-xl text-stone-700 hover:bg-stone-50 transition-colors"
+                class="flex items-center gap-2 px-4 py-2 border border-[var(--color-border)] rounded-xl text-[var(--color-text-secondary)] hover:bg-gray-50 transition-colors"
               >
                 <MessageCircleIcon class="w-4 h-4" />
                 Aide
@@ -74,9 +74,9 @@
         </div>
 
         <!-- Tracking Timeline -->
-        <div class="bg-white rounded-2xl border border-stone-100 overflow-hidden">
-          <div class="p-6 border-b border-stone-100">
-            <h2 class="text-lg font-semibold text-stone-800">Suivi de commande</h2>
+        <div class="bg-white rounded-2xl border border-[var(--color-border)] overflow-hidden">
+          <div class="p-6 border-b border-[var(--color-border)]">
+            <h2 class="text-lg font-semibold text-[var(--color-text)]">Suivi de commande</h2>
           </div>
           
           <div class="p-6">
@@ -92,19 +92,19 @@
                     class="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
                     :class="step.completed 
                       ? 'bg-gradient-to-br from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-500/25' 
-                      : 'bg-stone-100 text-stone-400'"
+                      : 'bg-gray-100 text-[var(--color-text-muted)]'"
                   >
                     <component :is="step.icon" class="w-5 h-5" />
                   </div>
-                  <p class="text-xs font-medium mt-2 text-center" :class="step.completed ? 'text-stone-800' : 'text-stone-400'">
+                  <p class="text-xs font-medium mt-2 text-center" :class="step.completed ? 'text-[var(--color-text)]' : 'text-[var(--color-text-muted)]'">
                     {{ step.label }}
                   </p>
-                  <p v-if="step.date" class="text-xs text-stone-400">{{ step.date }}</p>
+                  <p v-if="step.date" class="text-xs text-[var(--color-text-muted)]">{{ step.date }}</p>
                 </div>
               </div>
               
               <!-- Progress Line -->
-              <div class="absolute top-5 left-0 right-0 h-0.5 bg-stone-100 -z-0 mx-16">
+              <div class="absolute top-5 left-0 right-0 h-0.5 bg-gray-100 -z-0 mx-16">
                 <div 
                   class="h-full bg-gradient-to-r from-amber-500 to-amber-400 transition-all duration-500"
                   :style="{ width: progressWidth + '%' }"
@@ -122,14 +122,14 @@
                 <div class="flex flex-col items-center">
                   <div
                     class="w-3 h-3 rounded-full"
-                    :class="event.completed ? 'bg-amber-500' : 'bg-stone-200'"
+                    :class="event.completed ? 'bg-amber-500' : 'bg-gray-200'"
                   ></div>
-                  <div class="w-0.5 flex-1 bg-stone-100"></div>
+                  <div class="w-0.5 flex-1 bg-gray-100"></div>
                 </div>
                 <div class="pb-6">
-                  <p class="font-medium text-stone-800">{{ event.title }}</p>
-                  <p v-if="event.description" class="text-sm text-stone-500">{{ event.description }}</p>
-                  <p class="text-xs text-stone-400 mt-1">{{ event.date }}</p>
+                  <p class="font-medium text-[var(--color-text)]">{{ event.title }}</p>
+                  <p v-if="event.description" class="text-sm text-[var(--color-text-muted)]">{{ event.description }}</p>
+                  <p class="text-xs text-[var(--color-text-muted)] mt-1">{{ event.date }}</p>
                 </div>
               </div>
             </div>
@@ -150,33 +150,33 @@
         </div>
 
         <!-- Order Items -->
-        <div class="bg-white rounded-2xl border border-stone-100 overflow-hidden">
-          <div class="p-6 border-b border-stone-100">
-            <h2 class="text-lg font-semibold text-stone-800">
+        <div class="bg-white rounded-2xl border border-[var(--color-border)] overflow-hidden">
+          <div class="p-6 border-b border-[var(--color-border)]">
+            <h2 class="text-lg font-semibold text-[var(--color-text)]">
               Articles ({{ order.items.length }})
             </h2>
           </div>
           
-          <div class="divide-y divide-stone-100">
+          <div class="divide-y divide-[var(--color-border)]">
             <div
               v-for="item in order.items"
               :key="item.id"
               class="flex items-center gap-4 p-6"
             >
-              <div class="w-20 h-20 bg-stone-100 rounded-xl flex items-center justify-center shrink-0">
+              <div class="w-20 h-20 bg-gray-100 rounded-xl flex items-center justify-center shrink-0">
                 <img
                   v-if="item.thumbnail"
                   :src="item.thumbnail"
                   :alt="item.title"
                   class="w-16 h-16 object-contain"
                 />
-                <PackageIcon v-else class="w-8 h-8 text-stone-400" />
+                <PackageIcon v-else class="w-8 h-8 text-[var(--color-text-muted)]" />
               </div>
               <div class="flex-1 min-w-0">
-                <p class="font-medium text-stone-800">{{ item.title }}</p>
-                <p class="text-sm text-stone-500">Quantité: {{ item.quantity }}</p>
+                <p class="font-medium text-[var(--color-text)]">{{ item.title }}</p>
+                <p class="text-sm text-[var(--color-text-muted)]">Quantité: {{ item.quantity }}</p>
               </div>
-              <p class="font-semibold text-stone-800">{{ formatPrice(item.total) }}</p>
+              <p class="font-semibold text-[var(--color-text)]">{{ formatPrice(item.total) }}</p>
             </div>
           </div>
         </div>
@@ -184,23 +184,23 @@
         <!-- Order Summary & Addresses -->
         <div class="grid md:grid-cols-2 gap-6">
           <!-- Shipping Address -->
-          <div class="bg-white rounded-2xl border border-stone-100 overflow-hidden">
-            <div class="p-6 border-b border-stone-100">
-              <h2 class="text-lg font-semibold text-stone-800">Adresse de livraison</h2>
+          <div class="bg-white rounded-2xl border border-[var(--color-border)] overflow-hidden">
+            <div class="p-6 border-b border-[var(--color-border)]">
+              <h2 class="text-lg font-semibold text-[var(--color-text)]">Adresse de livraison</h2>
             </div>
             <div class="p-6">
               <div class="flex items-start gap-3">
                 <MapPinIcon class="w-5 h-5 text-amber-500 mt-0.5 shrink-0" />
                 <div>
-                  <p class="font-medium text-stone-800">
+                  <p class="font-medium text-[var(--color-text)]">
                     {{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}
                   </p>
-                  <p class="text-stone-600 mt-1">
+                  <p class="text-[var(--color-text-secondary)] mt-1">
                     {{ order.shippingAddress.address1 }}<br />
                     <span v-if="order.shippingAddress.address2">{{ order.shippingAddress.address2 }}<br /></span>
                     {{ order.shippingAddress.city }}, {{ order.shippingAddress.country }}
                   </p>
-                  <p v-if="order.shippingAddress.phone" class="text-stone-500 mt-2 flex items-center gap-2">
+                  <p v-if="order.shippingAddress.phone" class="text-[var(--color-text-muted)] mt-2 flex items-center gap-2">
                     <PhoneIcon class="w-4 h-4" />
                     {{ order.shippingAddress.phone }}
                   </p>
@@ -210,29 +210,29 @@
           </div>
 
           <!-- Order Summary -->
-          <div class="bg-white rounded-2xl border border-stone-100 overflow-hidden">
-            <div class="p-6 border-b border-stone-100">
-              <h2 class="text-lg font-semibold text-stone-800">Récapitulatif</h2>
+          <div class="bg-white rounded-2xl border border-[var(--color-border)] overflow-hidden">
+            <div class="p-6 border-b border-[var(--color-border)]">
+              <h2 class="text-lg font-semibold text-[var(--color-text)]">Récapitulatif</h2>
             </div>
             <div class="p-6 space-y-3">
-              <div class="flex justify-between text-stone-600">
+              <div class="flex justify-between text-[var(--color-text-secondary)]">
                 <span>Sous-total</span>
                 <span>{{ formatPrice(order.subtotal) }}</span>
               </div>
-              <div class="flex justify-between text-stone-600">
+              <div class="flex justify-between text-[var(--color-text-secondary)]">
                 <span>Livraison</span>
                 <span>{{ formatPrice(order.shippingTotal) }}</span>
               </div>
-              <div class="pt-3 border-t border-stone-100 flex justify-between">
-                <span class="font-semibold text-stone-800">Total</span>
+              <div class="pt-3 border-t border-[var(--color-border)] flex justify-between">
+                <span class="font-semibold text-[var(--color-text)]">Total</span>
                 <div class="text-right">
-                  <p class="font-bold text-lg text-stone-800">{{ formatPrice(order.total) }}</p>
-                  <p class="text-xs text-stone-400">≈ {{ formatFCFA(order.total) }}</p>
+                  <p class="font-bold text-lg text-[var(--color-text)]">{{ formatPrice(order.total) }}</p>
+                  <p class="text-xs text-[var(--color-text-muted)]">≈ {{ formatFCFA(order.total) }}</p>
                 </div>
               </div>
               
               <!-- Payment Status -->
-              <div class="pt-4 mt-4 border-t border-stone-100">
+              <div class="pt-4 mt-4 border-t border-[var(--color-border)]">
                 <div class="flex items-center gap-2">
                   <CheckCircleIcon 
                     v-if="order.paymentStatus === 'captured'" 
@@ -259,7 +259,7 @@
           </NuxtLink>
           <NuxtLink
             to="/compte/commandes"
-            class="flex-1 flex items-center justify-center gap-2 px-6 py-3 border border-stone-200 text-stone-700 font-semibold rounded-xl hover:bg-stone-50 transition-colors"
+            class="flex-1 flex items-center justify-center gap-2 px-6 py-3 border border-[var(--color-border)] text-[var(--color-text-secondary)] font-semibold rounded-xl hover:bg-gray-50 transition-colors"
           >
             <ArrowLeftIcon class="w-5 h-5" />
             Retour aux commandes
@@ -528,24 +528,24 @@ function getStatusLabel(status: FulfillmentStatus): string {
 
 function getStatusClass(status: FulfillmentStatus): string {
   const classes: Record<FulfillmentStatus, string> = {
-    not_fulfilled: 'bg-stone-100 text-stone-700',
+    not_fulfilled: 'bg-gray-100 text-[var(--color-text-secondary)]',
     partially_fulfilled: 'bg-blue-100 text-blue-700',
     fulfilled: 'bg-blue-100 text-blue-700',
     shipped: 'bg-amber-100 text-amber-700',
     delivered: 'bg-green-100 text-green-700',
   }
-  return classes[status] || 'bg-stone-100 text-stone-700'
+  return classes[status] || 'bg-gray-100 text-[var(--color-text-secondary)]'
 }
 
 function getStatusDotClass(status: FulfillmentStatus): string {
   const classes: Record<FulfillmentStatus, string> = {
-    not_fulfilled: 'bg-stone-500',
+    not_fulfilled: 'bg-gray-500',
     partially_fulfilled: 'bg-blue-500',
     fulfilled: 'bg-blue-500',
     shipped: 'bg-amber-500',
     delivered: 'bg-green-500',
   }
-  return classes[status] || 'bg-stone-500'
+  return classes[status] || 'bg-gray-500'
 }
 
 function downloadInvoice() {

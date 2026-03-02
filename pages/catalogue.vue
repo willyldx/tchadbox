@@ -2,7 +2,15 @@
   <div>
     <!-- Hero -->
     <section class="relative text-white py-20 overflow-hidden">
-      <img src="/hero-catalogue.png" alt="" class="absolute inset-0 w-full h-full object-cover" />
+      <NuxtImg 
+        src="/hero-catalogue.png" 
+        alt="Catalogue TchadBox" 
+        class="absolute inset-0 w-full h-full object-cover" 
+        loading="eager"
+        quality="80"
+        format="webp"
+        sizes="100vw"
+      />
       <div class="absolute inset-0 bg-[var(--color-primary)]/80" />
       <div class="container-main relative z-10">
         <div class="flex items-center gap-2 text-white/60 text-sm mb-4">

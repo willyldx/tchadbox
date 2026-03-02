@@ -82,12 +82,12 @@
           <form @submit.prevent="handleSubmit" class="space-y-5">
             <!-- Email -->
             <div>
-              <label for="email" class="block text-sm font-medium text-stone-700 mb-2">
+              <label for="email" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
                 Adresse email
               </label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <svg class="w-5 h-5 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 text-[var(--color-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>

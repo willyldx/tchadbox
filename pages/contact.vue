@@ -2,7 +2,7 @@
   <div>
     <!-- Hero -->
     <section class="relative py-24 overflow-hidden text-center">
-      <img src="/hero-contact.png" alt="" class="absolute inset-0 w-full h-full object-cover" />
+      <NuxtImg src="/hero-contact.png" alt="Contact TchadBox" class="absolute inset-0 w-full h-full object-cover" loading="eager" quality="80" format="webp" sizes="100vw" />
       <div class="absolute inset-0 bg-[var(--color-primary)]/75" />
       
       <div class="container-main relative z-10">

@@ -52,7 +52,7 @@
           class="card overflow-hidden group hover:!border-[var(--color-accent)]/15"
         >
           <!-- Product Image -->
-          <NuxtLink :to="`/produit/${item.productId}`" class="block relative aspect-square bg-stone-50">
+          <NuxtLink :to="`/produit/${item.productId}`" class="block relative aspect-square bg-gray-50">
             <img
               v-if="item.thumbnail"
               :src="item.thumbnail"
@@ -60,7 +60,7 @@
               class="w-full h-full object-contain p-6 group-hover:scale-105 transition-transform duration-300"
             />
             <div v-else class="w-full h-full flex items-center justify-center">
-              <PackageIcon class="w-12 h-12 text-stone-300" />
+              <PackageIcon class="w-12 h-12 text-gray-300" />
             </div>
 
             <!-- Remove Button -->
@@ -72,7 +72,7 @@
             </button>
 
             <!-- Category Badge -->
-            <span v-if="item.category" class="absolute bottom-3 left-3 text-xs bg-white/90 backdrop-blur-sm text-stone-600 px-2 py-1 rounded-full">
+            <span v-if="item.category" class="absolute bottom-3 left-3 text-xs bg-white/90 backdrop-blur-sm text-[var(--color-text-secondary)] px-2 py-1 rounded-full">
               {{ item.category }}
             </span>
           </NuxtLink>
@@ -146,7 +146,7 @@
             <div class="flex gap-3">
               <button
                 @click="showClearConfirm = false"
-                class="flex-1 py-3 border border-stone-200 text-stone-700 font-medium rounded-xl hover:bg-stone-50 transition-colors"
+                class="flex-1 py-3 border border-[var(--color-border)] text-[var(--color-text-secondary)] font-medium rounded-xl hover:bg-gray-50 transition-colors"
               >
                 Annuler
               </button>

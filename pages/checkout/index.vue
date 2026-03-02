@@ -7,10 +7,10 @@
           <div class="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center">
             <PackageIcon class="w-5 h-5 text-white" />
           </div>
-          <span class="text-xl font-bold text-stone-800">TchadBox</span>
+          <span class="text-xl font-bold text-[var(--color-text)]">TchadBox</span>
         </NuxtLink>
         
-        <NuxtLink to="/panier" class="text-sm text-stone-500 hover:text-amber-600 flex items-center gap-1">
+        <NuxtLink to="/panier" class="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-accent-dark)] flex items-center gap-1">
           <ArrowLeftIcon class="w-4 h-4" />
           Retour au panier
         </NuxtLink>
@@ -30,7 +30,7 @@
               </div>
               <span 
                 class="text-xs mt-2 font-medium"
-                :class="index <= currentStep ? 'text-amber-600' : 'text-stone-400'"
+                :class="index <= currentStep ? 'text-amber-600' : 'text-[var(--color-text-muted)]'"
               >
                 {{ step.label }}
               </span>
@@ -38,7 +38,7 @@
             <div 
               v-if="index < steps.length - 1"
               class="w-20 sm:w-32 h-0.5 mx-2"
-              :class="index < currentStep ? 'bg-amber-500' : 'bg-stone-200'"
+              :class="index < currentStep ? 'bg-amber-500' : 'bg-gray-200'"
             ></div>
           </div>
         </div>
@@ -49,9 +49,9 @@
         <div class="lg:col-span-2">
           <!-- Step 1: Information -->
           <div v-show="currentStep === 0" class="space-y-6">
-            <div class="bg-white rounded-2xl border border-stone-100 overflow-hidden">
-              <div class="p-6 border-b border-stone-100">
-                <h2 class="text-lg font-semibold text-stone-800">Vos informations</h2>
+            <div class="bg-white rounded-2xl border border-[var(--color-border)] overflow-hidden">
+              <div class="p-6 border-b border-[var(--color-border)]">
+                <h2 class="text-lg font-semibold text-[var(--color-text)]">Vos informations</h2>
               </div>
               
               <div class="p-6 space-y-5">
@@ -71,7 +71,7 @@
 
                 <div class="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-sm font-medium text-stone-700 mb-2">Prénom *</label>
+                    <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">Prénom *</label>
                     <input
                       v-model="form.firstName"
                       type="text"
@@ -80,7 +80,7 @@
                     />
                   </div>
                   <div>
-                    <label class="block text-sm font-medium text-stone-700 mb-2">Nom *</label>
+                    <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">Nom *</label>
                     <input
                       v-model="form.lastName"
                       type="text"
@@ -91,7 +91,7 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-stone-700 mb-2">Email *</label>
+                  <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">Email *</label>
                   <input
                     v-model="form.email"
                     type="email"
@@ -101,12 +101,12 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-stone-700 mb-2">Téléphone *</label>
+                  <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">Téléphone *</label>
                   <input
                     v-model="form.phone"
                     type="tel"
                     required
-                    placeholder="+33 6 XX XX XX XX"
+                    placeholder="+235 XX XX XX XX"
                     class="input"
                   />
                 </div>
@@ -114,10 +114,10 @@
             </div>
 
             <!-- Recipient Information -->
-            <div class="bg-white rounded-2xl border border-stone-100 overflow-hidden">
-              <div class="p-6 border-b border-stone-100">
-                <h2 class="text-lg font-semibold text-stone-800">Destinataire au Tchad</h2>
-                <p class="text-sm text-stone-500">Personne qui recevra le colis à N'Djamena</p>
+            <div class="bg-white rounded-2xl border border-[var(--color-border)] overflow-hidden">
+              <div class="p-6 border-b border-[var(--color-border)]">
+                <h2 class="text-lg font-semibold text-[var(--color-text)]">Destinataire au Tchad</h2>
+                <p class="text-sm text-[var(--color-text-muted)]">Personne qui recevra le colis à N'Djamena</p>
               </div>
               
               <div class="p-6 space-y-5">
@@ -126,16 +126,16 @@
                     id="sameRecipient"
                     v-model="sameAsCustomer"
                     type="checkbox"
-                    class="w-4 h-4 text-amber-500 border-stone-300 rounded focus:ring-amber-500/20"
+                    class="w-4 h-4 text-amber-500 border-gray-300 rounded focus:ring-amber-500/20"
                   />
-                  <label for="sameRecipient" class="text-sm text-stone-600">
+                  <label for="sameRecipient" class="text-sm text-[var(--color-text-secondary)]">
                     Je suis le destinataire
                   </label>
                 </div>
 
                 <div v-if="!sameAsCustomer" class="space-y-5">
                   <div>
-                    <label class="block text-sm font-medium text-stone-700 mb-2">Nom du destinataire *</label>
+                    <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">Nom du destinataire *</label>
                     <input
                       v-model="form.recipientName"
                       type="text"
@@ -145,7 +145,7 @@
                   </div>
 
                   <div>
-                    <label class="block text-sm font-medium text-stone-700 mb-2">Téléphone du destinataire *</label>
+                    <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">Téléphone du destinataire *</label>
                     <input
                       v-model="form.recipientPhone"
                       type="tel"
@@ -157,7 +157,7 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-stone-700 mb-2">Adresse de livraison *</label>
+                  <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">Adresse de livraison *</label>
                   <input
                     v-model="form.address.address1"
                     type="text"
@@ -169,7 +169,7 @@
 
                 <div class="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-sm font-medium text-stone-700 mb-2">Ville *</label>
+                    <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">Ville *</label>
                     <select
                       v-model="form.address.city"
                       required
@@ -181,18 +181,18 @@
                     </select>
                   </div>
                   <div>
-                    <label class="block text-sm font-medium text-stone-700 mb-2">Pays</label>
+                    <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">Pays</label>
                     <input
                       value="Tchad"
                       disabled
-                      class="w-full px-4 py-3 bg-stone-100 border border-stone-200 rounded-xl text-stone-500"
+                      class="w-full px-4 py-3 bg-gray-100 border border-[var(--color-border)] rounded-xl text-[var(--color-text-muted)]"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-stone-700 mb-2">
-                    Instructions de livraison <span class="text-stone-400 font-normal">(optionnel)</span>
+                  <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
+                    Instructions de livraison <span class="text-[var(--color-text-muted)] font-normal">(optionnel)</span>
                   </label>
                   <textarea
                     v-model="form.deliveryInstructions"
@@ -207,10 +207,10 @@
 
           <!-- Step 2: Payment -->
           <div v-show="currentStep === 1" class="space-y-6">
-            <div class="bg-white rounded-2xl border border-stone-100 overflow-hidden">
-              <div class="p-6 border-b border-stone-100">
-                <h2 class="text-lg font-semibold text-stone-800">Mode de paiement</h2>
-                <p class="text-sm text-stone-500 mt-1">Paiement sécurisé via Paystack</p>
+            <div class="bg-white rounded-2xl border border-[var(--color-border)] overflow-hidden">
+              <div class="p-6 border-b border-[var(--color-border)]">
+                <h2 class="text-lg font-semibold text-[var(--color-text)]">Mode de paiement</h2>
+                <p class="text-sm text-[var(--color-text-muted)] mt-1">Paiement sécurisé via Paystack</p>
               </div>
               
               <div class="p-6 space-y-4">
@@ -221,20 +221,20 @@
                   class="flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-colors"
                   :class="selectedPayment === method.id 
                     ? 'border-amber-500 bg-amber-50' 
-                    : 'border-stone-200 hover:border-stone-300'"
+                    : 'border-[var(--color-border)] hover:border-gray-300'"
                 >
                   <input
                     v-model="selectedPayment"
                     type="radio"
                     :value="method.id"
-                    class="w-5 h-5 text-amber-500 border-stone-300 focus:ring-amber-500/20"
+                    class="w-5 h-5 text-amber-500 border-gray-300 focus:ring-amber-500/20"
                   />
-                  <div class="w-12 h-8 bg-stone-100 rounded flex items-center justify-center">
-                    <component :is="method.icon" class="w-6 h-6 text-stone-600" />
+                  <div class="w-12 h-8 bg-gray-100 rounded flex items-center justify-center">
+                    <component :is="method.icon" class="w-6 h-6 text-[var(--color-text-secondary)]" />
                   </div>
                   <div class="flex-1">
-                    <p class="font-medium text-stone-800">{{ method.label }}</p>
-                    <p class="text-sm text-stone-500">{{ method.description }}</p>
+                    <p class="font-medium text-[var(--color-text)]">{{ method.label }}</p>
+                    <p class="text-sm text-[var(--color-text-muted)]">{{ method.description }}</p>
                   </div>
                 </label>
 
@@ -264,33 +264,33 @@
 
           <!-- Step 3: Confirmation -->
           <div v-show="currentStep === 2" class="space-y-6">
-            <div class="bg-white rounded-2xl border border-stone-100 overflow-hidden">
-              <div class="p-6 border-b border-stone-100">
-                <h2 class="text-lg font-semibold text-stone-800">Récapitulatif de votre commande</h2>
+            <div class="bg-white rounded-2xl border border-[var(--color-border)] overflow-hidden">
+              <div class="p-6 border-b border-[var(--color-border)]">
+                <h2 class="text-lg font-semibold text-[var(--color-text)]">Récapitulatif de votre commande</h2>
               </div>
               
               <div class="p-6 space-y-6">
                 <!-- Customer Info -->
                 <div>
-                  <h3 class="text-sm font-medium text-stone-500 mb-3">EXPÉDITEUR</h3>
-                  <p class="text-stone-800">{{ form.firstName }} {{ form.lastName }}</p>
-                  <p class="text-stone-600">{{ form.email }}</p>
-                  <p class="text-stone-600">{{ form.phone }}</p>
+                  <h3 class="text-sm font-medium text-[var(--color-text-muted)] mb-3">EXPÉDITEUR</h3>
+                  <p class="text-[var(--color-text)]">{{ form.firstName }} {{ form.lastName }}</p>
+                  <p class="text-[var(--color-text-secondary)]">{{ form.email }}</p>
+                  <p class="text-[var(--color-text-secondary)]">{{ form.phone }}</p>
                 </div>
 
                 <!-- Recipient Info -->
                 <div>
-                  <h3 class="text-sm font-medium text-stone-500 mb-3">DESTINATAIRE</h3>
-                  <p class="text-stone-800">{{ sameAsCustomer ? `${form.firstName} ${form.lastName}` : form.recipientName }}</p>
-                  <p class="text-stone-600">{{ sameAsCustomer ? form.phone : form.recipientPhone }}</p>
-                  <p class="text-stone-600">{{ form.address.address1 }}</p>
-                  <p class="text-stone-600">{{ form.address.city }}, Tchad</p>
+                  <h3 class="text-sm font-medium text-[var(--color-text-muted)] mb-3">DESTINATAIRE</h3>
+                  <p class="text-[var(--color-text)]">{{ sameAsCustomer ? `${form.firstName} ${form.lastName}` : form.recipientName }}</p>
+                  <p class="text-[var(--color-text-secondary)]">{{ sameAsCustomer ? form.phone : form.recipientPhone }}</p>
+                  <p class="text-[var(--color-text-secondary)]">{{ form.address.address1 }}</p>
+                  <p class="text-[var(--color-text-secondary)]">{{ form.address.city }}, Tchad</p>
                 </div>
 
                 <!-- Payment -->
                 <div>
-                  <h3 class="text-sm font-medium text-stone-500 mb-3">PAIEMENT</h3>
-                  <p class="text-stone-800">{{ paymentMethods.find(m => m.id === selectedPayment)?.label }}</p>
+                  <h3 class="text-sm font-medium text-[var(--color-text-muted)] mb-3">PAIEMENT</h3>
+                  <p class="text-[var(--color-text)]">{{ paymentMethods.find(m => m.id === selectedPayment)?.label }}</p>
                 </div>
               </div>
             </div>
@@ -302,9 +302,9 @@
                 v-model="acceptTerms"
                 type="checkbox"
                 required
-                class="w-5 h-5 mt-0.5 text-amber-500 border-stone-300 rounded focus:ring-amber-500/20"
+                class="w-5 h-5 mt-0.5 text-amber-500 border-gray-300 rounded focus:ring-amber-500/20"
               />
-              <label for="terms" class="text-sm text-stone-600">
+              <label for="terms" class="text-sm text-[var(--color-text-secondary)]">
                 J'accepte les 
                 <NuxtLink to="/conditions" class="text-amber-600 hover:underline">conditions générales de vente</NuxtLink>
                 et la 
@@ -318,7 +318,7 @@
             <button
               v-if="currentStep > 0"
               @click="currentStep--"
-              class="px-6 py-3 border border-stone-200 text-stone-700 font-semibold rounded-xl hover:bg-stone-50 transition-colors flex items-center gap-2"
+              class="px-6 py-3 border border-[var(--color-border)] text-[var(--color-text-secondary)] font-semibold rounded-xl hover:bg-gray-50 transition-colors flex items-center gap-2"
             >
               <ArrowLeftIcon class="w-5 h-5" />
               Retour
@@ -347,9 +347,9 @@
 
         <!-- Order Summary Sidebar -->
         <div class="lg:col-span-1">
-          <div class="bg-white rounded-2xl border border-stone-100 overflow-hidden sticky top-8">
-            <div class="p-6 border-b border-stone-100">
-              <h2 class="text-lg font-semibold text-stone-800">Votre commande</h2>
+          <div class="bg-white rounded-2xl border border-[var(--color-border)] overflow-hidden sticky top-8">
+            <div class="p-6 border-b border-[var(--color-border)]">
+              <h2 class="text-lg font-semibold text-[var(--color-text)]">Votre commande</h2>
             </div>
             
             <!-- Cart Items -->
@@ -357,51 +357,51 @@
               <div
                 v-for="item in cartStore.items"
                 :key="item.productId"
-                class="flex items-center gap-4 p-4 border-b border-stone-50"
+                class="flex items-center gap-4 p-4 border-b border-gray-50"
               >
                 <div class="relative">
-                  <div class="w-16 h-16 bg-stone-100 rounded-lg flex items-center justify-center">
+                  <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
                     <img
                       v-if="item.thumbnail"
                       :src="item.thumbnail"
                       :alt="item.title"
                       class="w-12 h-12 object-contain"
                     />
-                    <PackageIcon v-else class="w-6 h-6 text-stone-400" />
+                    <PackageIcon v-else class="w-6 h-6 text-[var(--color-text-muted)]" />
                   </div>
                   <span class="absolute -top-2 -right-2 w-5 h-5 bg-amber-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
                     {{ item.quantity }}
                   </span>
                 </div>
                 <div class="flex-1 min-w-0">
-                  <p class="text-sm font-medium text-stone-800 truncate">{{ item.title }}</p>
-                  <p class="text-xs text-stone-500">{{ formatPrice(item.price) }} × {{ item.quantity }}</p>
+                  <p class="text-sm font-medium text-[var(--color-text)] truncate">{{ item.title }}</p>
+                  <p class="text-xs text-[var(--color-text-muted)]">{{ formatPrice(item.price) }} × {{ item.quantity }}</p>
                 </div>
-                <p class="font-semibold text-stone-800">{{ formatPrice(item.price * item.quantity) }}</p>
+                <p class="font-semibold text-[var(--color-text)]">{{ formatPrice(item.price * item.quantity) }}</p>
               </div>
             </div>
 
             <!-- Totals -->
             <div class="p-6 space-y-3">
-              <div class="flex justify-between text-stone-600">
+              <div class="flex justify-between text-[var(--color-text-secondary)]">
                 <span>Sous-total</span>
                 <span>{{ cartStore.subtotalFormatted }}</span>
               </div>
-              <div class="flex justify-between text-stone-600">
+              <div class="flex justify-between text-[var(--color-text-secondary)]">
                 <span>Livraison</span>
                 <span>{{ cartStore.shippingFormatted }}</span>
               </div>
-              <div class="pt-3 border-t border-stone-100 flex justify-between">
-                <span class="font-semibold text-stone-800">Total</span>
+              <div class="pt-3 border-t border-[var(--color-border)] flex justify-between">
+                <span class="font-semibold text-[var(--color-text)]">Total</span>
                 <div class="text-right">
-                  <p class="font-bold text-lg text-stone-800">{{ cartStore.totalFormatted }}</p>
-                  <p class="text-xs text-stone-400">≈ {{ cartStore.totalFCFA }}</p>
+                  <p class="font-bold text-lg text-[var(--color-text)]">{{ cartStore.totalFormatted }}</p>
+                  <p class="text-xs text-[var(--color-text-muted)]">≈ {{ cartStore.totalFCFA }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Trust badges -->
-            <div class="px-6 pb-6 flex items-center justify-center gap-4 text-xs text-stone-400">
+            <div class="px-6 pb-6 flex items-center justify-center gap-4 text-xs text-[var(--color-text-muted)]">
               <span class="flex items-center gap-1">
                 <LockIcon class="w-4 h-4" />
                 SSL sécurisé
@@ -547,7 +547,7 @@ function getStepClass(index: number): string {
   if (index === currentStep.value) {
     return 'bg-amber-500 text-white'
   }
-  return 'bg-stone-100 text-stone-400'
+  return 'bg-gray-100 text-[var(--color-text-muted)]'
 }
 
 function nextStep() {

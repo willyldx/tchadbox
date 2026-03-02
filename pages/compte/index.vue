@@ -11,14 +11,14 @@
         <!-- Sidebar Navigation -->
         <div class="lg:col-span-1">
           <nav class="card overflow-hidden">
-            <div class="p-6 border-b border-stone-100">
+            <div class="p-6 border-b border-[var(--color-border)]">
               <div class="flex items-center gap-4">
                 <div class="w-14 h-14 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-amber-500/25">
                   {{ authStore.initials }}
                 </div>
                 <div>
-                  <p class="font-semibold text-stone-800">{{ authStore.fullName }}</p>
-                  <p class="text-sm text-stone-500">{{ authStore.user?.email }}</p>
+                  <p class="font-semibold text-[var(--color-text)]">{{ authStore.fullName }}</p>
+                  <p class="text-sm text-[var(--color-text-muted)]">{{ authStore.user?.email }}</p>
                 </div>
               </div>
             </div>
@@ -27,7 +27,7 @@
               <li v-for="item in navItems" :key="item.to">
                 <NuxtLink
                   :to="item.to"
-                  class="flex items-center gap-3 px-4 py-3 rounded-xl text-stone-600 hover:bg-amber-50 hover:text-amber-700 transition-colors"
+                  class="flex items-center gap-3 px-4 py-3 rounded-xl text-[var(--color-text-secondary)] hover:bg-amber-50 hover:text-amber-700 transition-colors"
                   :class="{ 'bg-amber-50 text-amber-700 font-medium': $route.path === item.to }"
                 >
                   <component :is="item.icon" class="w-5 h-5" />
@@ -39,7 +39,7 @@
               </li>
             </ul>
 
-            <div class="p-2 border-t border-stone-100">
+            <div class="p-2 border-t border-[var(--color-border)]">
               <button
                 @click="handleLogout"
                 class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-colors"
@@ -55,44 +55,44 @@
         <div class="lg:col-span-3 space-y-8">
           <!-- Quick Stats -->
           <div class="grid sm:grid-cols-3 gap-4">
-            <div class="bg-white rounded-2xl shadow-sm border border-stone-100 p-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-[var(--color-border)] p-6">
               <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
                   <PackageIcon class="w-6 h-6 text-blue-600" />
                 </div>
                 <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">Ce mois</span>
               </div>
-              <p class="text-3xl font-bold text-stone-800">{{ stats.totalOrders }}</p>
-              <p class="text-sm text-stone-500 mt-1">Commandes totales</p>
+              <p class="text-3xl font-bold text-[var(--color-text)]">{{ stats.totalOrders }}</p>
+              <p class="text-sm text-[var(--color-text-muted)] mt-1">Commandes totales</p>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-sm border border-stone-100 p-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-[var(--color-border)] p-6">
               <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
                   <TruckIcon class="w-6 h-6 text-amber-600" />
                 </div>
                 <span class="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full">En cours</span>
               </div>
-              <p class="text-3xl font-bold text-stone-800">{{ stats.inProgress }}</p>
-              <p class="text-sm text-stone-500 mt-1">En transit</p>
+              <p class="text-3xl font-bold text-[var(--color-text)]">{{ stats.inProgress }}</p>
+              <p class="text-sm text-[var(--color-text-muted)] mt-1">En transit</p>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-sm border border-stone-100 p-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-[var(--color-border)] p-6">
               <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
                   <CheckCircleIcon class="w-6 h-6 text-green-600" />
                 </div>
                 <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">Livrés</span>
               </div>
-              <p class="text-3xl font-bold text-stone-800">{{ stats.delivered }}</p>
-              <p class="text-sm text-stone-500 mt-1">Colis livrés</p>
+              <p class="text-3xl font-bold text-[var(--color-text)]">{{ stats.delivered }}</p>
+              <p class="text-sm text-[var(--color-text-muted)] mt-1">Colis livrés</p>
             </div>
           </div>
 
           <!-- Recent Orders -->
-          <div class="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden">
-            <div class="flex items-center justify-between p-6 border-b border-stone-100">
-              <h2 class="text-lg font-semibold text-stone-800">Commandes récentes</h2>
+          <div class="bg-white rounded-2xl shadow-sm border border-[var(--color-border)] overflow-hidden">
+            <div class="flex items-center justify-between p-6 border-b border-[var(--color-border)]">
+              <h2 class="text-lg font-semibold text-[var(--color-text)]">Commandes récentes</h2>
               <NuxtLink 
                 to="/compte/commandes" 
                 class="text-sm text-amber-600 hover:text-amber-700 font-medium flex items-center gap-1"
@@ -103,11 +103,11 @@
             </div>
 
             <div v-if="recentOrders.length === 0" class="p-12 text-center">
-              <div class="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <PackageIcon class="w-8 h-8 text-stone-400" />
+              <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <PackageIcon class="w-8 h-8 text-[var(--color-text-muted)]" />
               </div>
-              <h3 class="font-medium text-stone-800 mb-2">Aucune commande</h3>
-              <p class="text-sm text-stone-500 mb-4">Vous n'avez pas encore passé de commande.</p>
+              <h3 class="font-medium text-[var(--color-text)] mb-2">Aucune commande</h3>
+              <p class="text-sm text-[var(--color-text-muted)] mb-4">Vous n'avez pas encore passé de commande.</p>
               <NuxtLink
                 to="/catalogue"
                 class="btn-gold"
@@ -117,31 +117,31 @@
               </NuxtLink>
             </div>
 
-            <div v-else class="divide-y divide-stone-100">
+            <div v-else class="divide-y divide-[var(--color-border)]">
               <NuxtLink
                 v-for="order in recentOrders"
                 :key="order.id"
                 :to="`/compte/commandes/${order.id}`"
-                class="flex items-center gap-4 p-4 hover:bg-stone-50 transition-colors"
+                class="flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors"
               >
-                <div class="w-16 h-16 bg-stone-100 rounded-xl flex items-center justify-center shrink-0">
+                <div class="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center shrink-0">
                   <img 
                     v-if="order.items[0]?.thumbnail" 
                     :src="order.items[0].thumbnail" 
                     :alt="order.items[0].title"
                     class="w-12 h-12 object-contain"
                   />
-                  <PackageIcon v-else class="w-8 h-8 text-stone-400" />
+                  <PackageIcon v-else class="w-8 h-8 text-[var(--color-text-muted)]" />
                 </div>
                 <div class="flex-1 min-w-0">
-                  <p class="font-medium text-stone-800">{{ order.displayId }}</p>
-                  <p class="text-sm text-stone-500 truncate">
+                  <p class="font-medium text-[var(--color-text)]">{{ order.displayId }}</p>
+                  <p class="text-sm text-[var(--color-text-muted)] truncate">
                     {{ order.items.length }} article{{ order.items.length > 1 ? 's' : '' }}
                     • {{ formatDate(order.createdAt) }}
                   </p>
                 </div>
                 <div class="text-right shrink-0">
-                  <p class="font-semibold text-stone-800">{{ formatPrice(order.total) }}</p>
+                  <p class="font-semibold text-[var(--color-text)]">{{ formatPrice(order.total) }}</p>
                   <span 
                     class="inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full"
                     :class="getStatusClass(order.fulfillmentStatus)"
@@ -150,7 +150,7 @@
                     {{ getStatusLabel(order.fulfillmentStatus) }}
                   </span>
                 </div>
-                <ChevronRightIcon class="w-5 h-5 text-stone-400" />
+                <ChevronRightIcon class="w-5 h-5 text-[var(--color-text-muted)]" />
               </NuxtLink>
             </div>
           </div>
@@ -174,24 +174,24 @@
 
             <NuxtLink
               to="/suivi"
-              class="bg-white rounded-2xl p-6 border border-stone-100 group hover:shadow-lg hover:border-stone-200 transition-all"
+              class="bg-white rounded-2xl p-6 border border-[var(--color-border)] group hover:shadow-lg hover:border-[var(--color-border)] transition-all"
             >
               <div class="flex items-start justify-between">
                 <div>
-                  <h3 class="font-semibold text-lg text-stone-800 mb-1">Suivre un colis</h3>
-                  <p class="text-stone-500 text-sm">Entrez votre numéro de suivi</p>
+                  <h3 class="font-semibold text-lg text-[var(--color-text)] mb-1">Suivre un colis</h3>
+                  <p class="text-[var(--color-text-muted)] text-sm">Entrez votre numéro de suivi</p>
                 </div>
-                <div class="w-12 h-12 bg-stone-100 rounded-xl flex items-center justify-center group-hover:bg-amber-100 group-hover:text-amber-600 transition-colors">
-                  <SearchIcon class="w-6 h-6 text-stone-600 group-hover:text-amber-600" />
+                <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-amber-100 group-hover:text-[var(--color-accent-dark)] transition-colors">
+                  <SearchIcon class="w-6 h-6 text-[var(--color-text-secondary)] group-hover:text-[var(--color-accent-dark)]" />
                 </div>
               </div>
             </NuxtLink>
           </div>
 
           <!-- Saved Addresses Preview -->
-          <div class="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden">
-            <div class="flex items-center justify-between p-6 border-b border-stone-100">
-              <h2 class="text-lg font-semibold text-stone-800">Adresses enregistrées</h2>
+          <div class="bg-white rounded-2xl shadow-sm border border-[var(--color-border)] overflow-hidden">
+            <div class="flex items-center justify-between p-6 border-b border-[var(--color-border)]">
+              <h2 class="text-lg font-semibold text-[var(--color-text)]">Adresses enregistrées</h2>
               <NuxtLink 
                 to="/compte/adresses" 
                 class="text-sm text-amber-600 hover:text-amber-700 font-medium flex items-center gap-1"
@@ -202,8 +202,8 @@
             </div>
 
             <div v-if="!authStore.hasAddresses" class="p-8 text-center">
-              <MapPinIcon class="w-12 h-12 text-stone-300 mx-auto mb-3" />
-              <p class="text-stone-500 mb-4">Aucune adresse enregistrée</p>
+              <MapPinIcon class="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <p class="text-[var(--color-text-muted)] mb-4">Aucune adresse enregistrée</p>
               <NuxtLink
                 to="/compte/adresses"
                 class="inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 font-medium"
@@ -220,16 +220,16 @@
                 </div>
                 <div>
                   <div class="flex items-center gap-2 mb-1">
-                    <p class="font-medium text-stone-800">
+                    <p class="font-medium text-[var(--color-text)]">
                       {{ authStore.defaultAddress.firstName }} {{ authStore.defaultAddress.lastName }}
                     </p>
                     <span class="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Par défaut</span>
                   </div>
-                  <p class="text-sm text-stone-500">
+                  <p class="text-sm text-[var(--color-text-muted)]">
                     {{ authStore.defaultAddress.address1 }}<br />
                     {{ authStore.defaultAddress.city }}, {{ authStore.defaultAddress.country }}
                   </p>
-                  <p v-if="authStore.defaultAddress.phone" class="text-sm text-stone-500 mt-1">
+                  <p v-if="authStore.defaultAddress.phone" class="text-sm text-[var(--color-text-muted)] mt-1">
                     {{ authStore.defaultAddress.phone }}
                   </p>
                 </div>
@@ -279,14 +279,14 @@ const navItems = [
   { to: '/favoris', label: 'Favoris', icon: HeartIcon },
 ]
 
-// Stats (mock data - would come from API)
+// Stats
 const stats = reactive({
   totalOrders: 0,
   inProgress: 0,
   delivered: 0,
 })
 
-// Recent orders (mock data - would come from API)
+// Recent orders
 const recentOrders = ref<Order[]>([])
 
 // Fetch user data
@@ -369,24 +369,24 @@ function getStatusLabel(status: FulfillmentStatus): string {
 
 function getStatusClass(status: FulfillmentStatus): string {
   const classes: Record<FulfillmentStatus, string> = {
-    not_fulfilled: 'bg-stone-100 text-stone-700',
+    not_fulfilled: 'bg-gray-100 text-[var(--color-text-secondary)]',
     partially_fulfilled: 'bg-blue-100 text-blue-700',
     fulfilled: 'bg-blue-100 text-blue-700',
     shipped: 'bg-amber-100 text-amber-700',
     delivered: 'bg-green-100 text-green-700',
   }
-  return classes[status] || 'bg-stone-100 text-stone-700'
+  return classes[status] || 'bg-gray-100 text-[var(--color-text-secondary)]'
 }
 
 function getStatusDotClass(status: FulfillmentStatus): string {
   const classes: Record<FulfillmentStatus, string> = {
-    not_fulfilled: 'bg-stone-500',
+    not_fulfilled: 'bg-gray-500',
     partially_fulfilled: 'bg-blue-500',
     fulfilled: 'bg-blue-500',
     shipped: 'bg-amber-500',
     delivered: 'bg-green-500',
   }
-  return classes[status] || 'bg-stone-500'
+  return classes[status] || 'bg-gray-500'
 }
 
 async function handleLogout() {

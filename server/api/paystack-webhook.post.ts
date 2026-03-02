@@ -1,7 +1,7 @@
 // Paystack Webhook Handler
-// This endpoint receives webhook notifications from Paystack
-// Configure this URL in your Paystack Dashboard → Settings → Webhooks
+// Configure this URL in Paystack Dashboard → Settings → Webhooks
 import { createHmac } from 'crypto'
+import { createClient } from '@supabase/supabase-js'
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
@@ -9,26 +9,38 @@ export default defineEventHandler(async (event) => {
 
     // Read raw body for signature verification
     const rawBody = await readRawBody(event) || ''
-    const body = JSON.parse(rawBody)
 
-    // Verify webhook signature
+    // Verify webhook signature — MANDATORY
     const signature = getHeader(event, 'x-paystack-signature')
 
-    if (signature) {
-        const hash = createHmac('sha512', secretKey)
-            .update(rawBody)
-            .digest('hex')
-
-        if (hash !== signature) {
-            console.error('Paystack webhook: Invalid signature')
-            throw createError({
-                statusCode: 401,
-                statusMessage: 'Invalid signature',
-            })
-        }
+    if (!signature) {
+        console.error('Paystack webhook: Missing signature')
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Missing signature',
+        })
     }
 
+    const hash = createHmac('sha512', secretKey)
+        .update(rawBody)
+        .digest('hex')
+
+    if (hash !== signature) {
+        console.error('Paystack webhook: Invalid signature')
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Invalid signature',
+        })
+    }
+
+    const body = JSON.parse(rawBody)
     const eventType = body.event
+
+    // Server-side Supabase client (service role for admin operations)
+    const supabase = createClient(
+        config.public.supabaseUrl,
+        config.public.supabaseAnonKey
+    )
 
     console.log(`[Paystack Webhook] Event: ${eventType}`, body.data?.reference)
 
@@ -42,20 +54,43 @@ export default defineEventHandler(async (event) => {
                 customer: data.customer?.email,
             })
 
-            // TODO: Update order status in Supabase
-            // const supabase = createClient(...)
-            // await supabase.from('orders').update({ 
-            //   payment_status: 'captured',
-            //   paid_at: data.paid_at 
-            // }).eq('payment_reference', data.reference)
+            // Update order payment status in Supabase
+            const { error: updateError } = await supabase
+                .from('orders')
+                .update({
+                    payment_status: 'captured',
+                    paid_at: data.paid_at || new Date().toISOString(),
+                    payment_reference: data.reference,
+                    updated_at: new Date().toISOString(),
+                })
+                .eq('payment_reference', data.reference)
+
+            if (updateError) {
+                console.error('[Paystack Webhook] Failed to update order:', updateError)
+            } else {
+                console.log(`[Paystack Webhook] Order updated: payment_status = captured`)
+            }
 
             break
         }
 
         case 'charge.failed': {
-            console.log(`[Paystack Webhook] Payment failed:`, body.data?.reference)
+            const data = body.data
+            console.log(`[Paystack Webhook] Payment failed:`, data.reference)
 
-            // TODO: Update order status to failed
+            // Update order status to reflect failed payment
+            const { error: updateError } = await supabase
+                .from('orders')
+                .update({
+                    payment_status: 'awaiting',
+                    updated_at: new Date().toISOString(),
+                })
+                .eq('payment_reference', data.reference)
+
+            if (updateError) {
+                console.error('[Paystack Webhook] Failed to update failed order:', updateError)
+            }
+
             break
         }
 

@@ -20,8 +20,8 @@
       <!-- Confirmation Card -->
       <div class="card-glass rounded-2xl shadow-xl overflow-hidden">
         <div class="p-8 text-center">
-          <h1 class="text-2xl font-bold text-stone-800 mb-2">Commande confirmée !</h1>
-          <p class="text-stone-500">Merci pour votre confiance</p>
+          <h1 class="text-2xl font-bold text-[var(--color-text)] mb-2">Commande confirmée !</h1>
+          <p class="text-[var(--color-text-muted)]">Merci pour votre confiance</p>
         </div>
 
         <div class="px-8 pb-8 space-y-6">
@@ -33,15 +33,15 @@
 
           <!-- What's Next -->
           <div class="space-y-4">
-            <h3 class="font-semibold text-stone-800">Prochaines étapes</h3>
+            <h3 class="font-semibold text-[var(--color-text)]">Prochaines étapes</h3>
             
             <div class="flex items-start gap-4">
               <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center shrink-0">
                 <span class="text-green-600 font-bold text-sm">1</span>
               </div>
               <div>
-                <p class="font-medium text-stone-800">Email de confirmation</p>
-                <p class="text-sm text-stone-500">Vous allez recevoir un email avec les détails de votre commande</p>
+                <p class="font-medium text-[var(--color-text)]">Email de confirmation</p>
+                <p class="text-sm text-[var(--color-text-muted)]">Vous allez recevoir un email avec les détails de votre commande</p>
               </div>
             </div>
 
@@ -50,8 +50,8 @@
                 <span class="text-amber-600 font-bold text-sm">2</span>
               </div>
               <div>
-                <p class="font-medium text-stone-800">Préparation du colis</p>
-                <p class="text-sm text-stone-500">Nous préparons votre colis avec soin sous 24-48h</p>
+                <p class="font-medium text-[var(--color-text)]">Préparation du colis</p>
+                <p class="text-sm text-[var(--color-text-muted)]">Nous préparons votre colis avec soin sous 24-48h</p>
               </div>
             </div>
 
@@ -60,8 +60,8 @@
                 <span class="text-blue-600 font-bold text-sm">3</span>
               </div>
               <div>
-                <p class="font-medium text-stone-800">Expédition</p>
-                <p class="text-sm text-stone-500">Livraison à N'Djamena sous 3-5 jours</p>
+                <p class="font-medium text-[var(--color-text)]">Expédition</p>
+                <p class="text-sm text-[var(--color-text-muted)]">Livraison à N'Djamena sous 3-5 jours</p>
               </div>
             </div>
 
@@ -70,18 +70,18 @@
                 <span class="text-green-600 font-bold text-sm">4</span>
               </div>
               <div>
-                <p class="font-medium text-stone-800">Livraison avec photo</p>
-                <p class="text-sm text-stone-500">Photo de confirmation lors de la remise au destinataire</p>
+                <p class="font-medium text-[var(--color-text)]">Livraison avec photo</p>
+                <p class="text-sm text-[var(--color-text-muted)]">Photo de confirmation lors de la remise au destinataire</p>
               </div>
             </div>
           </div>
 
           <!-- Tracking Info -->
-          <div class="bg-stone-50 rounded-xl p-4 flex items-start gap-3">
-            <PackageIcon class="w-5 h-5 text-stone-500 mt-0.5 shrink-0" />
+          <div class="bg-gray-50 rounded-xl p-4 flex items-start gap-3">
+            <PackageIcon class="w-5 h-5 text-[var(--color-text-muted)] mt-0.5 shrink-0" />
             <div>
-              <p class="text-sm font-medium text-stone-800">Suivez votre colis</p>
-              <p class="text-sm text-stone-500">
+              <p class="text-sm font-medium text-[var(--color-text)]">Suivez votre colis</p>
+              <p class="text-sm text-[var(--color-text-muted)]">
                 Utilisez votre numéro de commande <strong>{{ orderId }}</strong> pour suivre votre colis en temps réel.
               </p>
             </div>
@@ -98,13 +98,13 @@
             </NuxtLink>
             <NuxtLink
               to="/suivi"
-              class="block w-full py-3 border border-stone-200 text-stone-700 font-semibold rounded-xl hover:bg-stone-50 transition-colors text-center"
+              class="block w-full py-3 border border-[var(--color-border)] text-[var(--color-text-secondary)] font-semibold rounded-xl hover:bg-gray-50 transition-colors text-center"
             >
               Suivre mon colis
             </NuxtLink>
             <NuxtLink
               to="/"
-              class="block w-full py-3 text-stone-500 hover:text-stone-700 font-medium text-center transition-colors"
+              class="block w-full py-3 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] font-medium text-center transition-colors"
             >
               Retour à l'accueil
             </NuxtLink>
@@ -114,7 +114,7 @@
 
       <!-- Support -->
       <div class="text-center mt-8">
-        <p class="text-sm text-stone-500">
+        <p class="text-sm text-[var(--color-text-muted)]">
           Une question ? 
           <NuxtLink to="/contact" class="text-amber-600 hover:underline">Contactez-nous</NuxtLink>
         </p>

@@ -3,7 +3,7 @@
     <!-- Announcement Bar -->
     <div 
       class="text-white py-2.5 transition-all duration-500"
-      :class="isScrolled ? 'bg-[var(--color-primary)]/90 backdrop-blur-md' : 'bg-[var(--color-primary)]'"
+      :class="isScrolled ? 'bg-[var(--color-primary)]/80 backdrop-blur-md' : 'bg-[var(--color-primary)]'"
     >
       <div class="container-main">
         <div class="flex items-center justify-center gap-2 text-sm">
@@ -15,10 +15,10 @@
       </div>
     </div>
 
-    <!-- Header -->
+    <!-- Header — Liquid Glass -->
     <header 
-      class="sticky top-0 z-50 transition-all duration-500"
-      :class="isScrolled ? 'bg-white/80 backdrop-blur-xl shadow-[0_1px_20px_rgba(0,0,0,0.06)] border-b border-white/50' : 'bg-white/95 backdrop-blur-sm'"
+      class="sticky top-0 z-50 transition-all duration-500 header-glass"
+      :class="isScrolled ? 'header-glass--scrolled' : 'header-glass--top'"
     >
       <div class="container-main">
         <div class="flex items-center justify-between h-20">
@@ -186,80 +186,78 @@
         leave-to-class="opacity-0 -translate-y-2"
       >
         <div v-if="isMobileMenuOpen" class="lg:hidden bg-white border-t border-gray-100 shadow-lg">
-  <nav class="container-main py-4 space-y-1">
-    <NuxtLink 
-      v-for="link in navLinks" 
-      :key="link.to" 
-      :to="link.to"
-      class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
-      @click="isMobileMenuOpen = false"
-    >
-      <component :is="link.icon" class="w-5 h-5" />
-      {{ link.label }}
-    </NuxtLink>
-    
-    <!-- Divider -->
-    <div class="border-t border-gray-100 my-2"></div>
-    
-    <!-- Favorites -->
-    <NuxtLink 
-      to="/favoris"
-      class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
-      @click="isMobileMenuOpen = false"
-    >
-      <Heart class="w-5 h-5" />
-      Favoris
-      <span v-if="favoritesStore.count > 0" class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-        {{ favoritesStore.count }}
-      </span>
-    </NuxtLink>
-    
-    <!-- Auth Section -->
-    <template v-if="authStore.isAuthenticated">
-      <NuxtLink 
-        to="/compte"
-        class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
-        @click="isMobileMenuOpen = false"
-      >
-        <User class="w-5 h-5" />
-        Mon compte
-      </NuxtLink>
-      <NuxtLink 
-        to="/compte/commandes"
-        class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
-        @click="isMobileMenuOpen = false"
-      >
-        <Package class="w-5 h-5" />
-        Mes commandes
-      </NuxtLink>
-      <button 
-        @click="handleLogout(); isMobileMenuOpen = false"
-        class="flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-colors w-full"
-      >
-        <LogOut class="w-5 h-5" />
-        Déconnexion
-      </button>
-    </template>
-    <template v-else>
-      <NuxtLink 
-        to="/auth/login"
-        class="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-white font-medium transition-colors"
-        @click="isMobileMenuOpen = false"
-      >
-        <User class="w-5 h-5" />
-        Connexion
-      </NuxtLink>
-      <NuxtLink 
-        to="/auth/register"
-        class="flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
-        @click="isMobileMenuOpen = false"
-      >
-        <UserPlus class="w-5 h-5" />
-        Créer un compte
-      </NuxtLink>
-    </template>
-  </nav>
-</div>
+          <nav class="container-main py-4 space-y-1">
+            <NuxtLink 
+              v-for="link in navLinks" 
+              :key="link.to" 
+              :to="link.to"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
+              @click="isMobileMenuOpen = false"
+            >
+              <component :is="link.icon" class="w-5 h-5" />
+              {{ link.label }}
+            </NuxtLink>
+            
+            <!-- Divider -->
+            <div class="border-t border-gray-100 my-2"></div>
+            
+            <!-- Favorites -->
+            <NuxtLink 
+              to="/favoris"
+              class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
+              @click="isMobileMenuOpen = false"
+            >
+              <Heart class="w-5 h-5" />
+              Favoris
+              <span v-if="favoritesStore.count > 0" class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                {{ favoritesStore.count }}
+              </span>
+            </NuxtLink>
+            
+            <!-- Auth Section -->
+            <template v-if="authStore.isAuthenticated">
+              <NuxtLink 
+                to="/compte"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
+                @click="isMobileMenuOpen = false"
+              >
+                <User class="w-5 h-5" />
+                Mon compte
+              </NuxtLink>
+              <NuxtLink 
+                to="/compte/commandes"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
+                @click="isMobileMenuOpen = false"
+              >
+                <Package class="w-5 h-5" />
+                Mes commandes
+              </NuxtLink>
+              <button 
+                @click="handleLogout(); isMobileMenuOpen = false"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-colors w-full"
+              >
+                <LogOut class="w-5 h-5" />
+                Déconnexion
+              </button>
+            </template>
+            <template v-else>
+              <NuxtLink 
+                to="/auth/login"
+                class="btn-gold w-full justify-center"
+                @click="isMobileMenuOpen = false"
+              >
+                <span><User class="w-5 h-5" />Connexion</span>
+              </NuxtLink>
+              <NuxtLink 
+                to="/auth/register"
+                class="btn-outline w-full justify-center mt-2"
+                @click="isMobileMenuOpen = false"
+              >
+                <span><UserPlus class="w-5 h-5" />Créer un compte</span>
+              </NuxtLink>
+            </template>
+          </nav>
+        </div>
       </Transition>
     </header>
 
@@ -339,9 +337,9 @@
         <div class="border-t border-white/5 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p class="text-slate-500 text-sm">© {{ new Date().getFullYear() }} TchadBox. Tous droits réservés.</p>
           <div class="flex gap-6 text-sm text-slate-500">
-  <NuxtLink to="/conditions" class="hover:text-white transition-colors">CGV</NuxtLink>
-  <NuxtLink to="/mentions-legales" class="hover:text-white transition-colors">Mentions légales</NuxtLink>
-  <NuxtLink to="/confidentialite" class="hover:text-white transition-colors">Confidentialité</NuxtLink>
+            <NuxtLink to="/conditions" class="hover:text-white transition-colors">CGV</NuxtLink>
+            <NuxtLink to="/mentions-legales" class="hover:text-white transition-colors">Mentions légales</NuxtLink>
+            <NuxtLink to="/confidentialite" class="hover:text-white transition-colors">Confidentialité</NuxtLink>
 </div>
         </div>
       </div>
@@ -403,16 +401,10 @@ async function handleLogout() {
   await authStore.logout()
 }
 
-onMounted(async () => {
+onMounted(() => {
   window.addEventListener('scroll', () => {
     isScrolled.value = window.scrollY > 20
   })
-  
-  // Check session on mount
-  await authStore.checkSession()
-  
-  // Initialize favorites
-  favoritesStore.initialize()
 })
 
 watch(() => route.path, () => {
@@ -422,6 +414,29 @@ watch(() => route.path, () => {
 </script>
 
 <style scoped>
+/* Liquid Glass Header */
+.header-glass {
+  border-bottom: 1px solid transparent;
+}
+
+.header-glass--top {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+}
+
+.header-glass--scrolled {
+  background: rgba(255, 251, 245, 0.55);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow:
+    0 1px 0 0 rgba(245, 158, 11, 0.08),
+    0 4px 24px -2px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Nav Links */
 .nav-link {
   @apply relative font-medium text-gray-600 transition-colors duration-300;
 }

@@ -3,16 +3,16 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Breadcrumb -->
       <nav class="flex items-center gap-2 text-sm mb-6">
-        <NuxtLink to="/compte" class="text-stone-500 hover:text-amber-600">Mon compte</NuxtLink>
-        <ChevronRightIcon class="w-4 h-4 text-stone-400" />
-        <span class="text-stone-800 font-medium">Mes adresses</span>
+        <NuxtLink to="/compte" class="text-[var(--color-text-muted)] hover:text-[var(--color-accent-dark)]">Mon compte</NuxtLink>
+        <ChevronRightIcon class="w-4 h-4 text-[var(--color-text-muted)]" />
+        <span class="text-[var(--color-text)] font-medium">Mes adresses</span>
       </nav>
 
       <!-- Header -->
       <div class="flex items-center justify-between mb-8">
         <div>
-          <h1 class="text-3xl font-bold text-stone-800">Mes adresses</h1>
-          <p class="text-stone-500 mt-1">Gérez vos adresses de livraison</p>
+          <h1 class="text-3xl font-bold text-[var(--color-text)]">Mes adresses</h1>
+          <p class="text-[var(--color-text-muted)] mt-1">Gérez vos adresses de livraison</p>
         </div>
         <button
           @click="openAddModal"
@@ -25,19 +25,19 @@
 
       <!-- Addresses Grid -->
       <div v-if="isLoading" class="grid md:grid-cols-2 gap-4">
-        <div v-for="i in 2" :key="i" class="bg-white rounded-2xl border border-stone-100 p-6 animate-pulse">
-          <div class="h-4 bg-stone-200 rounded w-32 mb-3"></div>
-          <div class="h-3 bg-stone-200 rounded w-48 mb-2"></div>
-          <div class="h-3 bg-stone-200 rounded w-40"></div>
+        <div v-for="i in 2" :key="i" class="bg-white rounded-2xl border border-[var(--color-border)] p-6 animate-pulse">
+          <div class="h-4 bg-gray-200 rounded w-32 mb-3"></div>
+          <div class="h-3 bg-gray-200 rounded w-48 mb-2"></div>
+          <div class="h-3 bg-gray-200 rounded w-40"></div>
         </div>
       </div>
 
-      <div v-else-if="addresses.length === 0" class="bg-white rounded-2xl border border-stone-100 p-12 text-center">
-        <div class="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <MapPinIcon class="w-10 h-10 text-stone-400" />
+      <div v-else-if="addresses.length === 0" class="bg-white rounded-2xl border border-[var(--color-border)] p-12 text-center">
+        <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <MapPinIcon class="w-10 h-10 text-[var(--color-text-muted)]" />
         </div>
-        <h3 class="text-lg font-semibold text-stone-800 mb-2">Aucune adresse enregistrée</h3>
-        <p class="text-stone-500 mb-6">Ajoutez une adresse pour faciliter vos commandes</p>
+        <h3 class="text-lg font-semibold text-[var(--color-text)] mb-2">Aucune adresse enregistrée</h3>
+        <p class="text-[var(--color-text-muted)] mb-6">Ajoutez une adresse pour faciliter vos commandes</p>
         <button
           @click="openAddModal"
           class="btn-gold"
@@ -51,7 +51,7 @@
         <div
           v-for="address in addresses"
           :key="address.id"
-          class="bg-white rounded-2xl border border-stone-100 p-6 relative group hover:border-stone-200 hover:shadow-lg transition-all"
+          class="bg-white rounded-2xl border border-[var(--color-border)] p-6 relative group hover:border-[var(--color-border)] hover:shadow-lg transition-all"
         >
           <!-- Default Badge -->
           <span
@@ -67,17 +67,17 @@
               <MapPinIcon class="w-6 h-6 text-amber-600" />
             </div>
             <div class="flex-1 min-w-0">
-              <p class="font-semibold text-stone-800">
+              <p class="font-semibold text-[var(--color-text)]">
                 {{ address.firstName }} {{ address.lastName }}
               </p>
-              <p class="text-stone-600 mt-1">
+              <p class="text-[var(--color-text-secondary)] mt-1">
                 {{ address.address1 }}
                 <span v-if="address.address2"><br />{{ address.address2 }}</span>
               </p>
-              <p class="text-stone-600">
+              <p class="text-[var(--color-text-secondary)]">
                 {{ address.city }}, {{ address.country }}
               </p>
-              <p v-if="address.phone" class="text-stone-500 mt-2 flex items-center gap-2">
+              <p v-if="address.phone" class="text-[var(--color-text-muted)] mt-2 flex items-center gap-2">
                 <PhoneIcon class="w-4 h-4" />
                 {{ address.phone }}
               </p>
@@ -85,10 +85,10 @@
           </div>
 
           <!-- Actions -->
-          <div class="flex items-center gap-2 mt-4 pt-4 border-t border-stone-100">
+          <div class="flex items-center gap-2 mt-4 pt-4 border-t border-[var(--color-border)]">
             <button
               @click="editAddress(address)"
-              class="flex items-center gap-1 px-3 py-1.5 text-sm text-stone-600 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+              class="flex items-center gap-1 px-3 py-1.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-accent-dark)] hover:bg-amber-50 rounded-lg transition-colors"
             >
               <EditIcon class="w-4 h-4" />
               Modifier
@@ -96,7 +96,7 @@
             <button
               v-if="!address.isDefault"
               @click="setAsDefault(address.id)"
-              class="flex items-center gap-1 px-3 py-1.5 text-sm text-stone-600 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+              class="flex items-center gap-1 px-3 py-1.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-accent-dark)] hover:bg-amber-50 rounded-lg transition-colors"
             >
               <StarIcon class="w-4 h-4" />
               Par défaut
@@ -145,12 +145,12 @@
           >
             <div v-if="showModal" class="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
               <!-- Modal Header -->
-              <div class="flex items-center justify-between p-6 border-b border-stone-100">
-                <h3 class="text-lg font-semibold text-stone-800">
+              <div class="flex items-center justify-between p-6 border-b border-[var(--color-border)]">
+                <h3 class="text-lg font-semibold text-[var(--color-text)]">
                   {{ editingAddress ? 'Modifier l\'adresse' : 'Nouvelle adresse' }}
                 </h3>
-                <button @click="closeModal" class="p-2 hover:bg-stone-100 rounded-lg transition-colors">
-                  <XIcon class="w-5 h-5 text-stone-500" />
+                <button @click="closeModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                  <XIcon class="w-5 h-5 text-[var(--color-text-muted)]" />
                 </button>
               </div>
 
@@ -158,7 +158,7 @@
               <form @submit.prevent="handleSubmit" class="p-6 space-y-5">
                 <div class="grid grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-sm font-medium text-stone-700 mb-2">Prénom</label>
+                    <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">Prénom</label>
                     <input
                       v-model="form.firstName"
                       type="text"
@@ -167,7 +167,7 @@
                     />
                   </div>
                   <div>
-                    <label class="block text-sm font-medium text-stone-700 mb-2">Nom</label>
+                    <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">Nom</label>
                     <input
                       v-model="form.lastName"
                       type="text"
@@ -178,7 +178,7 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-stone-700 mb-2">Adresse</label>
+                  <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">Adresse</label>
                   <input
                     v-model="form.address1"
                     type="text"
@@ -189,8 +189,8 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-stone-700 mb-2">
-                    Complément <span class="text-stone-400 font-normal">(optionnel)</span>
+                  <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
+                    Complément <span class="text-[var(--color-text-muted)] font-normal">(optionnel)</span>
                   </label>
                   <input
                     v-model="form.address2"
@@ -202,7 +202,7 @@
 
                 <div class="grid grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-sm font-medium text-stone-700 mb-2">Ville</label>
+                    <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">Ville</label>
                     <select
                       v-model="form.city"
                       required
@@ -215,18 +215,18 @@
                     </select>
                   </div>
                   <div>
-                    <label class="block text-sm font-medium text-stone-700 mb-2">Pays</label>
+                    <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">Pays</label>
                     <input
                       v-model="form.country"
                       type="text"
                       disabled
-                      class="w-full px-4 py-3 bg-stone-100 border border-stone-200 rounded-xl text-stone-500"
+                      class="w-full px-4 py-3 bg-gray-100 border border-[var(--color-border)] rounded-xl text-[var(--color-text-muted)]"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-stone-700 mb-2">Téléphone</label>
+                  <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">Téléphone</label>
                   <input
                     v-model="form.phone"
                     type="tel"
@@ -241,9 +241,9 @@
                     id="isDefault"
                     v-model="form.isDefault"
                     type="checkbox"
-                    class="w-4 h-4 text-amber-500 border-stone-300 rounded focus:ring-amber-500/20"
+                    class="w-4 h-4 text-amber-500 border-gray-300 rounded focus:ring-amber-500/20"
                   />
-                  <label for="isDefault" class="text-sm text-stone-600">
+                  <label for="isDefault" class="text-sm text-[var(--color-text-secondary)]">
                     Définir comme adresse par défaut
                   </label>
                 </div>
@@ -253,7 +253,7 @@
                   <button
                     type="button"
                     @click="closeModal"
-                    class="flex-1 py-3 border border-stone-200 text-stone-700 font-semibold rounded-xl hover:bg-stone-50 transition-colors"
+                    class="flex-1 py-3 border border-[var(--color-border)] text-[var(--color-text-secondary)] font-semibold rounded-xl hover:bg-gray-50 transition-colors"
                   >
                     Annuler
                   </button>
@@ -288,14 +288,14 @@
             <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <TrashIcon class="w-8 h-8 text-red-600" />
             </div>
-            <h3 class="text-xl font-bold text-stone-800 text-center mb-2">Supprimer l'adresse ?</h3>
-            <p class="text-stone-500 text-center mb-6">
+            <h3 class="text-xl font-bold text-[var(--color-text)] text-center mb-2">Supprimer l'adresse ?</h3>
+            <p class="text-[var(--color-text-muted)] text-center mb-6">
               Cette action est irréversible.
             </p>
             <div class="flex gap-3">
               <button
                 @click="showDeleteModal = false"
-                class="flex-1 py-3 border border-stone-200 text-stone-700 font-medium rounded-xl hover:bg-stone-50 transition-colors"
+                class="flex-1 py-3 border border-[var(--color-border)] text-[var(--color-text-secondary)] font-medium rounded-xl hover:bg-gray-50 transition-colors"
               >
                 Annuler
               </button>

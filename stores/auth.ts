@@ -23,7 +23,7 @@ export const useAuthStore = defineStore('auth', {
       if (!state.user) return ''
       return `${state.user.firstName} ${state.user.lastName}`.trim()
     },
-    
+
     initials: (state): string => {
       if (!state.user) return '?'
       const first = state.user.firstName?.[0] || ''
@@ -83,12 +83,12 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     async checkSession() {
       if (this.sessionChecked) return
-      
+
       const { getSession } = useSupabase()
-      
+
       try {
         const { session } = await getSession()
-        
+
         if (session?.user) {
           await this.fetchUserProfile(session.user.id)
         }
@@ -102,12 +102,12 @@ export const useAuthStore = defineStore('auth', {
     async login(email: string, password: string) {
       this.isLoading = true
       this.error = null
-      
+
       const { signIn } = useSupabase()
-      
+
       try {
         const { data, error } = await signIn(email, password)
-        
+
         if (error) {
           this.error = translateAuthError(error.message)
           return { success: false, error: this.error }
@@ -136,9 +136,9 @@ export const useAuthStore = defineStore('auth', {
     }) {
       this.isLoading = true
       this.error = null
-      
+
       const { signUp, client } = useSupabase()
-      
+
       try {
         const { data: authData, error: authError } = await signUp(
           data.email,
@@ -149,7 +149,7 @@ export const useAuthStore = defineStore('auth', {
             phone: data.phone,
           }
         )
-        
+
         if (authError) {
           this.error = translateAuthError(authError.message)
           return { success: false, error: this.error }
@@ -172,7 +172,7 @@ export const useAuthStore = defineStore('auth', {
           }
 
           await this.fetchUserProfile(authData.user.id)
-          
+
           return { success: true, requiresConfirmation: !authData.session }
         }
 
@@ -187,7 +187,7 @@ export const useAuthStore = defineStore('auth', {
 
     async fetchUserProfile(userId: string) {
       const { client } = useSupabase()
-      
+
       try {
         const { data: profile, error } = await client
           .from('profiles')
@@ -212,6 +212,7 @@ export const useAuthStore = defineStore('auth', {
             phone: profile.phone,
             role: profile.role || 'client',
             avatarUrl: profile.avatar_url,
+            createdAt: profile.created_at,
             addresses: (profile.addresses || []).map((a: any) => ({
               id: a.id,
               firstName: a.first_name,
@@ -239,10 +240,10 @@ export const useAuthStore = defineStore('auth', {
       phone: string
     }>) {
       if (!this.user) return { success: false, error: 'Non connecté' }
-      
+
       this.isLoading = true
       const { client } = useSupabase()
-      
+
       try {
         const { error } = await client
           .from('profiles')
@@ -298,9 +299,9 @@ export const useAuthStore = defineStore('auth', {
 
     async addAddress(address: Omit<Address, 'id'>) {
       if (!this.user) return { success: false, error: 'Non connecté' }
-      
+
       const { client } = useSupabase()
-      
+
       try {
         if (address.isDefault) {
           await client
@@ -332,7 +333,7 @@ export const useAuthStore = defineStore('auth', {
         }
 
         await this.fetchUserProfile(this.user.id)
-        
+
         return { success: true, address: data }
       } catch (error: any) {
         return { success: false, error: error.message }
@@ -341,9 +342,9 @@ export const useAuthStore = defineStore('auth', {
 
     async updateAddress(addressId: string, updates: Partial<Address>) {
       if (!this.user) return { success: false, error: 'Non connecté' }
-      
+
       const { client } = useSupabase()
-      
+
       try {
         if (updates.isDefault) {
           await client
@@ -381,9 +382,9 @@ export const useAuthStore = defineStore('auth', {
 
     async deleteAddress(addressId: string) {
       if (!this.user) return { success: false, error: 'Non connecté' }
-      
+
       const { client } = useSupabase()
-      
+
       try {
         const { error } = await client
           .from('addresses')
@@ -403,17 +404,17 @@ export const useAuthStore = defineStore('auth', {
 
     async logout() {
       const { signOut } = useSupabase()
-      
+
       try {
         await signOut()
       } finally {
         this.user = null
         this.isAuthenticated = false
         this.error = null
-        
+
         const cartStore = useCartStore()
         cartStore.clearCart()
-        
+
         navigateTo('/')
       }
     },
@@ -421,7 +422,7 @@ export const useAuthStore = defineStore('auth', {
     async requestPasswordReset(email: string) {
       this.isLoading = true
       const { client } = useSupabase()
-      
+
       try {
         const { error } = await client.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}/auth/reset-password`,
@@ -448,7 +449,7 @@ export const useAuthStore = defineStore('auth', {
     // =============================================
     getRedirectPath(): string {
       if (!this.user) return '/'
-      
+
       switch (this.user.role) {
         case 'super_admin':
         case 'admin':

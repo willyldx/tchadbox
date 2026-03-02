@@ -3,11 +3,11 @@
     <!-- Loading State -->
     <div v-if="isLoading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="grid lg:grid-cols-2 gap-12 animate-pulse">
-        <div class="aspect-square bg-stone-200 rounded-2xl"></div>
+        <div class="aspect-square bg-gray-200 rounded-2xl"></div>
         <div class="space-y-4">
-          <div class="h-8 bg-stone-200 rounded w-3/4"></div>
-          <div class="h-6 bg-stone-200 rounded w-1/4"></div>
-          <div class="h-24 bg-stone-200 rounded"></div>
+          <div class="h-8 bg-gray-200 rounded w-3/4"></div>
+          <div class="h-6 bg-gray-200 rounded w-1/4"></div>
+          <div class="h-24 bg-gray-200 rounded"></div>
         </div>
       </div>
     </div>
@@ -16,25 +16,25 @@
     <div v-else-if="product" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Breadcrumb -->
       <nav class="flex items-center gap-2 text-sm mb-6">
-        <NuxtLink to="/" class="text-stone-500 hover:text-amber-600">Accueil</NuxtLink>
-        <ChevronRightIcon class="w-4 h-4 text-stone-400" />
-        <NuxtLink to="/catalogue" class="text-stone-500 hover:text-amber-600">Catalogue</NuxtLink>
-        <ChevronRightIcon class="w-4 h-4 text-stone-400" />
+        <NuxtLink to="/" class="text-[var(--color-text-muted)] hover:text-[var(--color-accent-dark)]">Accueil</NuxtLink>
+        <ChevronRightIcon class="w-4 h-4 text-[var(--color-text-muted)]" />
+        <NuxtLink to="/catalogue" class="text-[var(--color-text-muted)] hover:text-[var(--color-accent-dark)]">Catalogue</NuxtLink>
+        <ChevronRightIcon class="w-4 h-4 text-[var(--color-text-muted)]" />
         <NuxtLink 
           :to="`/catalogue?category=${product.category?.handle}`" 
-          class="text-stone-500 hover:text-amber-600"
+          class="text-[var(--color-text-muted)] hover:text-[var(--color-accent-dark)]"
         >
           {{ product.category?.name }}
         </NuxtLink>
-        <ChevronRightIcon class="w-4 h-4 text-stone-400" />
-        <span class="text-stone-800 font-medium truncate">{{ product.title }}</span>
+        <ChevronRightIcon class="w-4 h-4 text-[var(--color-text-muted)]" />
+        <span class="text-[var(--color-text)] font-medium truncate">{{ product.title }}</span>
       </nav>
 
       <div class="grid lg:grid-cols-2 gap-12">
         <!-- Product Images -->
         <div class="space-y-4">
           <!-- Main Image -->
-          <div class="relative aspect-square bg-white rounded-2xl border border-stone-100 overflow-hidden group">
+          <div class="relative aspect-square bg-white rounded-2xl border border-[var(--color-border)] overflow-hidden group">
             <img
               :src="selectedImage || product.thumbnail"
               :alt="product.title"
@@ -48,7 +48,7 @@
             >
               <HeartIcon 
                 class="w-6 h-6 transition-colors" 
-                :class="isFavorite ? 'fill-red-500 text-red-500' : 'text-stone-400'"
+                :class="isFavorite ? 'fill-red-500 text-red-500' : 'text-[var(--color-text-muted)]'"
               />
             </button>
 
@@ -57,7 +57,7 @@
               @click="showZoom = true"
               class="absolute bottom-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
             >
-              <ZoomInIcon class="w-5 h-5 text-stone-600" />
+              <ZoomInIcon class="w-5 h-5 text-[var(--color-text-secondary)]" />
             </button>
 
             <!-- Badges -->
@@ -65,7 +65,7 @@
               <span v-if="product.compareAtPrice" class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                 -{{ discountPercent }}%
               </span>
-              <span v-if="!product.inStock" class="bg-stone-800 text-white text-xs font-bold px-3 py-1 rounded-full">
+              <span v-if="!product.inStock" class="bg-[var(--color-primary)] text-white text-xs font-bold px-3 py-1 rounded-full">
                 Rupture
               </span>
             </div>
@@ -78,7 +78,7 @@
               :key="index"
               @click="selectedImage = image"
               class="w-20 h-20 bg-white rounded-xl border-2 overflow-hidden shrink-0 transition-colors"
-              :class="selectedImage === image ? 'border-amber-500' : 'border-stone-100 hover:border-stone-200'"
+              :class="selectedImage === image ? 'border-amber-500' : 'border-[var(--color-border)] hover:border-[var(--color-border)]'"
             >
               <img :src="image" :alt="`Vue ${index + 1}`" class="w-full h-full object-contain p-2" />
             </button>
@@ -99,41 +99,41 @@
           </div>
 
           <!-- Title -->
-          <h1 class="text-3xl lg:text-4xl font-bold text-stone-800">{{ product.title }}</h1>
+          <h1 class="text-3xl lg:text-4xl font-bold text-[var(--color-text)]">{{ product.title }}</h1>
 
           <!-- Subtitle -->
-          <p v-if="product.subtitle" class="text-lg text-stone-500">{{ product.subtitle }}</p>
+          <p v-if="product.subtitle" class="text-lg text-[var(--color-text-muted)]">{{ product.subtitle }}</p>
 
           <!-- Price -->
           <div class="flex items-baseline gap-4">
-            <span class="text-4xl font-bold text-stone-800">{{ formatPrice(product.price) }}</span>
-            <span v-if="product.compareAtPrice" class="text-xl text-stone-400 line-through">
+            <span class="text-4xl font-bold text-[var(--color-text)]">{{ formatPrice(product.price) }}</span>
+            <span v-if="product.compareAtPrice" class="text-xl text-[var(--color-text-muted)] line-through">
               {{ formatPrice(product.compareAtPrice) }}
             </span>
           </div>
-          <p class="text-sm text-stone-500">≈ {{ formatFCFA(product.price) }}</p>
+          <p class="text-sm text-[var(--color-text-muted)]">≈ {{ formatFCFA(product.price) }}</p>
 
           <!-- Description -->
           <div class="prose prose-stone max-w-none">
-            <p class="text-stone-600 leading-relaxed">{{ product.description }}</p>
+            <p class="text-[var(--color-text-secondary)] leading-relaxed">{{ product.description }}</p>
           </div>
 
           <!-- Quantity Selector -->
           <div class="flex items-center gap-4">
-            <span class="text-sm font-medium text-stone-700">Quantité</span>
-            <div class="flex items-center border border-stone-200 rounded-xl overflow-hidden">
+            <span class="text-sm font-medium text-[var(--color-text-secondary)]">Quantité</span>
+            <div class="flex items-center border border-[var(--color-border)] rounded-xl overflow-hidden">
               <button
                 @click="quantity > 1 && quantity--"
                 :disabled="quantity <= 1"
-                class="w-12 h-12 flex items-center justify-center text-stone-600 hover:bg-stone-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                class="w-12 h-12 flex items-center justify-center text-[var(--color-text-secondary)] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <MinusIcon class="w-5 h-5" />
               </button>
-              <span class="w-16 text-center font-semibold text-stone-800">{{ quantity }}</span>
+              <span class="w-16 text-center font-semibold text-[var(--color-text)]">{{ quantity }}</span>
               <button
                 @click="quantity++"
                 :disabled="quantity >= 10"
-                class="w-12 h-12 flex items-center justify-center text-stone-600 hover:bg-stone-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                class="w-12 h-12 flex items-center justify-center text-[var(--color-text-secondary)] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <PlusIcon class="w-5 h-5" />
               </button>
@@ -161,27 +161,27 @@
           </div>
 
           <!-- Trust Badges -->
-          <div class="grid grid-cols-3 gap-4 pt-6 border-t border-stone-100">
+          <div class="grid grid-cols-3 gap-4 pt-6 border-t border-[var(--color-border)]">
             <div class="text-center">
               <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-2">
                 <TruckIcon class="w-6 h-6 text-green-600" />
               </div>
-              <p class="text-xs text-stone-600 font-medium">Livraison N'Djamena</p>
+              <p class="text-xs text-[var(--color-text-secondary)] font-medium">Livraison N'Djamena</p>
               <p class="text-xs text-[var(--color-text-muted)]">3-5 jours</p>
             </div>
             <div class="text-center">
               <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-2">
                 <ShieldCheckIcon class="w-6 h-6 text-blue-600" />
               </div>
-              <p class="text-xs text-stone-600 font-medium">Paiement sécurisé</p>
-              <p class="text-xs text-stone-400">100% protégé</p>
+              <p class="text-xs text-[var(--color-text-secondary)] font-medium">Paiement sécurisé</p>
+              <p class="text-xs text-[var(--color-text-muted)]">100% protégé</p>
             </div>
             <div class="text-center">
               <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mx-auto mb-2">
                 <PackageIcon class="w-6 h-6 text-amber-600" />
               </div>
-              <p class="text-xs text-stone-600 font-medium">Photo à la livraison</p>
-              <p class="text-xs text-stone-400">Preuve de remise</p>
+              <p class="text-xs text-[var(--color-text-secondary)] font-medium">Photo à la livraison</p>
+              <p class="text-xs text-[var(--color-text-muted)]">Preuve de remise</p>
             </div>
           </div>
         </div>
@@ -189,7 +189,7 @@
 
       <!-- Product Details Tabs -->
       <div class="mt-16">
-        <div class="border-b border-stone-200">
+        <div class="border-b border-[var(--color-border)]">
           <nav class="flex gap-8">
             <button
               v-for="tab in tabs"
@@ -198,7 +198,7 @@
               class="py-4 border-b-2 font-medium transition-colors"
               :class="activeTab === tab.id 
                 ? 'border-amber-500 text-amber-600' 
-                : 'border-transparent text-stone-500 hover:text-stone-700'"
+                : 'border-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]'"
             >
               {{ tab.label }}
             </button>
@@ -219,9 +219,9 @@
 
           <!-- Shipping Tab -->
           <div v-else-if="activeTab === 'shipping'" class="space-y-6">
-            <div class="bg-stone-50 rounded-xl p-6">
-              <h3 class="font-semibold text-stone-800 mb-4">Informations de livraison</h3>
-              <ul class="space-y-3 text-stone-600">
+            <div class="bg-gray-50 rounded-xl p-6">
+              <h3 class="font-semibold text-[var(--color-text)] mb-4">Informations de livraison</h3>
+              <ul class="space-y-3 text-[var(--color-text-secondary)]">
                 <li class="flex items-start gap-3">
                   <CheckIcon class="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
                   <span>Délai de livraison : 3 à 5 jours ouvrés</span>
@@ -245,9 +245,9 @@
           <!-- Reviews Tab -->
           <div v-else-if="activeTab === 'reviews'" class="space-y-6">
             <div class="text-center py-12">
-              <StarIcon class="w-12 h-12 text-stone-300 mx-auto mb-4" />
-              <p class="text-stone-500">Aucun avis pour le moment</p>
-              <p class="text-sm text-stone-400">Soyez le premier à donner votre avis !</p>
+              <StarIcon class="w-12 h-12 text-gray-300 mx-auto mb-4" />
+              <p class="text-[var(--color-text-muted)]">Aucun avis pour le moment</p>
+              <p class="text-sm text-[var(--color-text-muted)]">Soyez le premier à donner votre avis !</p>
             </div>
           </div>
         </div>
@@ -255,7 +255,7 @@
 
       <!-- Related Products -->
       <div class="mt-16">
-        <h2 class="text-2xl font-bold text-stone-800 mb-8">Vous aimerez aussi</h2>
+        <h2 class="text-2xl font-bold text-[var(--color-text)] mb-8">Vous aimerez aussi</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
           <ProductCard
             v-for="relatedProduct in relatedProducts"
@@ -268,11 +268,11 @@
 
     <!-- Error State -->
     <div v-else class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-      <div class="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-        <PackageIcon class="w-10 h-10 text-stone-400" />
+      <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <PackageIcon class="w-10 h-10 text-[var(--color-text-muted)]" />
       </div>
-      <h2 class="text-xl font-semibold text-stone-800 mb-2">Produit introuvable</h2>
-      <p class="text-stone-500 mb-6">Ce produit n'existe pas ou a été supprimé.</p>
+      <h2 class="text-xl font-semibold text-[var(--color-text)] mb-2">Produit introuvable</h2>
+      <p class="text-[var(--color-text-muted)] mb-6">Ce produit n'existe pas ou a été supprimé.</p>
       <NuxtLink
         to="/catalogue"
         class="btn-gold"
@@ -375,41 +375,72 @@ onMounted(async () => {
 
 async function fetchProduct() {
   const slug = route.params.slug as string
+  const { client } = useSupabase()
   
-  // Simulated product data - would come from Medusa API
-  // In production: const { data } = await useMedusa().getProduct(slug)
-  
-  await new Promise(resolve => setTimeout(resolve, 500))
-  
-  // Mock product for demo
-  product.value = {
-    id: slug,
-    title: 'Pack Épicerie Premium',
-    handle: slug,
-    description: 'Découvrez notre sélection premium de produits d\'épicerie française. Ce pack contient une variété de produits soigneusement sélectionnés pour ravir vos papilles : huile d\'olive extra vierge, moutarde de Dijon, confiture artisanale, et bien plus encore.',
-    subtitle: 'Sélection de produits français de qualité',
-    price: 45,
-    compareAtPrice: 55,
-    images: [
-      '/images/products/epicerie-1.jpg',
-      '/images/products/epicerie-2.jpg',
-      '/images/products/epicerie-3.jpg',
-    ],
-    thumbnail: '/images/products/epicerie-1.jpg',
-    category: {
-      id: 'cat_epicerie',
-      name: 'Épicerie',
-      handle: 'epicerie',
-    },
-    categoryId: 'cat_epicerie',
-    inStock: true,
-    stockQuantity: 15,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+  try {
+    // Fetch product from Supabase by handle
+    const { data, error } = await client
+      .from('products')
+      .select(`
+        *,
+        category:categories(*)
+      `)
+      .eq('handle', slug)
+      .single()
+
+    if (error || !data) {
+      isLoading.value = false
+      return
+    }
+
+    product.value = {
+      id: data.id,
+      title: data.title,
+      handle: data.handle,
+      description: data.description,
+      subtitle: data.subtitle,
+      price: data.price,
+      compareAtPrice: data.compare_at_price,
+      images: data.images || [],
+      thumbnail: data.thumbnail || (data.images?.[0] ?? ''),
+      category: data.category ? {
+        id: data.category.id,
+        name: data.category.name,
+        handle: data.category.handle,
+      } : { id: '', name: '', handle: '' },
+      categoryId: data.category_id,
+      inStock: data.in_stock ?? true,
+      stockQuantity: data.stock_quantity,
+      createdAt: data.created_at,
+      updatedAt: data.updated_at,
+    }
+    
+    // Fetch related products from same category
+    if (data.category_id) {
+      const { data: related } = await client
+        .from('products')
+        .select('*')
+        .eq('category_id', data.category_id)
+        .neq('id', data.id)
+        .limit(4)
+      
+      relatedProducts.value = (related || []).map((p: any) => ({
+        id: p.id,
+        title: p.title,
+        handle: p.handle,
+        price: p.price,
+        thumbnail: p.thumbnail || (p.images?.[0] ?? ''),
+        category: data.category,
+        categoryId: p.category_id,
+        images: p.images || [],
+        inStock: p.in_stock ?? true,
+        createdAt: p.created_at,
+        updatedAt: p.updated_at,
+      }))
+    }
+  } catch (e) {
+    console.error('Failed to fetch product:', e)
   }
-  
-  // Fetch related products
-  relatedProducts.value = []
   
   isLoading.value = false
 }
@@ -435,9 +466,6 @@ async function addToCart() {
   if (!product.value || !product.value.inStock) return
   
   isAddingToCart.value = true
-  
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 500))
   
   cartStore.addItem({
     id: product.value.id,

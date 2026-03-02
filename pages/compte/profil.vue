@@ -3,24 +3,24 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Breadcrumb -->
       <nav class="flex items-center gap-2 text-sm mb-6">
-        <NuxtLink to="/compte" class="text-stone-500 hover:text-amber-600">Mon compte</NuxtLink>
-        <ChevronRightIcon class="w-4 h-4 text-stone-400" />
-        <span class="text-stone-800 font-medium">Mon profil</span>
+        <NuxtLink to="/compte" class="text-[var(--color-text-muted)] hover:text-[var(--color-accent-dark)]">Mon compte</NuxtLink>
+        <ChevronRightIcon class="w-4 h-4 text-[var(--color-text-muted)]" />
+        <span class="text-[var(--color-text)] font-medium">Mon profil</span>
       </nav>
 
       <div class="grid lg:grid-cols-3 gap-8">
         <!-- Profile Card -->
         <div class="lg:col-span-1">
-          <div class="bg-white rounded-2xl shadow-sm border border-stone-100 p-6 text-center">
+          <div class="bg-white rounded-2xl shadow-sm border border-[var(--color-border)] p-6 text-center">
             <div class="w-24 h-24 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mx-auto shadow-lg shadow-amber-500/25">
               {{ authStore.initials }}
             </div>
-            <h2 class="text-xl font-semibold text-stone-800 mt-4">{{ authStore.fullName }}</h2>
-            <p class="text-stone-500">{{ authStore.user?.email }}</p>
+            <h2 class="text-xl font-semibold text-[var(--color-text)] mt-4">{{ authStore.fullName }}</h2>
+            <p class="text-[var(--color-text-muted)]">{{ authStore.user?.email }}</p>
             
-            <div class="mt-6 pt-6 border-t border-stone-100">
-              <p class="text-xs text-stone-400 mb-1">Membre depuis</p>
-              <p class="text-sm text-stone-600">{{ memberSince }}</p>
+            <div class="mt-6 pt-6 border-t border-[var(--color-border)]">
+              <p class="text-xs text-[var(--color-text-muted)] mb-1">Membre depuis</p>
+              <p class="text-sm text-[var(--color-text-secondary)]">{{ memberSince }}</p>
             </div>
           </div>
         </div>
@@ -28,10 +28,10 @@
         <!-- Profile Form -->
         <div class="lg:col-span-2 space-y-6">
           <!-- Personal Info -->
-          <div class="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden">
-            <div class="p-6 border-b border-stone-100">
-              <h3 class="text-lg font-semibold text-stone-800">Informations personnelles</h3>
-              <p class="text-sm text-stone-500">Modifiez vos informations de profil</p>
+          <div class="bg-white rounded-2xl shadow-sm border border-[var(--color-border)] overflow-hidden">
+            <div class="p-6 border-b border-[var(--color-border)]">
+              <h3 class="text-lg font-semibold text-[var(--color-text)]">Informations personnelles</h3>
+              <p class="text-sm text-[var(--color-text-muted)]">Modifiez vos informations de profil</p>
             </div>
 
             <form @submit.prevent="handleUpdateProfile" class="p-6 space-y-6">
@@ -67,7 +67,7 @@
 
               <div class="grid sm:grid-cols-2 gap-6">
                 <div>
-                  <label for="firstName" class="block text-sm font-medium text-stone-700 mb-2">
+                  <label for="firstName" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
                     Prénom
                   </label>
                   <input
@@ -80,7 +80,7 @@
                   />
                 </div>
                 <div>
-                  <label for="lastName" class="block text-sm font-medium text-stone-700 mb-2">
+                  <label for="lastName" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
                     Nom
                   </label>
                   <input
@@ -95,7 +95,7 @@
               </div>
 
               <div>
-                <label for="email" class="block text-sm font-medium text-stone-700 mb-2">
+                <label for="email" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
                   Adresse email
                 </label>
                 <input
@@ -103,20 +103,20 @@
                   :value="authStore.user?.email"
                   type="email"
                   disabled
-                  class="w-full px-4 py-3 bg-stone-100 border border-stone-200 rounded-xl text-stone-500 cursor-not-allowed"
+                  class="w-full px-4 py-3 bg-gray-100 border border-[var(--color-border)] rounded-xl text-[var(--color-text-muted)] cursor-not-allowed"
                 />
-                <p class="text-xs text-stone-400 mt-1">L'email ne peut pas être modifié</p>
+                <p class="text-xs text-[var(--color-text-muted)] mt-1">L'email ne peut pas être modifié</p>
               </div>
 
               <div>
-                <label for="phone" class="block text-sm font-medium text-stone-700 mb-2">
+                <label for="phone" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
                   Téléphone
                 </label>
                 <input
                   id="phone"
                   v-model="form.phone"
                   type="tel"
-                  placeholder="+33 6 12 34 56 78"
+                  placeholder="+235 XX XX XX XX"
                   class="input"
                   :disabled="isLoading"
                 />
@@ -137,15 +137,15 @@
           </div>
 
           <!-- Password Change -->
-          <div class="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden">
-            <div class="p-6 border-b border-stone-100">
-              <h3 class="text-lg font-semibold text-stone-800">Mot de passe</h3>
-              <p class="text-sm text-stone-500">Changez votre mot de passe de connexion</p>
+          <div class="bg-white rounded-2xl shadow-sm border border-[var(--color-border)] overflow-hidden">
+            <div class="p-6 border-b border-[var(--color-border)]">
+              <h3 class="text-lg font-semibold text-[var(--color-text)]">Mot de passe</h3>
+              <p class="text-sm text-[var(--color-text-muted)]">Changez votre mot de passe de connexion</p>
             </div>
 
             <form @submit.prevent="handleChangePassword" class="p-6 space-y-6">
               <div>
-                <label for="currentPassword" class="block text-sm font-medium text-stone-700 mb-2">
+                <label for="currentPassword" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
                   Mot de passe actuel
                 </label>
                 <div class="relative">
@@ -162,14 +162,14 @@
                     @click="showCurrentPassword = !showCurrentPassword"
                     class="absolute inset-y-0 right-0 pr-4 flex items-center"
                   >
-                    <EyeIcon v-if="!showCurrentPassword" class="w-5 h-5 text-stone-400 hover:text-stone-600" />
-                    <EyeOffIcon v-else class="w-5 h-5 text-stone-400 hover:text-stone-600" />
+                    <EyeIcon v-if="!showCurrentPassword" class="w-5 h-5 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]" />
+                    <EyeOffIcon v-else class="w-5 h-5 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]" />
                   </button>
                 </div>
               </div>
 
               <div>
-                <label for="newPassword" class="block text-sm font-medium text-stone-700 mb-2">
+                <label for="newPassword" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
                   Nouveau mot de passe
                 </label>
                 <div class="relative">
@@ -187,14 +187,14 @@
                     @click="showNewPassword = !showNewPassword"
                     class="absolute inset-y-0 right-0 pr-4 flex items-center"
                   >
-                    <EyeIcon v-if="!showNewPassword" class="w-5 h-5 text-stone-400 hover:text-stone-600" />
-                    <EyeOffIcon v-else class="w-5 h-5 text-stone-400 hover:text-stone-600" />
+                    <EyeIcon v-if="!showNewPassword" class="w-5 h-5 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]" />
+                    <EyeOffIcon v-else class="w-5 h-5 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]" />
                   </button>
                 </div>
               </div>
 
               <div>
-                <label for="confirmPassword" class="block text-sm font-medium text-stone-700 mb-2">
+                <label for="confirmPassword" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
                   Confirmer le nouveau mot de passe
                 </label>
                 <input
@@ -215,7 +215,7 @@
                 <button
                   type="submit"
                   :disabled="isChangingPassword || !passwordsMatch || !passwordForm.current || !passwordForm.new"
-                  class="px-6 py-3 border border-stone-200 text-stone-700 font-semibold rounded-xl hover:bg-stone-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  class="px-6 py-3 border border-[var(--color-border)] text-[var(--color-text-secondary)] font-semibold rounded-xl hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
                   <LoaderIcon v-if="isChangingPassword" class="w-5 h-5 animate-spin" />
                   <KeyIcon v-else class="w-5 h-5" />
@@ -229,14 +229,14 @@
           <div class="bg-white rounded-2xl shadow-sm border border-red-100 overflow-hidden">
             <div class="p-6 border-b border-red-100">
               <h3 class="text-lg font-semibold text-red-600">Zone de danger</h3>
-              <p class="text-sm text-stone-500">Actions irréversibles sur votre compte</p>
+              <p class="text-sm text-[var(--color-text-muted)]">Actions irréversibles sur votre compte</p>
             </div>
 
             <div class="p-6">
               <div class="flex items-center justify-between">
                 <div>
-                  <p class="font-medium text-stone-800">Supprimer mon compte</p>
-                  <p class="text-sm text-stone-500">Cette action est irréversible</p>
+                  <p class="font-medium text-[var(--color-text)]">Supprimer mon compte</p>
+                  <p class="text-sm text-[var(--color-text-muted)]">Cette action est irréversible</p>
                 </div>
                 <button
                   @click="showDeleteConfirm = true"
@@ -266,14 +266,14 @@
             <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <AlertTriangleIcon class="w-8 h-8 text-red-600" />
             </div>
-            <h3 class="text-xl font-bold text-stone-800 text-center mb-2">Supprimer le compte ?</h3>
-            <p class="text-stone-500 text-center mb-6">
+            <h3 class="text-xl font-bold text-[var(--color-text)] text-center mb-2">Supprimer le compte ?</h3>
+            <p class="text-[var(--color-text-muted)] text-center mb-6">
               Cette action est irréversible. Toutes vos données seront supprimées définitivement.
             </p>
             <div class="flex gap-3">
               <button
                 @click="showDeleteConfirm = false"
-                class="flex-1 py-3 border border-stone-200 text-stone-700 font-medium rounded-xl hover:bg-stone-50 transition-colors"
+                class="flex-1 py-3 border border-[var(--color-border)] text-[var(--color-text-secondary)] font-medium rounded-xl hover:bg-gray-50 transition-colors"
               >
                 Annuler
               </button>
@@ -338,11 +338,14 @@ const showDeleteConfirm = ref(false)
 
 // Computed
 const memberSince = computed(() => {
-  // Mock date - would come from user data
-  return new Date().toLocaleDateString('fr-FR', {
-    month: 'long',
-    year: 'numeric',
-  })
+  const createdAt = authStore.user?.createdAt
+  if (createdAt) {
+    return new Date(createdAt).toLocaleDateString('fr-FR', {
+      month: 'long',
+      year: 'numeric',
+    })
+  }
+  return 'Récemment'
 })
 
 const hasChanges = computed(() => {

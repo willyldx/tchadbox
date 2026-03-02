@@ -3,23 +3,23 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Breadcrumb -->
       <nav class="flex items-center gap-2 text-sm mb-6">
-        <NuxtLink to="/compte" class="text-stone-500 hover:text-amber-600">Mon compte</NuxtLink>
-        <ChevronRightIcon class="w-4 h-4 text-stone-400" />
-        <span class="text-stone-800 font-medium">Mes commandes</span>
+        <NuxtLink to="/compte" class="text-[var(--color-text-muted)] hover:text-[var(--color-accent-dark)]">Mon compte</NuxtLink>
+        <ChevronRightIcon class="w-4 h-4 text-[var(--color-text-muted)]" />
+        <span class="text-[var(--color-text)] font-medium">Mes commandes</span>
       </nav>
 
       <!-- Header -->
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-          <h1 class="text-3xl font-bold text-stone-800">Mes commandes</h1>
-          <p class="text-stone-500 mt-1">{{ orders.length }} commande{{ orders.length > 1 ? 's' : '' }} au total</p>
+          <h1 class="text-3xl font-bold text-[var(--color-text)]">Mes commandes</h1>
+          <p class="text-[var(--color-text-muted)] mt-1">{{ orders.length }} commande{{ orders.length > 1 ? 's' : '' }} au total</p>
         </div>
 
         <!-- Filters -->
         <div class="flex items-center gap-3">
           <select
             v-model="statusFilter"
-            class="px-4 py-2 bg-white border border-stone-200 rounded-xl text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+            class="px-4 py-2 bg-white border border-[var(--color-border)] rounded-xl text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
           >
             <option value="all">Tous les statuts</option>
             <option value="pending">En préparation</option>
@@ -31,25 +31,25 @@
 
       <!-- Orders List -->
       <div v-if="isLoading" class="space-y-4">
-        <div v-for="i in 3" :key="i" class="bg-white rounded-2xl border border-stone-100 p-6 animate-pulse">
+        <div v-for="i in 3" :key="i" class="bg-white rounded-2xl border border-[var(--color-border)] p-6 animate-pulse">
           <div class="flex items-center gap-4">
-            <div class="w-20 h-20 bg-stone-200 rounded-xl"></div>
+            <div class="w-20 h-20 bg-gray-200 rounded-xl"></div>
             <div class="flex-1">
-              <div class="h-4 bg-stone-200 rounded w-32 mb-2"></div>
-              <div class="h-3 bg-stone-200 rounded w-48"></div>
+              <div class="h-4 bg-gray-200 rounded w-32 mb-2"></div>
+              <div class="h-3 bg-gray-200 rounded w-48"></div>
             </div>
           </div>
         </div>
       </div>
 
-      <div v-else-if="filteredOrders.length === 0" class="bg-white rounded-2xl border border-stone-100 p-12 text-center">
-        <div class="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <PackageIcon class="w-10 h-10 text-stone-400" />
+      <div v-else-if="filteredOrders.length === 0" class="bg-white rounded-2xl border border-[var(--color-border)] p-12 text-center">
+        <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <PackageIcon class="w-10 h-10 text-[var(--color-text-muted)]" />
         </div>
-        <h3 class="text-lg font-semibold text-stone-800 mb-2">
+        <h3 class="text-lg font-semibold text-[var(--color-text)] mb-2">
           {{ statusFilter === 'all' ? 'Aucune commande' : 'Aucune commande avec ce statut' }}
         </h3>
-        <p class="text-stone-500 mb-6">
+        <p class="text-[var(--color-text-muted)] mb-6">
           {{ statusFilter === 'all' ? "Vous n'avez pas encore passé de commande." : 'Essayez un autre filtre.' }}
         </p>
         <NuxtLink
@@ -67,17 +67,17 @@
           v-for="order in filteredOrders"
           :key="order.id"
           :to="`/compte/commandes/${order.id}`"
-          class="block bg-white rounded-2xl border border-stone-100 hover:border-stone-200 hover:shadow-lg transition-all overflow-hidden group"
+          class="block bg-white rounded-2xl border border-[var(--color-border)] hover:border-[var(--color-border)] hover:shadow-lg transition-all overflow-hidden group"
         >
           <!-- Order Header -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 border-b border-stone-100">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 border-b border-[var(--color-border)]">
             <div class="flex items-center gap-4">
               <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
                 <PackageIcon class="w-6 h-6 text-amber-600" />
               </div>
               <div>
-                <p class="font-semibold text-stone-800">{{ order.displayId }}</p>
-                <p class="text-sm text-stone-500">{{ formatDate(order.createdAt) }}</p>
+                <p class="font-semibold text-[var(--color-text)]">{{ order.displayId }}</p>
+                <p class="text-sm text-[var(--color-text-muted)]">{{ formatDate(order.createdAt) }}</p>
               </div>
             </div>
             <div class="flex items-center gap-4">
@@ -88,7 +88,7 @@
                 <span class="w-2 h-2 rounded-full" :class="getStatusDotClass(order.fulfillmentStatus)"></span>
                 {{ getStatusLabel(order.fulfillmentStatus) }}
               </span>
-              <ChevronRightIcon class="w-5 h-5 text-stone-400 group-hover:text-amber-500 transition-colors" />
+              <ChevronRightIcon class="w-5 h-5 text-[var(--color-text-muted)] group-hover:text-amber-500 transition-colors" />
             </div>
           </div>
 
@@ -100,7 +100,7 @@
                 <div
                   v-for="(item, index) in order.items.slice(0, 4)"
                   :key="item.id"
-                  class="w-16 h-16 bg-stone-100 rounded-xl border-2 border-white flex items-center justify-center overflow-hidden"
+                  class="w-16 h-16 bg-gray-100 rounded-xl border-2 border-white flex items-center justify-center overflow-hidden"
                   :style="{ zIndex: 4 - index }"
                 >
                   <img
@@ -109,11 +109,11 @@
                     :alt="item.title"
                     class="w-12 h-12 object-contain"
                   />
-                  <PackageIcon v-else class="w-6 h-6 text-stone-400" />
+                  <PackageIcon v-else class="w-6 h-6 text-[var(--color-text-muted)]" />
                 </div>
                 <div
                   v-if="order.items.length > 4"
-                  class="w-16 h-16 bg-stone-200 rounded-xl border-2 border-white flex items-center justify-center text-sm font-medium text-stone-600"
+                  class="w-16 h-16 bg-gray-200 rounded-xl border-2 border-white flex items-center justify-center text-sm font-medium text-[var(--color-text-secondary)]"
                 >
                   +{{ order.items.length - 4 }}
                 </div>
@@ -121,28 +121,28 @@
 
               <!-- Order Summary -->
               <div class="flex-1 min-w-0">
-                <p class="text-sm text-stone-600 truncate">
+                <p class="text-sm text-[var(--color-text-secondary)] truncate">
                   {{ order.items.map(i => i.title).join(', ') }}
                 </p>
-                <p class="text-sm text-stone-400 mt-1">
+                <p class="text-sm text-[var(--color-text-muted)] mt-1">
                   {{ order.items.length }} article{{ order.items.length > 1 ? 's' : '' }}
                 </p>
               </div>
 
               <!-- Total -->
               <div class="text-right">
-                <p class="text-lg font-bold text-stone-800">{{ formatPrice(order.total) }}</p>
-                <p class="text-xs text-stone-400">{{ formatFCFA(order.total) }}</p>
+                <p class="text-lg font-bold text-[var(--color-text)]">{{ formatPrice(order.total) }}</p>
+                <p class="text-xs text-[var(--color-text-muted)]">{{ formatFCFA(order.total) }}</p>
               </div>
             </div>
 
             <!-- Progress Bar for shipped orders -->
             <div v-if="order.fulfillmentStatus === 'shipped'" class="mt-6">
-              <div class="flex items-center justify-between text-xs text-stone-500 mb-2">
+              <div class="flex items-center justify-between text-xs text-[var(--color-text-muted)] mb-2">
                 <span>En transit vers N'Djamena</span>
                 <span>Livraison estimée: {{ estimatedDelivery(order.createdAt) }}</span>
               </div>
-              <div class="h-2 bg-stone-100 rounded-full overflow-hidden">
+              <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
                 <div class="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full w-2/3 animate-pulse"></div>
               </div>
             </div>
@@ -155,7 +155,7 @@
         <button
           @click="currentPage--"
           :disabled="currentPage === 1"
-          class="p-2 rounded-xl border border-stone-200 hover:bg-stone-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          class="p-2 rounded-xl border border-[var(--color-border)] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           <ChevronLeftIcon class="w-5 h-5" />
         </button>
@@ -167,7 +167,7 @@
           class="w-10 h-10 rounded-xl font-medium transition-colors"
           :class="currentPage === page 
             ? 'bg-amber-500 text-white' 
-            : 'border border-stone-200 hover:bg-stone-50 text-stone-600'"
+            : 'border border-[var(--color-border)] hover:bg-gray-50 text-[var(--color-text-secondary)]'"
         >
           {{ page }}
         </button>
@@ -175,7 +175,7 @@
         <button
           @click="currentPage++"
           :disabled="currentPage === totalPages"
-          class="p-2 rounded-xl border border-stone-200 hover:bg-stone-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          class="p-2 rounded-xl border border-[var(--color-border)] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           <ChevronRightIcon class="w-5 h-5" />
         </button>
@@ -341,23 +341,23 @@ function getStatusLabel(status: FulfillmentStatus): string {
 
 function getStatusClass(status: FulfillmentStatus): string {
   const classes: Record<FulfillmentStatus, string> = {
-    not_fulfilled: 'bg-stone-100 text-stone-700',
+    not_fulfilled: 'bg-gray-100 text-[var(--color-text-secondary)]',
     partially_fulfilled: 'bg-blue-100 text-blue-700',
     fulfilled: 'bg-blue-100 text-blue-700',
     shipped: 'bg-amber-100 text-amber-700',
     delivered: 'bg-green-100 text-green-700',
   }
-  return classes[status] || 'bg-stone-100 text-stone-700'
+  return classes[status] || 'bg-gray-100 text-[var(--color-text-secondary)]'
 }
 
 function getStatusDotClass(status: FulfillmentStatus): string {
   const classes: Record<FulfillmentStatus, string> = {
-    not_fulfilled: 'bg-stone-500',
+    not_fulfilled: 'bg-gray-500',
     partially_fulfilled: 'bg-blue-500',
     fulfilled: 'bg-blue-500',
     shipped: 'bg-amber-500',
     delivered: 'bg-green-500',
   }
-  return classes[status] || 'bg-stone-500'
+  return classes[status] || 'bg-gray-500'
 }
 </script>
