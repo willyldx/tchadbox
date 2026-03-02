@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50/30">
+  <div>
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Breadcrumb -->
       <nav class="flex items-center gap-2 text-sm mb-6">
@@ -16,7 +16,7 @@
         </div>
         <button
           @click="openAddModal"
-          class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all shadow-lg shadow-amber-500/25"
+          class="flex items-center gap-2 px-4 py-2 btn-gold"
         >
           <PlusIcon class="w-5 h-5" />
           Ajouter
@@ -40,7 +40,7 @@
         <p class="text-stone-500 mb-6">Ajoutez une adresse pour faciliter vos commandes</p>
         <button
           @click="openAddModal"
-          class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all shadow-lg shadow-amber-500/25"
+          class="btn-gold"
         >
           <PlusIcon class="w-5 h-5" />
           Ajouter une adresse
@@ -163,7 +163,7 @@
                       v-model="form.firstName"
                       type="text"
                       required
-                      class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                      class="input"
                     />
                   </div>
                   <div>
@@ -172,7 +172,7 @@
                       v-model="form.lastName"
                       type="text"
                       required
-                      class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                      class="input"
                     />
                   </div>
                 </div>
@@ -184,7 +184,7 @@
                     type="text"
                     required
                     placeholder="Rue, numéro, quartier..."
-                    class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                    class="input"
                   />
                 </div>
 
@@ -196,7 +196,7 @@
                     v-model="form.address2"
                     type="text"
                     placeholder="Appartement, étage, repère..."
-                    class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                    class="input"
                   />
                 </div>
 
@@ -206,7 +206,7 @@
                     <select
                       v-model="form.city"
                       required
-                      class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                      class="input"
                     >
                       <option value="N'Djamena">N'Djamena</option>
                       <option value="Moundou">Moundou</option>
@@ -232,7 +232,7 @@
                     type="tel"
                     required
                     placeholder="+235 XX XX XX XX"
-                    class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                    class="input"
                   />
                 </div>
 
@@ -260,7 +260,7 @@
                   <button
                     type="submit"
                     :disabled="isSaving"
-                    class="flex-1 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                    class="flex-1 py-3 btn-gold disabled:opacity-50 flex items-center justify-center gap-2"
                   >
                     <LoaderIcon v-if="isSaving" class="w-5 h-5 animate-spin" />
                     {{ isSaving ? 'Enregistrement...' : (editingAddress ? 'Enregistrer' : 'Ajouter') }}

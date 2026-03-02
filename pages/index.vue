@@ -1,55 +1,58 @@
 <template>
   <div>
-    <!-- Hero Section — Photo Background -->
-    <section class="hero-image relative min-h-[85vh] flex items-center">
-      <img 
-        src="/hero-bg.png" 
-        alt="" 
-        class="absolute inset-0 w-full h-full object-cover"
-        loading="eager"
-      />
+    <!-- Hero Section — Sliding Carousel -->
+    <section class="hero-image relative min-h-[85vh] flex items-center overflow-hidden">
+      <!-- Sliding Background Images -->
+      <div v-for="(slide, i) in heroSlides" :key="i">
+        <Transition
+          enter-active-class="transition-all duration-[1200ms] ease-out"
+          enter-from-class="opacity-0 scale-110"
+          enter-to-class="opacity-100 scale-100"
+          leave-active-class="transition-all duration-[1200ms] ease-in"
+          leave-from-class="opacity-100 scale-100"
+          leave-to-class="opacity-0 scale-105"
+        >
+          <img 
+            v-show="currentSlide === i"
+            :src="slide.image" 
+            :alt="slide.title"
+            class="absolute inset-0 w-full h-full object-cover"
+            :class="{ 'hero-zoom': currentSlide === i }"
+            loading="eager"
+          />
+        </Transition>
+      </div>
       
       <!-- Decorative orbs -->
       <div class="orb orb-amber w-96 h-96 -top-20 right-0 animate-float" style="z-index: 2;" />
       
       <div class="container-main relative z-10 py-20">
         <div class="max-w-2xl">
-          <div 
-            v-motion
-            :initial="{ opacity: 0, y: 20 }"
-            :enter="{ opacity: 1, y: 0, transition: { delay: 100 } }"
-            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-8"
-          >
+          <div class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-8">
             <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
             <span class="text-sm font-medium text-white/90">🇹🇩 Service de livraison premium à N'Djamena — Preuve photo garantie</span>
           </div>
           
-          <h1 
-            v-motion
-            :initial="{ opacity: 0, y: 30 }"
-            :enter="{ opacity: 1, y: 0, transition: { delay: 200 } }"
-            class="heading-hero text-white mb-6"
-          >
-            Offrez le meilleur<br />
-            à vos <span class="text-gradient-gold">proches</span> au Tchad
-          </h1>
+          <!-- Sliding text content -->
+          <div class="relative min-h-[180px] md:min-h-[160px]">
+            <TransitionGroup
+              enter-active-class="transition-all duration-700 ease-out"
+              enter-from-class="opacity-0 translate-y-6"
+              enter-to-class="opacity-100 translate-y-0"
+              leave-active-class="transition-all duration-500 ease-in absolute inset-0"
+              leave-from-class="opacity-100 translate-y-0"
+              leave-to-class="opacity-0 -translate-y-4"
+            >
+              <div :key="currentSlide">
+                <h1 class="heading-hero text-white mb-6" v-html="heroSlides[currentSlide].title" />
+                <p class="text-xl text-white/80 mb-10 max-w-lg leading-relaxed">
+                  {{ heroSlides[currentSlide].subtitle }}
+                </p>
+              </div>
+            </TransitionGroup>
+          </div>
           
-          <p 
-            v-motion
-            :initial="{ opacity: 0, y: 30 }"
-            :enter="{ opacity: 1, y: 0, transition: { delay: 300 } }"
-            class="text-xl text-white/80 mb-10 max-w-lg leading-relaxed"
-          >
-            Où que vous soyez dans le monde, envoyez des produits de qualité 
-            à votre famille au Tchad. Livraison sécurisée, rapide et confirmée par photo.
-          </p>
-          
-          <div 
-            v-motion
-            :initial="{ opacity: 0, y: 30 }"
-            :enter="{ opacity: 1, y: 0, transition: { delay: 400 } }"
-            class="flex flex-col sm:flex-row gap-4"
-          >
+          <div class="flex flex-col sm:flex-row gap-4">
             <NuxtLink to="/catalogue" class="btn-gold text-lg">
               <span><ShoppingBag class="w-5 h-5" />Voir le catalogue</span>
             </NuxtLink>
@@ -59,18 +62,29 @@
           </div>
 
           <!-- Trust badges -->
-          <div 
-            v-motion
-            :initial="{ opacity: 0 }"
-            :enter="{ opacity: 1, transition: { delay: 600 } }"
-            class="flex flex-wrap items-center gap-6 mt-14 pt-8 border-t border-white/10"
-          >
+          <div class="flex flex-wrap items-center gap-6 mt-14 pt-8 border-t border-white/10">
             <div v-for="badge in trustBadges" :key="badge.label" class="flex items-center gap-2.5">
               <div class="w-8 h-8 rounded-lg bg-[var(--color-accent)]/20 flex items-center justify-center">
                 <component :is="badge.icon" class="w-4 h-4 text-[var(--color-accent)]" />
               </div>
               <span class="text-sm text-white/80 font-medium">{{ badge.label }}</span>
             </div>
+          </div>
+
+          <!-- Slide indicators -->
+          <div class="flex items-center gap-3 mt-8">
+            <button 
+              v-for="(slide, i) in heroSlides" :key="'dot-'+i"
+              @click="goToSlide(i)"
+              class="relative h-1.5 rounded-full overflow-hidden transition-all duration-500"
+              :class="currentSlide === i ? 'w-12 bg-white/30' : 'w-6 bg-white/20 hover:bg-white/30'"
+            >
+              <div 
+                v-if="currentSlide === i"
+                class="absolute inset-0 bg-[var(--color-accent)] rounded-full hero-progress"
+                :style="{ animationDuration: slideDuration + 'ms' }"
+              />
+            </button>
           </div>
         </div>
       </div>
@@ -282,6 +296,44 @@ import {
 } from 'lucide-vue-next'
 import ProductCard from '~/components/product/ProductCard.vue'
 
+// Hero Carousel
+const heroSlides = [
+  {
+    image: '/hero-bg.png',
+    title: 'Offrez le meilleur<br />à vos <span class="text-gradient-gold">proches</span> au Tchad',
+    subtitle: 'Où que vous soyez dans le monde, envoyez des produits de qualité à votre famille. Livraison sécurisée et confirmée par photo.'
+  },
+  {
+    image: '/hero-slide2.png',
+    title: 'La joie de <span class="text-gradient-gold">recevoir</span>,<br />le bonheur d\'offrir',
+    subtitle: 'Chaque colis TchadBox crée un moment de bonheur. Découvrez nos packs alimentaires, scolaires et bien plus encore.'
+  },
+  {
+    image: '/hero-slide3.png',
+    title: 'Un service <span class="text-gradient-gold">fiable</span><br />qui vous ressemble',
+    subtitle: 'Plus de 500 familles nous font confiance. Rejoignez la communauté TchadBox et restez connecté avec vos proches.'
+  },
+]
+
+const currentSlide = ref(0)
+const slideDuration = 6000
+let slideInterval: ReturnType<typeof setInterval> | null = null
+
+const startAutoPlay = () => {
+  slideInterval = setInterval(() => {
+    currentSlide.value = (currentSlide.value + 1) % heroSlides.length
+  }, slideDuration)
+}
+
+const goToSlide = (index: number) => {
+  currentSlide.value = index
+  if (slideInterval) clearInterval(slideInterval)
+  startAutoPlay()
+}
+
+onMounted(() => startAutoPlay())
+onUnmounted(() => { if (slideInterval) clearInterval(slideInterval) })
+
 const trustBadges = [
   { icon: Shield, label: 'Paiement 100% sécurisé' },
   { icon: Truck, label: 'Livré en 3 à 5 jours' },
@@ -324,3 +376,24 @@ const testimonials = [
 
 useHead({ title: 'Accueil' })
 </script>
+
+<style scoped>
+.hero-zoom {
+  animation: heroZoom 8s ease-out forwards;
+}
+
+@keyframes heroZoom {
+  from { transform: scale(1.08); }
+  to { transform: scale(1); }
+}
+
+.hero-progress {
+  animation: progressFill linear forwards;
+  transform-origin: left;
+}
+
+@keyframes progressFill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+</style>

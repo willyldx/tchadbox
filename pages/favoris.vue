@@ -1,24 +1,24 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50/30">
+  <div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Header -->
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-          <h1 class="text-3xl font-bold text-stone-800">Mes favoris</h1>
-          <p class="text-stone-500 mt-1">{{ favoritesStore.count }} article{{ favoritesStore.count > 1 ? 's' : '' }} sauvegardé{{ favoritesStore.count > 1 ? 's' : '' }}</p>
+          <h1 class="text-3xl font-bold text-[var(--color-text)]">Mes favoris</h1>
+          <p class="text-[var(--color-text-muted)] mt-1">{{ favoritesStore.count }} article{{ favoritesStore.count > 1 ? 's' : '' }} sauvegardé{{ favoritesStore.count > 1 ? 's' : '' }}</p>
         </div>
 
         <div v-if="!favoritesStore.isEmpty" class="flex gap-3">
           <button
             @click="moveAllToCart"
-            class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all shadow-lg shadow-amber-500/25"
+            class="flex items-center gap-2 px-4 py-2 btn-gold !py-2 !px-4 !text-sm"
           >
             <ShoppingCartIcon class="w-5 h-5" />
             Tout ajouter au panier
           </button>
           <button
             @click="showClearConfirm = true"
-            class="flex items-center gap-2 px-4 py-2 border border-stone-200 text-stone-600 font-medium rounded-xl hover:bg-stone-50 transition-colors"
+            class="flex items-center gap-2 px-4 py-2 btn-outline !py-2 !px-4 !text-sm"
           >
             <TrashIcon class="w-5 h-5" />
             Vider
@@ -27,17 +27,17 @@
       </div>
 
       <!-- Empty State -->
-      <div v-if="favoritesStore.isEmpty" class="bg-white rounded-2xl border border-stone-100 p-12 text-center">
-        <div class="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <HeartIcon class="w-10 h-10 text-stone-400" />
+      <div v-if="favoritesStore.isEmpty" class="card p-12 text-center">
+        <div class="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4">
+          <HeartIcon class="w-10 h-10 text-amber-300" />
         </div>
-        <h3 class="text-lg font-semibold text-stone-800 mb-2">Aucun favori</h3>
-        <p class="text-stone-500 mb-6 max-w-md mx-auto">
+        <h3 class="text-lg font-semibold text-[var(--color-text)] mb-2">Aucun favori</h3>
+        <p class="text-[var(--color-text-muted)] mb-6 max-w-md mx-auto">
           Parcourez notre catalogue et cliquez sur le cœur pour sauvegarder vos produits préférés.
         </p>
         <NuxtLink
           to="/catalogue"
-          class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all shadow-lg shadow-amber-500/25"
+          class="btn-gold"
         >
           <SearchIcon class="w-5 h-5" />
           Découvrir nos produits
@@ -49,7 +49,7 @@
         <div
           v-for="item in favoritesStore.items"
           :key="item.productId"
-          class="bg-white rounded-2xl border border-stone-100 overflow-hidden group hover:border-stone-200 hover:shadow-lg transition-all"
+          class="card overflow-hidden group hover:!border-[var(--color-accent)]/15"
         >
           <!-- Product Image -->
           <NuxtLink :to="`/produit/${item.productId}`" class="block relative aspect-square bg-stone-50">
@@ -80,13 +80,13 @@
           <!-- Product Info -->
           <div class="p-4">
             <NuxtLink :to="`/produit/${item.productId}`">
-              <h3 class="font-medium text-stone-800 mb-1 line-clamp-2 hover:text-amber-600 transition-colors">
+              <h3 class="font-medium text-[var(--color-text)] mb-1 line-clamp-2 hover:text-[var(--color-accent-dark)] transition-colors">
                 {{ item.title }}
               </h3>
             </NuxtLink>
             
             <div class="flex items-center justify-between mt-3">
-              <p class="font-bold text-lg text-stone-800">{{ formatPrice(item.price) }}</p>
+              <p class="font-bold text-lg text-[var(--color-text)]">{{ formatPrice(item.price) }}</p>
               <button
                 @click="addToCart(item)"
                 class="w-10 h-10 bg-amber-100 hover:bg-amber-500 text-amber-600 hover:text-white rounded-xl flex items-center justify-center transition-colors"
@@ -95,7 +95,7 @@
               </button>
             </div>
 
-            <p class="text-xs text-stone-400 mt-1">Ajouté {{ formatDate(item.addedAt) }}</p>
+            <p class="text-xs text-[var(--color-text-muted)] mt-1">Ajouté {{ formatDate(item.addedAt) }}</p>
           </div>
         </div>
       </div>
@@ -139,8 +139,8 @@
             <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <TrashIcon class="w-8 h-8 text-red-600" />
             </div>
-            <h3 class="text-xl font-bold text-stone-800 text-center mb-2">Vider les favoris ?</h3>
-            <p class="text-stone-500 text-center mb-6">
+            <h3 class="text-xl font-bold text-[var(--color-text)] text-center mb-2">Vider les favoris ?</h3>
+            <p class="text-[var(--color-text-muted)] text-center mb-6">
               Tous vos {{ favoritesStore.count }} articles favoris seront supprimés.
             </p>
             <div class="flex gap-3">

@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50/30">
+  <div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Breadcrumb -->
       <nav class="flex items-center gap-2 text-sm mb-6">
@@ -75,7 +75,7 @@
                     v-model="form.firstName"
                     type="text"
                     required
-                    class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                    class="input"
                     :disabled="isLoading"
                   />
                 </div>
@@ -88,7 +88,7 @@
                     v-model="form.lastName"
                     type="text"
                     required
-                    class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                    class="input"
                     :disabled="isLoading"
                   />
                 </div>
@@ -117,7 +117,7 @@
                   v-model="form.phone"
                   type="tel"
                   placeholder="+33 6 12 34 56 78"
-                  class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                  class="input"
                   :disabled="isLoading"
                 />
               </div>
@@ -126,7 +126,7 @@
                 <button
                   type="submit"
                   :disabled="isLoading || !hasChanges"
-                  class="px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-amber-700 focus:ring-4 focus:ring-amber-500/25 transition-all shadow-lg shadow-amber-500/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  class="px-6 py-3 btn-gold disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
                   <LoaderIcon v-if="isLoading" class="w-5 h-5 animate-spin" />
                   <SaveIcon v-else class="w-5 h-5" />
@@ -154,7 +154,7 @@
                     v-model="passwordForm.current"
                     :type="showCurrentPassword ? 'text' : 'password'"
                     required
-                    class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all pr-12"
+                    class="input pr-12"
                     :disabled="isChangingPassword"
                   />
                   <button
@@ -179,7 +179,7 @@
                     :type="showNewPassword ? 'text' : 'password'"
                     required
                     minlength="6"
-                    class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all pr-12"
+                    class="input pr-12"
                     :disabled="isChangingPassword"
                   />
                   <button
@@ -202,7 +202,7 @@
                   v-model="passwordForm.confirm"
                   :type="showNewPassword ? 'text' : 'password'"
                   required
-                  class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                  class="input"
                   :class="{ 'border-red-300': passwordForm.confirm && !passwordsMatch }"
                   :disabled="isChangingPassword"
                 />

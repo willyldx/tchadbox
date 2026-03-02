@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50/30">
+  <div>
     <!-- Loading State -->
     <div v-if="isLoading" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="grid lg:grid-cols-2 gap-12 animate-pulse">
@@ -145,7 +145,7 @@
             <button
               @click="addToCart"
               :disabled="!product.inStock || isAddingToCart"
-              class="flex-1 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-amber-700 focus:ring-4 focus:ring-amber-500/25 transition-all shadow-lg shadow-amber-500/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              class="flex-1 py-4 btn-gold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               <LoaderIcon v-if="isAddingToCart" class="w-5 h-5 animate-spin" />
               <ShoppingCartIcon v-else class="w-5 h-5" />
@@ -167,7 +167,7 @@
                 <TruckIcon class="w-6 h-6 text-green-600" />
               </div>
               <p class="text-xs text-stone-600 font-medium">Livraison N'Djamena</p>
-              <p class="text-xs text-stone-400">7-14 jours</p>
+              <p class="text-xs text-[var(--color-text-muted)]">3-5 jours</p>
             </div>
             <div class="text-center">
               <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-2">
@@ -224,7 +224,7 @@
               <ul class="space-y-3 text-stone-600">
                 <li class="flex items-start gap-3">
                   <CheckIcon class="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
-                  <span>Délai de livraison : 7 à 14 jours ouvrés</span>
+                  <span>Délai de livraison : 3 à 5 jours ouvrés</span>
                 </li>
                 <li class="flex items-start gap-3">
                   <CheckIcon class="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
@@ -275,7 +275,7 @@
       <p class="text-stone-500 mb-6">Ce produit n'existe pas ou a été supprimé.</p>
       <NuxtLink
         to="/catalogue"
-        class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all"
+        class="btn-gold"
       >
         Voir le catalogue
       </NuxtLink>

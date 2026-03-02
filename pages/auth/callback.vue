@@ -1,9 +1,9 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50/30 flex items-center justify-center p-4">
+  <div class="min-h-screen bg-[var(--color-bg)] flex items-center justify-center p-4">
     <div class="text-center">
       <div class="w-16 h-16 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
-      <h1 class="text-xl font-semibold text-stone-800 mb-2">Connexion en cours...</h1>
-      <p class="text-stone-500">Veuillez patienter</p>
+      <h1 class="text-xl font-semibold text-[var(--color-text)] mb-2">Connexion en cours...</h1>
+      <p class="text-[var(--color-text-muted)]">Veuillez patienter</p>
     </div>
   </div>
 </template>

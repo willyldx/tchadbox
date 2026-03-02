@@ -1,9 +1,9 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50/30 flex items-center justify-center p-4">
+  <div class="min-h-screen bg-[var(--color-bg)] flex items-center justify-center p-4">
     <!-- Background decoration -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="absolute -top-40 -right-40 w-80 h-80 bg-amber-200/20 rounded-full blur-3xl"></div>
-      <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-amber-300/20 rounded-full blur-3xl"></div>
+      <div class="orb orb-amber w-80 h-80 -top-40 -right-40"></div>
+      <div class="orb orb-warm w-80 h-80 -bottom-40 -left-40"></div>
     </div>
 
     <div class="w-full max-w-md relative">
@@ -14,11 +14,11 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
           </svg>
         </div>
-        <span class="text-2xl font-bold text-stone-800">TchadBox</span>
+        <span class="text-2xl font-bold text-[var(--color-text)]">TchadBox</span>
       </NuxtLink>
 
       <!-- Card -->
-      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl shadow-stone-200/50 border border-white/50 p-8">
+      <div class="card-glass rounded-2xl shadow-xl p-8">
         <!-- Success State -->
         <div v-if="emailSent" class="text-center">
           <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -26,24 +26,24 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
           </div>
-          <h1 class="text-2xl font-bold text-stone-800 mb-2">Email envoyé !</h1>
-          <p class="text-stone-500 mb-6">
+          <h1 class="text-2xl font-bold text-[var(--color-text)] mb-2">Email envoyé !</h1>
+          <p class="text-[var(--color-text-muted)] mb-6">
             Si un compte existe avec l'adresse <strong>{{ form.email }}</strong>, vous recevrez un lien de réinitialisation.
           </p>
-          <p class="text-sm text-stone-400 mb-8">
+          <p class="text-sm text-[var(--color-text-muted)] mb-8">
             N'oubliez pas de vérifier vos spams si vous ne voyez pas l'email.
           </p>
           
           <div class="space-y-3">
             <button
               @click="resetForm"
-              class="w-full py-3 border border-stone-200 text-stone-700 font-medium rounded-xl hover:bg-stone-50 transition-colors"
+              class="w-full py-3 btn-outline"
             >
               Essayer une autre adresse
             </button>
             <NuxtLink
               to="/auth/login"
-              class="block w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all text-center"
+              class="block w-full py-3 btn-gold !rounded-xl text-center"
             >
               Retour à la connexion
             </NuxtLink>
@@ -58,8 +58,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
               </svg>
             </div>
-            <h1 class="text-2xl font-bold text-stone-800 mb-2">Mot de passe oublié ?</h1>
-            <p class="text-stone-500">Entrez votre email et nous vous enverrons un lien de réinitialisation.</p>
+            <h1 class="text-2xl font-bold text-[var(--color-text)] mb-2">Mot de passe oublié ?</h1>
+            <p class="text-[var(--color-text-muted)]">Entrez votre email et nous vous enverrons un lien de réinitialisation.</p>
           </div>
 
           <!-- Error Alert -->
@@ -98,7 +98,7 @@
                   required
                   autocomplete="email"
                   placeholder="votre@email.com"
-                  class="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all placeholder:text-stone-400"
+                  class="input pl-12"
                   :disabled="isLoading"
                 />
               </div>
@@ -108,7 +108,7 @@
             <button
               type="submit"
               :disabled="isLoading || !form.email"
-              class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-amber-700 focus:ring-4 focus:ring-amber-500/25 transition-all shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              class="w-full py-3.5 btn-gold !rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               <svg v-if="isLoading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -122,7 +122,7 @@
           <div class="mt-8 text-center">
             <NuxtLink 
               to="/auth/login" 
-              class="inline-flex items-center gap-2 text-stone-600 hover:text-amber-600 transition-colors"
+              class="inline-flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[var(--color-accent-dark)] transition-colors"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />

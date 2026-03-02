@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50/30">
+  <div>
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Header -->
       <div class="flex items-center justify-between mb-8">
@@ -76,7 +76,7 @@
                       v-model="form.firstName"
                       type="text"
                       required
-                      class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                      class="input"
                     />
                   </div>
                   <div>
@@ -85,7 +85,7 @@
                       v-model="form.lastName"
                       type="text"
                       required
-                      class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                      class="input"
                     />
                   </div>
                 </div>
@@ -96,7 +96,7 @@
                     v-model="form.email"
                     type="email"
                     required
-                    class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                    class="input"
                   />
                 </div>
 
@@ -107,7 +107,7 @@
                     type="tel"
                     required
                     placeholder="+33 6 XX XX XX XX"
-                    class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                    class="input"
                   />
                 </div>
               </div>
@@ -140,7 +140,7 @@
                       v-model="form.recipientName"
                       type="text"
                       required
-                      class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                      class="input"
                     />
                   </div>
 
@@ -151,7 +151,7 @@
                       type="tel"
                       required
                       placeholder="+235 XX XX XX XX"
-                      class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                      class="input"
                     />
                   </div>
                 </div>
@@ -163,7 +163,7 @@
                     type="text"
                     required
                     placeholder="Quartier, rue, repère..."
-                    class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                    class="input"
                   />
                 </div>
 
@@ -173,7 +173,7 @@
                     <select
                       v-model="form.address.city"
                       required
-                      class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                      class="input"
                     >
                       <option value="N'Djamena">N'Djamena</option>
                       <option value="Moundou">Moundou</option>
@@ -198,7 +198,7 @@
                     v-model="form.deliveryInstructions"
                     rows="3"
                     placeholder="Horaires préférés, instructions spéciales..."
-                    class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all resize-none"
+                    class="input resize-none"
                   ></textarea>
                 </div>
               </div>
@@ -327,7 +327,7 @@
               v-if="currentStep < 2"
               @click="nextStep"
               :disabled="!canProceed"
-              class="flex-1 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all shadow-lg shadow-amber-500/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              class="flex-1 py-3 btn-gold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               Continuer
               <ArrowRightIcon class="w-5 h-5" />
@@ -336,7 +336,7 @@
               v-if="currentStep === 2"
               @click="submitOrder"
               :disabled="!acceptTerms || isSubmitting"
-              class="flex-1 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all shadow-lg shadow-amber-500/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              class="flex-1 py-3 btn-gold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               <LoaderIcon v-if="isSubmitting" class="w-5 h-5 animate-spin" />
               <LockIcon v-else class="w-5 h-5" />

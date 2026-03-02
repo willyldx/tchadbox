@@ -1,16 +1,16 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50/30">
+  <div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-stone-800">Mon compte</h1>
-        <p class="text-stone-500 mt-1">Bienvenue, {{ authStore.fullName || 'cher client' }}</p>
+        <h1 class="text-3xl font-bold text-[var(--color-text)]">Mon compte</h1>
+        <p class="text-[var(--color-text-muted)] mt-1">Bienvenue, {{ authStore.fullName || 'cher client' }}</p>
       </div>
 
       <div class="grid lg:grid-cols-4 gap-8">
         <!-- Sidebar Navigation -->
         <div class="lg:col-span-1">
-          <nav class="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden">
+          <nav class="card overflow-hidden">
             <div class="p-6 border-b border-stone-100">
               <div class="flex items-center gap-4">
                 <div class="w-14 h-14 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-amber-500/25">
@@ -110,7 +110,7 @@
               <p class="text-sm text-stone-500 mb-4">Vous n'avez pas encore passé de commande.</p>
               <NuxtLink
                 to="/catalogue"
-                class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all shadow-lg shadow-amber-500/25"
+                class="btn-gold"
               >
                 <ShoppingBagIcon class="w-5 h-5" />
                 Découvrir nos produits

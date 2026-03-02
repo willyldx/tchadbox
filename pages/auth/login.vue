@@ -1,9 +1,9 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50/30 flex items-center justify-center p-4">
+  <div class="min-h-screen bg-[var(--color-bg)] flex items-center justify-center p-4">
     <!-- Background decoration -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="absolute -top-40 -right-40 w-80 h-80 bg-amber-200/20 rounded-full blur-3xl"></div>
-      <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-amber-300/20 rounded-full blur-3xl"></div>
+      <div class="orb orb-amber w-80 h-80 -top-40 -right-40"></div>
+      <div class="orb orb-warm w-80 h-80 -bottom-40 -left-40"></div>
     </div>
 
     <div class="w-full max-w-md relative">
@@ -14,14 +14,14 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
           </svg>
         </div>
-        <span class="text-2xl font-bold text-stone-800">TchadBox</span>
+        <span class="text-2xl font-bold text-[var(--color-text)]">TchadBox</span>
       </NuxtLink>
 
       <!-- Login Card -->
-      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl shadow-stone-200/50 border border-white/50 p-8">
+      <div class="card-glass rounded-2xl shadow-xl p-8">
         <div class="text-center mb-8">
-          <h1 class="text-2xl font-bold text-stone-800 mb-2">Bon retour !</h1>
-          <p class="text-stone-500">Connectez-vous à votre compte TchadBox</p>
+          <h1 class="text-2xl font-bold text-[var(--color-text)] mb-2">Bon retour !</h1>
+          <p class="text-[var(--color-text-muted)]">Connectez-vous à votre compte TchadBox</p>
         </div>
 
         <!-- Error Alert -->
@@ -45,7 +45,7 @@
         <form @submit.prevent="handleSubmit" class="space-y-5">
           <!-- Email -->
           <div>
-            <label for="email" class="block text-sm font-medium text-stone-700 mb-2">
+            <label for="email" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
               Adresse email
             </label>
             <div class="relative">
@@ -61,7 +61,7 @@
                 required
                 autocomplete="email"
                 placeholder="votre@email.com"
-                class="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all placeholder:text-stone-400"
+                class="input pl-12"
                 :disabled="authStore.isLoading"
               />
             </div>
@@ -70,12 +70,12 @@
           <!-- Password -->
           <div>
             <div class="flex items-center justify-between mb-2">
-              <label for="password" class="block text-sm font-medium text-stone-700">
+              <label for="password" class="block text-sm font-medium text-[var(--color-text-secondary)]">
                 Mot de passe
               </label>
               <NuxtLink 
                 to="/auth/mot-de-passe-oublie" 
-                class="text-sm text-amber-600 hover:text-amber-700 font-medium transition-colors"
+                class="text-sm text-[var(--color-accent-dark)] hover:text-[var(--color-accent)] font-medium transition-colors"
               >
                 Oublié ?
               </NuxtLink>
@@ -93,7 +93,7 @@
                 required
                 autocomplete="current-password"
                 placeholder="••••••••"
-                class="w-full pl-12 pr-12 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all placeholder:text-stone-400"
+                class="input pl-12 pr-12"
                 :disabled="authStore.isLoading"
               />
               <button
@@ -120,7 +120,7 @@
               type="checkbox"
               class="w-4 h-4 text-amber-500 border-stone-300 rounded focus:ring-amber-500/20 cursor-pointer"
             />
-            <label for="remember" class="ml-2 text-sm text-stone-600 cursor-pointer">
+            <label for="remember" class="ml-2 text-sm text-[var(--color-text-secondary)] cursor-pointer">
               Se souvenir de moi
             </label>
           </div>
@@ -129,7 +129,7 @@
           <button
             type="submit"
             :disabled="authStore.isLoading"
-            class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-amber-700 focus:ring-4 focus:ring-amber-500/25 transition-all shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            class="w-full py-3.5 btn-gold !rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             <svg v-if="authStore.isLoading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -145,7 +145,7 @@
             <div class="w-full border-t border-stone-200"></div>
           </div>
           <div class="relative flex justify-center text-sm">
-            <span class="px-4 bg-white text-stone-500">ou continuer avec</span>
+            <span class="px-4 bg-white text-[var(--color-text-muted)]">ou continuer avec</span>
           </div>
         </div>
 
@@ -154,7 +154,7 @@
           <button
             type="button"
             @click="handleGoogleLogin"
-            class="flex items-center justify-center gap-2 py-3 px-4 border border-stone-200 rounded-xl hover:bg-stone-50 transition-colors"
+            class="flex items-center justify-center gap-2 py-3 px-4 border border-[var(--color-border)] rounded-xl hover:bg-[var(--color-bg-warm)] transition-colors"
           >
             <svg class="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -177,16 +177,16 @@
         </div>
 
         <!-- Register Link -->
-        <p class="text-center text-stone-600 mt-8">
+        <p class="text-center text-[var(--color-text-secondary)] mt-8">
           Pas encore de compte ?
-          <NuxtLink to="/auth/register" class="text-amber-600 hover:text-amber-700 font-semibold transition-colors">
+          <NuxtLink to="/auth/register" class="text-[var(--color-accent-dark)] hover:text-[var(--color-accent)] font-semibold transition-colors">
             Créer un compte
           </NuxtLink>
         </p>
       </div>
 
       <!-- Security Note -->
-      <p class="text-center text-xs text-stone-400 mt-6">
+      <p class="text-center text-xs text-[var(--color-text-muted)] mt-6">
         <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>

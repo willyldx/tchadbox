@@ -1,9 +1,9 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50/30 flex items-center justify-center p-4 py-12">
+  <div class="min-h-screen bg-[var(--color-bg)] flex items-center justify-center p-4 py-12">
     <!-- Background decoration -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="absolute -top-40 -right-40 w-80 h-80 bg-amber-200/20 rounded-full blur-3xl"></div>
-      <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-amber-300/20 rounded-full blur-3xl"></div>
+      <div class="orb orb-amber w-80 h-80 -top-40 -right-40"></div>
+      <div class="orb orb-warm w-80 h-80 -bottom-40 -left-40"></div>
     </div>
 
     <div class="w-full max-w-md relative">
@@ -14,14 +14,14 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
           </svg>
         </div>
-        <span class="text-2xl font-bold text-stone-800">TchadBox</span>
+        <span class="text-2xl font-bold text-[var(--color-text)]">TchadBox</span>
       </NuxtLink>
 
       <!-- Register Card -->
-      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl shadow-stone-200/50 border border-white/50 p-8">
+      <div class="card-glass rounded-2xl shadow-xl p-8">
         <div class="text-center mb-8">
-          <h1 class="text-2xl font-bold text-stone-800 mb-2">Créer un compte</h1>
-          <p class="text-stone-500">Rejoignez TchadBox et envoyez vos colis</p>
+          <h1 class="text-2xl font-bold text-[var(--color-text)] mb-2">Créer un compte</h1>
+          <p class="text-[var(--color-text-muted)]">Rejoignez TchadBox et envoyez vos colis</p>
         </div>
 
         <!-- Success Message -->
@@ -75,7 +75,7 @@
                 required
                 autocomplete="given-name"
                 placeholder="Jean"
-                class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all placeholder:text-stone-400"
+                class="input"
                 :disabled="authStore.isLoading"
               />
             </div>
@@ -90,7 +90,7 @@
                 required
                 autocomplete="family-name"
                 placeholder="Dupont"
-                class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all placeholder:text-stone-400"
+                class="input"
                 :disabled="authStore.isLoading"
               />
             </div>
@@ -114,7 +114,7 @@
                 required
                 autocomplete="email"
                 placeholder="votre@email.com"
-                class="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all placeholder:text-stone-400"
+                class="input pl-12"
                 :disabled="authStore.isLoading"
               />
             </div>
@@ -137,7 +137,7 @@
                 type="tel"
                 autocomplete="tel"
                 placeholder="+33 6 12 34 56 78"
-                class="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all placeholder:text-stone-400"
+                class="input pl-12"
                 :disabled="authStore.isLoading"
               />
             </div>
@@ -162,7 +162,7 @@
                 autocomplete="new-password"
                 placeholder="••••••••"
                 minlength="6"
-                class="w-full pl-12 pr-12 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all placeholder:text-stone-400"
+                class="input pl-12 pr-12"
                 :disabled="authStore.isLoading"
               />
               <button
@@ -213,7 +213,7 @@
                 required
                 autocomplete="new-password"
                 placeholder="••••••••"
-                class="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all placeholder:text-stone-400"
+                class="input pl-12"
                 :class="{ 'border-red-300 focus:border-red-500': form.confirmPassword && !passwordsMatch }"
                 :disabled="authStore.isLoading"
               />
@@ -244,7 +244,7 @@
           <button
             type="submit"
             :disabled="authStore.isLoading || !isFormValid"
-            class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-amber-700 focus:ring-4 focus:ring-amber-500/25 transition-all shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            class="w-full py-3.5 btn-gold !rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             <svg v-if="authStore.isLoading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -255,9 +255,9 @@
         </form>
 
         <!-- Login Link -->
-        <p class="text-center text-stone-600 mt-8">
+        <p class="text-center text-[var(--color-text-secondary)] mt-8">
           Déjà un compte ?
-          <NuxtLink to="/auth/login" class="text-amber-600 hover:text-amber-700 font-semibold transition-colors">
+          <NuxtLink to="/auth/login" class="text-[var(--color-accent-dark)] hover:text-[var(--color-accent)] font-semibold transition-colors">
             Se connecter
           </NuxtLink>
         </p>
@@ -265,7 +265,7 @@
 
       <!-- Trust badges -->
       <div class="flex items-center justify-center gap-6 mt-8">
-        <div class="flex items-center gap-2 text-xs text-stone-400">
+        <div class="flex items-center gap-2 text-xs text-[var(--color-text-muted)]">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
