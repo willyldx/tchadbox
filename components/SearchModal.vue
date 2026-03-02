@@ -29,16 +29,21 @@
             </button>
           </div>
 
-          <div v-if="query.length > 0" class="max-h-80 overflow-y-auto">
-            <div v-if="filteredProducts.length > 0" class="p-2">
+          <div v-if="query.length >= 2" class="max-h-80 overflow-y-auto">
+            <div v-if="isSearching" class="p-8 text-center">
+              <div class="w-8 h-8 border-3 border-gray-200 border-t-[var(--color-accent)] rounded-full animate-spin mx-auto mb-3"></div>
+              <p class="text-[var(--color-text-muted)]">Recherche en cours...</p>
+            </div>
+            <div v-else-if="searchResults.length > 0" class="p-2">
               <NuxtLink 
-                v-for="product in filteredProducts" :key="product.id"
+                v-for="product in searchResults" :key="product.id"
                 :to="`/produit/${product.handle}`"
                 class="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors"
                 @click="close"
               >
-                <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
-                  <Package class="w-5 h-5 text-gray-400" />
+                <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden">
+                  <img v-if="product.thumbnail" :src="product.thumbnail" :alt="product.title" class="w-full h-full object-cover" />
+                  <Package v-else class="w-5 h-5 text-gray-400" />
                 </div>
                 <div class="flex-grow">
                   <h4 class="font-medium text-[var(--color-text)]">{{ product.title }}</h4>
@@ -75,23 +80,44 @@ const emit = defineEmits<{ 'update:modelValue': [value: boolean] }>()
 
 const query = ref('')
 const searchInput = ref<HTMLInputElement>()
+const searchResults = ref<any[]>([])
+const isSearching = ref(false)
 
-const products = [
-  { id: '1', title: 'Sac de riz 25kg', handle: 'sac-riz-25kg', price: 35, category: 'Alimentaire' },
-  { id: '2', title: 'Sac de riz 50kg', handle: 'sac-riz-50kg', price: 65, category: 'Alimentaire' },
-  { id: '3', title: 'Kit Rentrée Primaire', handle: 'kit-primaire', price: 35, category: 'Scolarité' },
-  { id: '4', title: 'Pack Ramadan', handle: 'pack-ramadan', price: 95, category: 'Fêtes' },
-]
+let searchTimeout: ReturnType<typeof setTimeout> | null = null
 
-const filteredProducts = computed(() => {
-  if (!query.value) return []
-  const q = query.value.toLowerCase()
-  return products.filter(p => p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q))
+// Debounced Supabase search
+watch(query, (q) => {
+  if (searchTimeout) clearTimeout(searchTimeout)
+  
+  if (!q || q.length < 2) {
+    searchResults.value = []
+    return
+  }
+
+  isSearching.value = true
+  searchTimeout = setTimeout(async () => {
+    const { client } = useSupabase()
+    const { data } = await client
+      .from('products')
+      .select('id, title, handle, price, thumbnail, category:categories(name)')
+      .ilike('title', `%${q}%`)
+      .limit(8)
+
+    searchResults.value = (data || []).map((p: any) => ({
+      id: p.id,
+      title: p.title,
+      handle: p.handle,
+      price: p.price,
+      thumbnail: p.thumbnail,
+      category: p.category?.name || '',
+    }))
+    isSearching.value = false
+  }, 300)
 })
 
 const formatPrice = (price: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price)
 
-const close = () => { emit('update:modelValue', false); query.value = '' }
+const close = () => { emit('update:modelValue', false); query.value = ''; searchResults.value = [] }
 
 watch(() => props.modelValue, (open) => { if (open) nextTick(() => searchInput.value?.focus()) })
 </script>
