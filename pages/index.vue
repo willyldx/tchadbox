@@ -21,7 +21,7 @@
             class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-8"
           >
             <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            <span class="text-sm font-medium text-white/90">Livraison garantie avec photo à N'Djamena</span>
+            <span class="text-sm font-medium text-white/90">🇹🇩 Service de livraison premium à N'Djamena — Preuve photo garantie</span>
           </div>
           
           <h1 
@@ -30,8 +30,8 @@
             :enter="{ opacity: 1, y: 0, transition: { delay: 200 } }"
             class="heading-hero text-white mb-6"
           >
-            Envoyez du<br />
-            <span class="text-gradient-gold">bonheur</span> au Tchad
+            Offrez le meilleur<br />
+            à vos <span class="text-gradient-gold">proches</span> au Tchad
           </h1>
           
           <p 
@@ -40,8 +40,8 @@
             :enter="{ opacity: 1, y: 0, transition: { delay: 300 } }"
             class="text-xl text-white/80 mb-10 max-w-lg leading-relaxed"
           >
-            La diaspora tchadienne envoie des biens essentiels à sa famille. 
-            Livraison sécurisée en 3-5 jours à N'Djamena.
+            Où que vous soyez dans le monde, envoyez des produits de qualité 
+            à votre famille au Tchad. Livraison sécurisée, rapide et confirmée par photo.
           </p>
           
           <div 
@@ -106,10 +106,10 @@
     <section class="py-20 bg-[var(--color-bg-warm)]">
       <div class="container-main">
         <div class="text-center mb-14">
-          <span class="label mb-3 block">Nos produits</span>
-          <h2 class="heading-section">Choisissez une <span class="text-gradient">catégorie</span></h2>
+          <span class="label mb-3 block">Nos gammes</span>
+          <h2 class="heading-section">Explorez nos <span class="text-gradient">catégories</span></h2>
           <p class="text-[var(--color-text-muted)] mt-3 max-w-lg mx-auto">
-            Des produits sélectionnés avec soin pour votre famille au Tchad
+            Des produits rigoureusement sélectionnés, sourcés localement pour garantir fraîcheur et qualité
           </p>
         </div>
         
@@ -151,8 +151,8 @@
       <div class="container-main">
         <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-14">
           <div>
-            <span class="label mb-3 block">Populaires</span>
-            <h2 class="heading-section">Produits <span class="text-gradient">phares</span></h2>
+            <span class="label mb-3 block">Les plus demandés</span>
+            <h2 class="heading-section">Nos <span class="text-gradient">best-sellers</span></h2>
           </div>
           <NuxtLink to="/catalogue" class="btn-outline self-start group">
             <span>Voir tout <ArrowRight class="w-4 h-4 transition-transform group-hover:translate-x-1" /></span>
@@ -171,10 +171,10 @@
       
       <div class="container-main relative">
         <div class="text-center mb-16">
-          <span class="label mb-3 block">Processus</span>
+          <span class="label mb-3 block">Simple et rapide</span>
           <h2 class="heading-section">Comment ça <span class="text-gradient">marche</span></h2>
           <p class="text-[var(--color-text-muted)] mt-3 max-w-lg mx-auto">
-            En 4 étapes simples, faites livrer des biens à votre famille
+            Un processus en 4 étapes pensé pour votre tranquillité d'esprit
           </p>
         </div>
         
@@ -210,8 +210,8 @@
     <section class="py-24 bg-[var(--color-bg)]">
       <div class="container-main">
         <div class="text-center mb-14">
-          <span class="label mb-3 block">Témoignages</span>
-          <h2 class="heading-section">Ce que dit notre <span class="text-gradient">communauté</span></h2>
+          <span class="label mb-3 block">Ils nous font confiance</span>
+          <h2 class="heading-section">La parole à notre <span class="text-gradient">communauté</span></h2>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -256,10 +256,10 @@
           :visibleOnce="{ opacity: 1, y: 0 }"
           class="heading-section text-white mb-6"
         >
-          Prêt à envoyer du <span class="text-gradient-gold">bonheur</span> ?
+          Faites la différence <span class="text-gradient-gold">aujourd'hui</span>
         </h2>
         <p class="text-xl text-white/70 mb-12 max-w-2xl mx-auto">
-          Commandez maintenant et faites livrer en 3-5 jours. Photo de preuve garantie.
+          Des milliers de familles reçoivent déjà leurs colis grâce à TchadBox. Rejoignez-les et offrez le sourire à vos proches.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <NuxtLink to="/catalogue" class="btn-gold text-lg">
@@ -283,43 +283,43 @@ import {
 import ProductCard from '~/components/product/ProductCard.vue'
 
 const trustBadges = [
-  { icon: Shield, label: 'Paiement sécurisé' },
-  { icon: Truck, label: 'Livraison 3-5 jours' },
-  { icon: Camera, label: 'Photo de preuve' },
+  { icon: Shield, label: 'Paiement 100% sécurisé' },
+  { icon: Truck, label: 'Livré en 3 à 5 jours' },
+  { icon: Camera, label: 'Photo de livraison certifiée' },
 ]
 
 const stats = [
-  { value: '500+', label: 'Familles servies', icon: Users, bgColor: 'rgba(245, 158, 11, 0.1)', iconColor: '#D97706' },
-  { value: '100%', label: 'Livraison garantie', icon: CheckCircle, bgColor: 'rgba(5, 150, 105, 0.1)', iconColor: '#059669' },
-  { value: '3-5j', label: 'Délai moyen', icon: Clock, bgColor: 'rgba(59, 130, 246, 0.1)', iconColor: '#2563EB' },
-  { value: '24/7', label: 'Support client', icon: MessageCircle, bgColor: 'rgba(168, 85, 247, 0.1)', iconColor: '#7C3AED' },
+  { value: '500+', label: 'Familles accompagnées', icon: Users, bgColor: 'rgba(245, 158, 11, 0.1)', iconColor: '#D97706' },
+  { value: '100%', label: 'Satisfaction garantie', icon: CheckCircle, bgColor: 'rgba(5, 150, 105, 0.1)', iconColor: '#059669' },
+  { value: '3-5j', label: 'Délai de livraison', icon: Clock, bgColor: 'rgba(59, 130, 246, 0.1)', iconColor: '#2563EB' },
+  { value: '24/7', label: 'Service client dédié', icon: MessageCircle, bgColor: 'rgba(168, 85, 247, 0.1)', iconColor: '#7C3AED' },
 ]
 
 const categories = [
-  { name: 'Alimentaire', handle: 'alimentaire', description: 'Riz, huile, sucre, farine...', icon: Wheat, color: '#059669' },
-  { name: 'Scolarité', handle: 'scolarite', description: 'Fournitures scolaires', icon: BookOpen, color: '#2563EB' },
-  { name: 'Santé & Bébé', handle: 'sante', description: 'Produits de santé', icon: Heart, color: '#EC4899' },
-  { name: 'Fêtes', handle: 'fetes', description: 'Ramadan, Tabaski...', icon: Gift, color: '#D97706' },
+  { name: 'Alimentaire', handle: 'alimentaire', description: 'Riz, huile, sucre, farine et produits de première nécessité', icon: Wheat, color: '#059669' },
+  { name: 'Scolarité', handle: 'scolarite', description: 'Kits scolaires complets pour la réussite de vos enfants', icon: BookOpen, color: '#2563EB' },
+  { name: 'Santé & Bébé', handle: 'sante', description: 'Médicaments, couches et soins essentiels', icon: Heart, color: '#EC4899' },
+  { name: 'Fêtes', handle: 'fetes', description: 'Packs spéciaux Ramadan, Tabaski et occasions', icon: Gift, color: '#D97706' },
 ]
 
 const featuredProducts = [
-  { id: '1', title: 'Sac de riz 25kg', handle: 'sac-riz-25kg', price: 35, category: 'Alimentaire', subtitle: 'Qualité premium' },
-  { id: '2', title: 'Sac de riz 50kg', handle: 'sac-riz-50kg', price: 65, category: 'Alimentaire', subtitle: 'Format familial' },
-  { id: '3', title: 'Kit Rentrée', handle: 'kit-rentree', price: 35, category: 'Scolarité', subtitle: 'Tout pour l\'école' },
-  { id: '4', title: 'Pack Ramadan', handle: 'pack-ramadan', price: 95, category: 'Fêtes', subtitle: 'Spécial mois sacré' },
+  { id: '1', title: 'Sac de riz 25kg', handle: 'sac-riz-25kg', price: 35, category: 'Alimentaire', subtitle: 'Qualité supérieure' },
+  { id: '2', title: 'Sac de riz 50kg', handle: 'sac-riz-50kg', price: 65, category: 'Alimentaire', subtitle: 'Le choix des grandes familles' },
+  { id: '3', title: 'Kit Rentrée Scolaire', handle: 'kit-rentree', price: 35, category: 'Scolarité', subtitle: 'Complet et prêt à l\'emploi' },
+  { id: '4', title: 'Pack Ramadan Premium', handle: 'pack-ramadan', price: 95, category: 'Fêtes', subtitle: 'L\'essentiel pour le mois béni' },
 ]
 
 const steps = [
-  { title: 'Choisissez', description: 'Parcourez notre catalogue de produits essentiels', icon: Package },
-  { title: 'Payez', description: 'Paiement sécurisé par carte ou Mobile Money', icon: CreditCard },
-  { title: 'On livre', description: 'Livraison rapide à N\'Djamena en 3-5 jours', icon: Truck },
-  { title: 'Photo preuve', description: 'Recevez la photo de livraison confirmée', icon: Camera },
+  { title: 'Sélectionnez', description: 'Choisissez parmi nos produits de qualité vérifiée', icon: Package },
+  { title: 'Réglez en toute sérénité', description: 'Paiement sécurisé par carte bancaire ou Mobile Money', icon: CreditCard },
+  { title: 'Nous livrons', description: 'Notre équipe locale livre directement à domicile en 3-5 jours', icon: Truck },
+  { title: 'Preuve certifiée', description: 'Recevez la photo de remise par WhatsApp ou email', icon: Camera },
 ]
 
 const testimonials = [
-  { id: 1, name: 'Fatima M.', location: 'Paris', message: 'Ma mère a reçu le riz en 4 jours. Elle était tellement heureuse ! TchadBox a changé notre façon d\'aider notre famille.' },
-  { id: 2, name: 'Ibrahim D.', location: 'Bruxelles', message: 'Service exceptionnel. La photo de livraison m\'a complètement rassuré. Je recommande à tous les Tchadiens de la diaspora.' },
-  { id: 3, name: 'Aisha T.', location: 'Lyon', message: 'Enfin un service fiable ! Plus besoin de chercher des voyageurs. Mes parents reçoivent régulièrement leurs provisions.' },
+  { id: 1, name: 'Fatima M.', location: 'Paris, France', message: 'Ma mère a reçu son colis en 4 jours seulement. La photo de livraison m\'a fait pleurer de joie. TchadBox a transformé notre manière de prendre soin de notre famille à distance.' },
+  { id: 2, name: 'Ibrahim D.', location: 'Bruxelles, Belgique', message: 'Un service d\'une fiabilité exceptionnelle. Depuis que j\'utilise TchadBox, je n\'ai plus aucune inquiétude. La preuve photo à chaque livraison, c\'est la transparence totale.' },
+  { id: 3, name: 'Aisha T.', location: 'Lyon, France', message: 'Fini le stress de chercher des voyageurs ou de faire confiance à des inconnus. Avec TchadBox, mes parents reçoivent leurs provisions chaque mois, comme sur des roulettes.' },
 ]
 
 useHead({ title: 'Accueil' })

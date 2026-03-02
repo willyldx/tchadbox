@@ -20,7 +20,7 @@
           v-motion :initial="{ opacity: 0, y: 20 }" :enter="{ opacity: 1, y: 0, transition: { delay: 200 } }"
           class="text-lg text-white/70 max-w-lg mx-auto"
         >
-          Notre équipe est disponible pour répondre à toutes vos questions
+          Notre équipe dédiée est à votre écoute pour vous accompagner à chaque étape
         </p>
       </div>
     </section>
@@ -31,8 +31,8 @@
         <!-- Contact Form — 3/5 width -->
         <div class="lg:col-span-3">
           <div class="card p-8 md:p-10">
-            <h2 class="text-2xl font-bold text-[var(--color-text)] mb-2">Envoyez un message</h2>
-            <p class="text-[var(--color-text-muted)] mb-8">Nous vous répondrons sous 24h</p>
+            <h2 class="text-2xl font-bold text-[var(--color-text)] mb-2">Écrivez-nous</h2>
+            <p class="text-[var(--color-text-muted)] mb-8">Notre équipe s'engage à vous répondre sous 24 heures</p>
             
             <form @submit.prevent="submitForm" class="space-y-6">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -139,8 +139,8 @@
               <Zap class="w-6 h-6 text-[var(--color-accent-dark)]" />
             </div>
             <div>
-              <p class="font-semibold text-[var(--color-text)] text-sm">Réponse rapide</p>
-              <p class="text-xs text-[var(--color-text-muted)]">Nous répondons en moins de 24h en moyenne</p>
+              <p class="font-semibold text-[var(--color-text)] text-sm">Temps de réponse moyen</p>
+              <p class="text-xs text-[var(--color-text-muted)]">Moins de 24h — votre satisfaction est notre priorité</p>
             </div>
           </div>
         </div>
@@ -157,9 +157,9 @@ const form = ref({ name: '', email: '', subject: '', message: '' })
 const isSubmitting = ref(false)
 
 const contactInfo = [
-  { label: 'Email', value: 'contact@tchadbox.com', href: 'mailto:contact@tchadbox.com', icon: Mail, color: '#2563EB', note: 'Réponse sous 24h' },
-  { label: 'WhatsApp', value: '+33 X XX XX XX XX', href: '#', icon: MessageSquare, color: '#059669', note: 'Réponse instantanée' },
-  { label: 'Livraison', value: 'N\'Djamena, Tchad', href: null, icon: MapPin, color: '#D97706', note: 'Zone de livraison principale' },
+  { label: 'Email professionnel', value: 'contact@tchadbox.com', href: 'mailto:contact@tchadbox.com', icon: Mail, color: '#2563EB', note: 'Réponse garantie sous 24h' },
+  { label: 'WhatsApp direct', value: '+33 X XX XX XX XX', href: '#', icon: MessageSquare, color: '#059669', note: 'Assistance en temps réel' },
+  { label: 'Zone de livraison', value: 'N\'Djamena, Tchad', href: null, icon: MapPin, color: '#D97706', note: 'Couverture complète de la capitale' },
 ]
 
 const hours = [
@@ -171,7 +171,7 @@ const hours = [
 const submitForm = async () => {
   isSubmitting.value = true
   await new Promise(r => setTimeout(r, 1500))
-  toast.add({ title: 'Message envoyé !', description: 'Nous vous répondrons sous 24h.', icon: 'i-heroicons-check-circle', color: 'green' })
+  toast.add({ title: 'Message envoyé avec succès !', description: 'Notre équipe vous contactera sous 24 heures.', icon: 'i-heroicons-check-circle', color: 'green' })
   form.value = { name: '', email: '', subject: '', message: '' }
   isSubmitting.value = false
 }

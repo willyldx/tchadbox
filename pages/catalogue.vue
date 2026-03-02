@@ -72,7 +72,7 @@
           <!-- Error state -->
           <div v-else-if="error" class="card p-16 text-center">
             <AlertCircle class="w-16 h-16 text-red-300 mx-auto mb-4" />
-            <h3 class="text-xl font-semibold text-[var(--color-text)] mb-2">Erreur de chargement</h3>
+            <h3 class="text-xl font-semibold text-[var(--color-text)] mb-2">Chargement impossible</h3>
             <p class="text-[var(--color-text-muted)] mb-6">{{ error }}</p>
             <button @click="fetchProducts" class="btn-primary"><span>Réessayer</span></button>
           </div>
@@ -85,9 +85,9 @@
           <!-- Empty state -->
           <div v-else class="card p-16 text-center">
             <SearchX class="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 class="text-xl font-semibold text-[var(--color-text)] mb-2">Aucun produit</h3>
-            <p class="text-[var(--color-text-muted)] mb-6">Modifiez vos filtres</p>
-            <button @click="resetFilters" class="btn-primary"><span>Voir tous</span></button>
+            <h3 class="text-xl font-semibold text-[var(--color-text)] mb-2">Aucun produit trouvé</h3>
+            <p class="text-[var(--color-text-muted)] mb-6">Essayez d'ajuster vos critères de recherche</p>
+            <button @click="resetFilters" class="btn-primary"><span>Afficher tout le catalogue</span></button>
           </div>
         </div>
       </div>
@@ -152,7 +152,7 @@ const fetchProducts = async () => {
     }))
   } catch (e: any) {
     console.error('Error fetching products:', e)
-    error.value = 'Impossible de charger les produits. Vérifiez votre connexion.'
+    error.value = 'Impossible de charger le catalogue. Vérifiez votre connexion internet et réessayez.'
   } finally {
     isLoading.value = false
   }

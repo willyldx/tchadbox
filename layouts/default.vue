@@ -1,11 +1,14 @@
 <template>
   <div class="min-h-screen flex flex-col">
     <!-- Announcement Bar -->
-    <div class="bg-[var(--color-primary)] text-white py-2.5">
+    <div 
+      class="text-white py-2.5 transition-all duration-500"
+      :class="isScrolled ? 'bg-[var(--color-primary)]/90 backdrop-blur-md' : 'bg-[var(--color-primary)]'"
+    >
       <div class="container-main">
         <div class="flex items-center justify-center gap-2 text-sm">
           <Truck class="w-4 h-4 text-[var(--color-accent)]" />
-          <span>Livraison garantie à N'Djamena en 3-5 jours avec photo</span>
+          <span>Livraison certifiée à N'Djamena sous 3 à 5 jours — Preuve photo incluse</span>
           <span class="hidden sm:inline text-[var(--color-accent)]">•</span>
           <span class="hidden sm:inline">Paiement 100% sécurisé</span>
         </div>
@@ -14,8 +17,8 @@
 
     <!-- Header -->
     <header 
-      class="sticky top-0 z-50 transition-all duration-300"
-      :class="isScrolled ? 'bg-white/95 backdrop-blur-md shadow-sm' : 'bg-white'"
+      class="sticky top-0 z-50 transition-all duration-500"
+      :class="isScrolled ? 'bg-white/80 backdrop-blur-xl shadow-[0_1px_20px_rgba(0,0,0,0.06)] border-b border-white/50' : 'bg-white/95 backdrop-blur-sm'"
     >
       <div class="container-main">
         <div class="flex items-center justify-between h-20">
@@ -275,7 +278,7 @@
           <div>
             <img src="/logo.png" alt="TchadBox" class="h-14 w-auto mb-6" />
             <p class="text-slate-400 leading-relaxed mb-6">
-              La diaspora tchadienne envoie des biens à sa famille. Livraison garantie avec photo.
+              Le service de référence pour la diaspora tchadienne. Envoyez des biens de qualité à vos proches au Tchad, avec preuve de livraison certifiée.
             </p>
             <div class="flex gap-3">
               <a v-for="s in socials" :key="s.name" :href="s.url" class="w-10 h-10 rounded-xl bg-white/5 hover:bg-[var(--color-accent)] hover:text-[var(--color-primary-dark)] flex items-center justify-center transition-all duration-300 hover:scale-110">

@@ -20,7 +20,7 @@
           v-motion :initial="{ opacity: 0, y: 20 }" :enter="{ opacity: 1, y: 0, transition: { delay: 200 } }"
           class="text-lg text-white/70 max-w-lg mx-auto"
         >
-          En 4 étapes simples, envoyez des biens essentiels à votre famille au Tchad
+          En 4 étapes simples, offrez le meilleur à votre famille au Tchad sans quitter votre canapé
         </p>
       </div>
     </section>
@@ -126,7 +126,7 @@
         >
           <h2 class="heading-section mb-4">Prêt à <span class="text-gradient">commencer</span> ?</h2>
           <p class="text-lg text-[var(--color-text-muted)] mb-8">
-            Faites plaisir à votre famille dès aujourd'hui
+            Rejoignez les centaines de familles qui font déjà confiance à TchadBox
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <NuxtLink to="/catalogue" class="btn-gold">
@@ -149,62 +149,62 @@ const openFaq = ref<number | null>(null)
 
 const steps = [
   { 
-    title: 'Choisissez vos produits', 
-    description: 'Parcourez notre catalogue et sélectionnez les produits à envoyer à votre famille au Tchad.',
-    subtitle: 'Catalogue complet',
+    title: 'Composez votre commande', 
+    description: 'Parcourez notre catalogue et choisissez les produits de qualité à faire livrer à vos proches au Tchad.',
+    subtitle: 'Catalogue riche et varié',
     icon: Package,
     color: '#2563EB',
     features: [
-      'Alimentaire, scolarité, santé, fêtes',
-      'Prix transparents en EUR et FCFA',
-      'Photos de chaque produit',
+      'Gammes alimentaire, scolarité, santé et fêtes',
+      'Prix affichés en euros et en FCFA, en toute transparence',
+      'Descriptions détaillées et photos réelles de chaque produit',
     ]
   },
   { 
-    title: 'Payez en sécurité', 
-    description: 'Paiement sécurisé par carte bancaire ou Mobile Money via notre partenaire Paystack.',
-    subtitle: 'Paystack sécurisé',
+    title: 'Réglez en toute confiance', 
+    description: 'Finalisez votre achat grâce à notre plateforme de paiement sécurisée, propulsée par Paystack, leader du paiement en Afrique.',
+    subtitle: 'Paiement sécurisé Paystack',
     icon: CreditCard,
     color: '#D97706',
     features: [
-      'Visa, Mastercard, Mobile Money',
-      'Cryptage SSL 256-bit',
-      'Confirmation instantanée par email',
+      'Visa, Mastercard et Mobile Money acceptés',
+      'Cryptage SSL 256-bit pour protéger vos données',
+      'Confirmation de commande instantanée par email',
     ]
   },
   { 
-    title: 'On livre à N\'Djamena', 
-    description: 'Notre équipe locale prépare et livre votre commande en 3-5 jours ouvrés directement chez le destinataire.',
-    subtitle: 'Livraison rapide',
+    title: 'Livraison à domicile à N\'Djamena', 
+    description: 'Notre équipe terrain, basée à N\'Djamena, prépare et achemine votre commande directement au domicile du destinataire sous 3 à 5 jours ouvrés.',
+    subtitle: 'Livraison express et fiable',
     icon: Truck,
     color: '#059669',
     features: [
-      'Livraison à domicile à N\'Djamena',
-      'Suivi en temps réel de votre commande',
-      'Équipe locale de confiance',
+      'Livraison porte-à-porte dans tout N\'Djamena',
+      'Suivi de commande en temps réel depuis votre espace client',
+      'Équipe locale professionnelle et de confiance',
     ]
   },
   { 
-    title: 'Photo de preuve', 
-    description: 'Recevez une photo confirmant la livraison à votre famille par WhatsApp ou email. Tranquillité d\'esprit garantie.',
-    subtitle: 'Preuve de livraison',
+    title: 'Preuve de livraison certifiée', 
+    description: 'Une fois le colis remis, recevez une photo confirmant la réception par votre famille. Votre tranquillité d\'esprit est notre priorité.',
+    subtitle: 'Transparence totale',
     icon: Camera,
     color: '#EC4899',
     features: [
-      'Photo envoyée par WhatsApp',
-      'Notification email automatique',
-      'Garantie de livraison à 100%',
+      'Photo de remise envoyée par WhatsApp ou email',
+      'Notification automatique dès la livraison effectuée',
+      'Engagement satisfaction : livraison garantie à 100%',
     ]
   },
 ]
 
 const faqs = [
-  { question: 'Dans quelles villes livrez-vous ?', answer: 'Actuellement nous livrons à N\'Djamena. Nous préparons l\'extension vers Moundou et Sarh très prochainement.' },
-  { question: 'Quel est le délai de livraison ?', answer: '3 à 5 jours ouvrés après confirmation du paiement. Pour les commandes urgentes, contactez-nous pour une livraison express.' },
-  { question: 'Comment savoir si ma famille a reçu le colis ?', answer: 'Nous envoyons systématiquement une photo de preuve de livraison par WhatsApp ou email. Vous pouvez aussi suivre votre commande en temps réel sur notre site.' },
-  { question: 'Quels moyens de paiement acceptez-vous ?', answer: 'Nous acceptons les cartes Visa et Mastercard, le Mobile Money (MTN, Orange Money, Wave), et le virement bancaire via notre partenaire Paystack.' },
-  { question: 'Puis-je annuler ma commande ?', answer: 'Oui, vous pouvez annuler gratuitement tant que la commande n\'a pas été préparée. Contactez-nous par email ou WhatsApp.' },
-  { question: 'Les prix incluent-ils la livraison ?', answer: 'Les frais de livraison sont calculés séparément et affichés clairement avant le paiement. Ils dépendent de la zone de livraison à N\'Djamena.' },
+  { question: 'Dans quelles villes livrez-vous actuellement ?', answer: 'Notre service de livraison couvre actuellement l\'ensemble de N\'Djamena. Nous travaillons activement à l\'ouverture de Moundou et Sarh dans les prochains mois. Inscrivez-vous à notre newsletter pour être informé dès leur lancement.' },
+  { question: 'Quel est le délai de livraison garanti ?', answer: 'Comptez 3 à 5 jours ouvrés après la confirmation de votre paiement. Pour les commandes urgentes, notre équipe peut organiser une livraison express — contactez-nous directement par WhatsApp pour en discuter.' },
+  { question: 'Comment être sûr que ma famille a bien reçu le colis ?', answer: 'C\'est notre engagement phare : chaque livraison est accompagnée d\'une photo de preuve envoyée par WhatsApp ou email. Vous pouvez également suivre l\'avancement de votre commande en temps réel depuis votre espace client sur notre site.' },
+  { question: 'Quels moyens de paiement sont acceptés ?', answer: 'Nous offrons une large palette de solutions de paiement : cartes Visa et Mastercard, Mobile Money (MTN Money, Orange Money, Wave), ainsi que le virement bancaire. Toutes les transactions sont sécurisées par notre partenaire Paystack.' },
+  { question: 'Est-il possible d\'annuler une commande ?', answer: 'Oui, l\'annulation est gratuite tant que la préparation de votre colis n\'a pas débuté. Il vous suffit de nous contacter par email ou WhatsApp et nous procéderons au remboursement intégral sous 48h.' },
+  { question: 'Les frais de livraison sont-ils inclus dans les prix ?', answer: 'Les frais de livraison sont calculés séparément en fonction de la zone de livraison à N\'Djamena et affichés de manière transparente avant la validation de votre commande. Aucun frais caché.' },
 ]
 
 useHead({ title: 'Comment ça marche' })

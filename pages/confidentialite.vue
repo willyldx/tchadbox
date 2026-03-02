@@ -1,30 +1,43 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50/30">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <!-- Header -->
-      <div class="mb-12">
-        <nav class="flex items-center gap-2 text-sm mb-6">
-          <NuxtLink to="/" class="text-stone-500 hover:text-amber-600">Accueil</NuxtLink>
-          <ChevronRightIcon class="w-4 h-4 text-stone-400" />
-          <span class="text-stone-800 font-medium">Politique de Confidentialité</span>
+  <div>
+    <!-- Hero -->
+    <section class="relative py-20 overflow-hidden text-center">
+      <div class="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-dark)]" />
+      <div class="orb orb-warm w-80 h-80 -bottom-20 -left-20 opacity-10" />
+      
+      <div class="container-main relative z-10">
+        <nav class="flex items-center justify-center gap-2 text-sm mb-6">
+          <NuxtLink to="/" class="text-white/60 hover:text-white transition-colors">Accueil</NuxtLink>
+          <ChevronRightIcon class="w-4 h-4 text-white/40" />
+          <span class="text-white font-medium">Politique de Confidentialité</span>
         </nav>
-        <h1 class="text-4xl font-bold text-stone-800 mb-4">Politique de Confidentialité</h1>
-        <p class="text-stone-500">Dernière mise à jour : {{ currentDate }}</p>
+        <h1 
+          v-motion :initial="{ opacity: 0, y: 20 }" :enter="{ opacity: 1, y: 0, transition: { delay: 100 } }"
+          class="heading-section text-white mb-4"
+        >
+          Politique de <span class="text-gradient-gold">Confidentialité</span>
+        </h1>
+        <p 
+          v-motion :initial="{ opacity: 0, y: 20 }" :enter="{ opacity: 1, y: 0, transition: { delay: 200 } }"
+          class="text-white/60"
+        >Dernière mise à jour : {{ currentDate }}</p>
       </div>
+    </section>
 
-      <!-- Content -->
-      <div class="bg-white rounded-2xl border border-stone-100 p-8 md:p-12">
+    <!-- Content -->
+    <div class="container-main py-12 max-w-4xl">
+      <div class="card p-8 md:p-12">
         <div class="prose prose-stone max-w-none">
           <p class="lead">
-            Chez TchadBox, nous accordons une grande importance à la protection de vos données 
-            personnelles. Cette politique de confidentialité explique comment nous collectons, 
-            utilisons et protégeons vos informations.
+            Chez TchadBox, la protection de vos données personnelles est au cœur de nos engagements. 
+            Cette politique détaille de manière transparente comment nous collectons, utilisons, 
+            protégeons et gérons vos informations personnelles.
           </p>
 
-          <h2>1. Responsable du traitement</h2>
+          <h2>1. Responsable du Traitement</h2>
           <p>
-            Le responsable du traitement des données est TchadBox, joignable à l'adresse 
-            contact@tchadbox.com.
+            Le responsable du traitement des données personnelles est la société TchadBox, 
+            joignable à l’adresse : contact@tchadbox.com.
           </p>
 
           <h2>2. Données collectées</h2>

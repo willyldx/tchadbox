@@ -21,7 +21,7 @@
           v-motion :initial="{ opacity: 0, y: 20 }" :enter="{ opacity: 1, y: 0, transition: { delay: 200 } }"
           class="text-lg text-[var(--color-text-muted)] max-w-lg mx-auto"
         >
-          Entrez votre numéro de commande pour voir son statut en temps réel
+          Saisissez votre numéro de commande pour suivre son acheminement en temps réel
         </p>
       </div>
     </section>
@@ -52,7 +52,7 @@
           </div>
           <p class="text-sm text-[var(--color-text-muted)] mt-3 flex items-center gap-2">
             <Lightbulb class="w-4 h-4 text-[var(--color-accent)]" />
-            Tapez "demo" pour voir un exemple
+            Saisissez "demo" pour découvrir un exemple de suivi
           </p>
         </form>
       </div>
@@ -131,10 +131,10 @@
           <div class="w-16 h-16 rounded-2xl bg-red-50 flex items-center justify-center mx-auto mb-4">
             <SearchX class="w-8 h-8 text-red-300" />
           </div>
-          <h3 class="text-xl font-semibold text-[var(--color-text)] mb-2">Commande non trouvée</h3>
-          <p class="text-[var(--color-text-muted)] mb-6 max-w-sm mx-auto">
-            Vérifiez le numéro et réessayez, ou contactez-nous pour de l'aide.
-          </p>
+           <h3 class="text-xl font-semibold text-[var(--color-text)] mb-2">Commande introuvable</h3>
+           <p class="text-[var(--color-text-muted)] mb-6 max-w-sm mx-auto">
+             Vérifiez votre numéro de commande et réessayez. Si le problème persiste, notre équipe est disponible pour vous aider.
+           </p>
           <NuxtLink to="/contact" class="btn-outline">
             <span><MessageCircle class="w-4 h-4" />Nous contacter</span>
           </NuxtLink>
@@ -170,11 +170,11 @@ const trackOrder = async () => {
       number: 'TCB-2024-001234',
       delivered: true,
       timeline: [
-        { title: 'Commande reçue', date: '15 Jan 2024, 10:30', detail: 'Votre commande a été enregistrée', completed: true, icon: Package },
-        { title: 'Paiement confirmé', date: '15 Jan 2024, 10:32', detail: 'Paiement de 95,00 € validé', completed: true, icon: CreditCard },
-        { title: 'En préparation', date: '15 Jan 2024, 14:00', detail: 'Votre colis est en cours de préparation', completed: true, icon: Clock },
-        { title: 'En livraison', date: '17 Jan 2024, 09:00', detail: 'Le livreur est en route', completed: true, icon: Truck },
-        { title: 'Livré', date: '18 Jan 2024, 15:45', detail: 'Photo de preuve envoyée par WhatsApp', completed: true, icon: Camera },
+        { title: 'Commande enregistrée', date: '15 Jan 2024, 10:30', detail: 'Votre commande a été validée et prise en charge', completed: true, icon: Package },
+        { title: 'Paiement confirmé', date: '15 Jan 2024, 10:32', detail: 'Règlement de 95,00 € traité avec succès', completed: true, icon: CreditCard },
+        { title: 'Préparation en cours', date: '15 Jan 2024, 14:00', detail: 'Votre colis est soigneusement préparé par notre équipe', completed: true, icon: Clock },
+        { title: 'En cours de livraison', date: '17 Jan 2024, 09:00', detail: 'Notre livreur est en route vers le destinataire', completed: true, icon: Truck },
+        { title: 'Livré avec succès', date: '18 Jan 2024, 15:45', detail: 'Preuve photo de remise envoyée par WhatsApp', completed: true, icon: Camera },
       ]
     }
   } else {
