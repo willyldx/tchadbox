@@ -145,6 +145,7 @@ const sidebarOpen = ref(false)
 const navigationItems = computed(() => [
   { to: '/admin', label: 'Dashboard', icon: 'lucide:layout-dashboard' },
   { to: '/admin/commandes', label: 'Commandes', icon: 'lucide:package', badge: pendingOrdersCount.value || null },
+  { to: '/admin/stocks', label: 'Stocks', icon: 'lucide:warehouse' },
   { to: '/admin/livreurs', label: 'Livreurs', icon: 'lucide:truck' },
   { to: '/admin/clients', label: 'Clients', icon: 'lucide:users' },
 ])

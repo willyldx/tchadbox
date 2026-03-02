@@ -161,7 +161,7 @@
     </section>
 
     <!-- Featured Products -->
-    <section class="py-20 bg-[var(--color-bg)]">
+    <section v-if="featuredProducts.length > 0" class="py-20 bg-[var(--color-bg)]">
       <div class="container-main">
         <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-14">
           <div>
@@ -221,7 +221,7 @@
     </section>
 
     <!-- Testimonials -->
-    <section class="py-24 bg-[var(--color-bg)]">
+    <section v-if="testimonials.length > 0" class="py-24 bg-[var(--color-bg)]">
       <div class="container-main">
         <div class="text-center mb-14">
           <span class="label mb-3 block">Ils nous font confiance</span>
@@ -331,7 +331,10 @@ const goToSlide = (index: number) => {
   startAutoPlay()
 }
 
-onMounted(() => startAutoPlay())
+onMounted(() => {
+  startAutoPlay()
+  fetchFeaturedProducts()
+})
 onUnmounted(() => { if (slideInterval) clearInterval(slideInterval) })
 
 const trustBadges = [
@@ -354,12 +357,26 @@ const categories = [
   { name: 'Fêtes', handle: 'fetes', description: 'Packs spéciaux Ramadan, Tabaski et occasions', icon: Gift, color: '#D97706' },
 ]
 
-const featuredProducts = [
-  { id: '1', title: 'Sac de riz 25kg', handle: 'sac-riz-25kg', price: 35, category: 'Alimentaire', subtitle: 'Qualité supérieure' },
-  { id: '2', title: 'Sac de riz 50kg', handle: 'sac-riz-50kg', price: 65, category: 'Alimentaire', subtitle: 'Le choix des grandes familles' },
-  { id: '3', title: 'Kit Rentrée Scolaire', handle: 'kit-rentree', price: 35, category: 'Scolarité', subtitle: 'Complet et prêt à l\'emploi' },
-  { id: '4', title: 'Pack Ramadan Premium', handle: 'pack-ramadan', price: 95, category: 'Fêtes', subtitle: 'L\'essentiel pour le mois béni' },
-]
+const featuredProducts = ref<any[]>([])
+
+const fetchFeaturedProducts = async () => {
+  try {
+    const { getProducts } = useMedusa()
+    const response = await getProducts({ limit: 4 })
+    featuredProducts.value = response.products.map(p => ({
+      id: p.id,
+      title: p.title,
+      handle: p.handle,
+      subtitle: p.subtitle || '',
+      price: p.variants?.[0]?.prices?.[0]?.amount ? p.variants[0].prices[0].amount / 100 : 0,
+      thumbnail: p.thumbnail || p.images?.[0]?.url || '',
+      category: p.categories?.[0]?.name || '',
+    }))
+  } catch (e) {
+    // Medusa pas encore configuré — section masquée
+    featuredProducts.value = []
+  }
+}
 
 const steps = [
   { title: 'Sélectionnez', description: 'Choisissez parmi nos produits de qualité vérifiée', icon: Package },
@@ -368,11 +385,8 @@ const steps = [
   { title: 'Preuve certifiée', description: 'Recevez la photo de remise par WhatsApp ou email', icon: Camera },
 ]
 
-const testimonials = [
-  { id: 1, name: 'Fatima M.', location: 'Paris, France', message: 'Ma mère a reçu son colis en 4 jours seulement. La photo de livraison m\'a fait pleurer de joie. TchadBox a transformé notre manière de prendre soin de notre famille à distance.' },
-  { id: 2, name: 'Ibrahim D.', location: 'Bruxelles, Belgique', message: 'Un service d\'une fiabilité exceptionnelle. Depuis que j\'utilise TchadBox, je n\'ai plus aucune inquiétude. La preuve photo à chaque livraison, c\'est la transparence totale.' },
-  { id: 3, name: 'Aisha T.', location: 'Lyon, France', message: 'Fini le stress de chercher des voyageurs ou de faire confiance à des inconnus. Avec TchadBox, mes parents reçoivent leurs provisions chaque mois, comme sur des roulettes.' },
-]
+const testimonials: any[] = []
+// TODO: Charger les vrais témoignages depuis Supabase ou CMS
 
 useHead({ title: 'Accueil' })
 </script>
