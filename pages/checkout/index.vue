@@ -623,7 +623,6 @@ async function submitOrder() {
               .update({
                 payment_status: 'captured',
                 status: 'processing',
-                paid_at: new Date().toISOString(),
               })
               .eq('id', orderId)
             cartStore.clearCart()

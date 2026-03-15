@@ -233,23 +233,8 @@ const fetchDelivery = async () => {
 
     if (error) throw error
 
-    // Fetch items
-    const { data: items } = await client
-      .from('order_items')
-      .select('*')
-      .eq('order_id', route.params.id)
-
-    delivery.value = {
-      ...mapOrder(data),
-      items: items?.map(i => ({
-        id: i.id,
-        title: i.title,
-        quantity: i.quantity,
-        unitPrice: Number(i.unit_price) || 0,
-        total: Number(i.total) || 0,
-        thumbnail: i.thumbnail
-      })) || []
-    }
+    const { normalizeOrder } = useOrderNormalizer()
+    delivery.value = normalizeOrder(data)
   } catch (error) {
     console.error('Error fetching delivery:', error)
     toast.add({ title: 'Erreur', description: 'Impossible de charger la livraison', color: 'red' })

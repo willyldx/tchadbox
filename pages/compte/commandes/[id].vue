@@ -426,10 +426,7 @@ async function fetchOrder() {
   try {
     const { data, error: fetchError } = await client
       .from('orders')
-      .select(`
-        *,
-        order_items (*)
-      `)
+      .select('*')
       .eq('id', orderId)
       .eq('user_id', authStore.user.id)
       .single()
@@ -437,45 +434,13 @@ async function fetchOrder() {
     if (fetchError) {
       error.value = 'Commande introuvable'
     } else if (data) {
-      order.value = transformOrder(data)
+      const { normalizeOrder } = useOrderNormalizer()
+      order.value = normalizeOrder(data)
     }
   } catch (e) {
     error.value = 'Erreur lors du chargement'
   } finally {
     isLoading.value = false
-  }
-}
-
-function transformOrder(dbOrder: any): Order {
-  return {
-    id: dbOrder.id,
-    displayId: dbOrder.display_id || `TCB-${dbOrder.id.slice(0, 8).toUpperCase()}`,
-    status: dbOrder.status,
-    paymentStatus: dbOrder.payment_status,
-    fulfillmentStatus: dbOrder.fulfillment_status,
-    items: (dbOrder.order_items || []).map((item: any) => ({
-      id: item.id,
-      title: item.title,
-      description: item.description,
-      thumbnail: item.thumbnail,
-      quantity: item.quantity,
-      unitPrice: item.unit_price,
-      total: item.total,
-    })),
-    shippingAddress: dbOrder.shipping_address || {
-      firstName: 'Destinataire',
-      lastName: '',
-      address1: 'N\'Djamena',
-      city: 'N\'Djamena',
-      country: 'Tchad',
-    },
-    subtotal: dbOrder.subtotal || 0,
-    shippingTotal: dbOrder.shipping_total || 0,
-    total: dbOrder.total || 0,
-    currency: 'EUR',
-    createdAt: dbOrder.created_at,
-    updatedAt: dbOrder.updated_at,
-    deliveryPhoto: dbOrder.delivery_photo,
   }
 }
 

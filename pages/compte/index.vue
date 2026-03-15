@@ -323,23 +323,7 @@ async function fetchDashboardData() {
   }
 }
 
-function transformOrder(dbOrder: any): Order {
-  return {
-    id: dbOrder.id,
-    displayId: dbOrder.display_id || `TCB-${dbOrder.id.slice(0, 8).toUpperCase()}`,
-    status: dbOrder.status,
-    paymentStatus: dbOrder.payment_status,
-    fulfillmentStatus: dbOrder.fulfillment_status,
-    items: dbOrder.items || [],
-    shippingAddress: dbOrder.shipping_address || {},
-    subtotal: dbOrder.subtotal || 0,
-    shippingTotal: dbOrder.shipping_total || 0,
-    total: dbOrder.total || 0,
-    currency: 'EUR',
-    createdAt: dbOrder.created_at,
-    updatedAt: dbOrder.updated_at,
-  }
-}
+const { normalizeOrder: transformOrder } = useOrderNormalizer()
 
 function formatDate(date: string): string {
   return new Date(date).toLocaleDateString('fr-FR', {

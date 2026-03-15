@@ -49,14 +49,20 @@ export default defineEventHandler(async (event) => {
                 customer: data.customer?.email,
             })
 
-            // Update order payment status in Supabase
+            // Update order payment status in Supabase (table n'a pas paid_at → on le met dans metadata)
+            const paidAt = data.paid_at || new Date().toISOString()
+            const { data: existing } = await supabase
+                .from('orders')
+                .select('metadata')
+                .eq('payment_reference', data.reference)
+                .single()
             const { error: updateError } = await supabase
                 .from('orders')
                 .update({
                     payment_status: 'captured',
-                    paid_at: data.paid_at || new Date().toISOString(),
                     payment_reference: data.reference,
                     updated_at: new Date().toISOString(),
+                    metadata: { ...(existing?.metadata || {}), paid_at: paidAt },
                 })
                 .eq('payment_reference', data.reference)
 

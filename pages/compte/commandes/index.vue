@@ -256,46 +256,18 @@ async function fetchOrders() {
   try {
     const { data, error } = await client
       .from('orders')
-      .select(`
-        *,
-        order_items (*)
-      `)
+      .select('*')
       .eq('user_id', authStore.user.id)
       .order('created_at', { ascending: false })
 
     if (!error && data) {
-      orders.value = data.map(transformOrder)
+      const { normalizeOrder } = useOrderNormalizer()
+      orders.value = data.map(normalizeOrder)
     }
   } catch (error) {
     console.error('Failed to fetch orders:', error)
   } finally {
     isLoading.value = false
-  }
-}
-
-function transformOrder(dbOrder: any): Order {
-  return {
-    id: dbOrder.id,
-    displayId: dbOrder.display_id || `TCB-${dbOrder.id.slice(0, 8).toUpperCase()}`,
-    status: dbOrder.status,
-    paymentStatus: dbOrder.payment_status,
-    fulfillmentStatus: dbOrder.fulfillment_status,
-    items: (dbOrder.order_items || []).map((item: any) => ({
-      id: item.id,
-      title: item.title,
-      description: item.description,
-      thumbnail: item.thumbnail,
-      quantity: item.quantity,
-      unitPrice: item.unit_price,
-      total: item.total,
-    })),
-    shippingAddress: dbOrder.shipping_address || {},
-    subtotal: dbOrder.subtotal || 0,
-    shippingTotal: dbOrder.shipping_total || 0,
-    total: dbOrder.total || 0,
-    currency: 'EUR',
-    createdAt: dbOrder.created_at,
-    updatedAt: dbOrder.updated_at,
   }
 }
 

@@ -63,10 +63,12 @@ export default defineEventHandler(async (event) => {
     customer_phone: body.customer_phone ?? null,
     recipient_name: body.recipient_name,
     recipient_phone: body.recipient_phone ?? null,
-    shipping_address_1: body.shipping_address_1 ?? null,
-    shipping_address_2: body.shipping_address_2 ?? null,
-    shipping_city: body.shipping_city ?? "N'Djamena",
-    shipping_country: body.shipping_country ?? 'Tchad',
+    shipping_address: {
+      address_1: body.shipping_address_1 ?? null,
+      address_2: body.shipping_address_2 ?? null,
+      city: body.shipping_city ?? "N'Djamena",
+      country: body.shipping_country ?? 'Tchad',
+    },
     delivery_instructions: body.delivery_instructions ?? null,
     subtotal: Number(body.subtotal),
     shipping_total: Number(body.shipping_total),
@@ -74,15 +76,17 @@ export default defineEventHandler(async (event) => {
     currency: 'EUR',
     payment_reference: reference,
     payment_method: body.payment_method ?? 'card',
-    items: body.items.map((item) => ({
-      product_id: item.product_id,
-      variant_id: item.variant_id,
-      title: item.title,
-      quantity: item.quantity,
-      unit_price: item.unit_price,
-      total: item.total,
-      thumbnail: item.thumbnail,
-    })),
+    metadata: {
+      items: body.items.map((item) => ({
+        product_id: item.product_id,
+        variant_id: item.variant_id,
+        title: item.title,
+        quantity: item.quantity,
+        unit_price: item.unit_price,
+        total: item.total,
+        thumbnail: item.thumbnail,
+      })),
+    },
   }
 
   const { data: order, error } = await supabase

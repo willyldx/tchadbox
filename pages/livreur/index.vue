@@ -195,27 +195,8 @@ const fetchDeliveries = async () => {
 
     if (error) throw error
 
-    // Fetch items for each order
-    const ordersWithItems = await Promise.all((data || []).map(async (order) => {
-      const { data: items } = await client
-        .from('order_items')
-        .select('*')
-        .eq('order_id', order.id)
-
-      return {
-        ...mapOrder(order),
-        items: items?.map(i => ({
-          id: i.id,
-          title: i.title,
-          quantity: i.quantity,
-          unitPrice: Number(i.unit_price) || 0,
-          total: Number(i.total) || 0,
-          thumbnail: i.thumbnail
-        })) || []
-      }
-    }))
-
-    deliveries.value = ordersWithItems
+    const { normalizeOrder } = useOrderNormalizer()
+    deliveries.value = (data || []).map((order) => normalizeOrder(order))
   } catch (error) {
     console.error('Error fetching deliveries:', error)
   } finally {
@@ -223,10 +204,10 @@ const fetchDeliveries = async () => {
   }
 }
 
-// Map order from database
+// Map order from database (legacy, préférer normalizeOrder)
 const mapOrder = (o: any): Order => ({
   id: o.id,
-  displayId: o.display_id || o.id.slice(0, 8).toUpperCase(),
+  displayId: o.display_id || o.id?.slice(0, 8).toUpperCase(),
   status: o.status,
   paymentStatus: o.payment_status,
   fulfillmentStatus: o.fulfillment_status,
