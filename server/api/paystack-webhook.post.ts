@@ -1,7 +1,6 @@
 // Paystack Webhook Handler
 // Configure this URL in Paystack Dashboard → Settings → Webhooks
 import { createHmac } from 'crypto'
-import { createClient } from '@supabase/supabase-js'
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
@@ -36,11 +35,7 @@ export default defineEventHandler(async (event) => {
     const body = JSON.parse(rawBody)
     const eventType = body.event
 
-    // Server-side Supabase client (service role for admin operations)
-    const supabase = createClient(
-        config.public.supabaseUrl,
-        config.public.supabaseAnonKey
-    )
+    const supabase = getSupabaseService()
 
     console.log(`[Paystack Webhook] Event: ${eventType}`, body.data?.reference)
 

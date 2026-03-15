@@ -45,6 +45,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // Server-side only (not exposed to client)
     paystackSecretKey: process.env.PAYSTACK_SECRET_KEY || '',
+    supabaseServiceKey: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
     public: {
       medusaUrl: process.env.MEDUSA_URL || 'http://31.97.114.49:9000',
       supabaseUrl: process.env.SUPABASE_URL || 'https://xoeybpypyghunujnlhpa.supabase.co',

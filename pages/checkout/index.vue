@@ -448,7 +448,8 @@ const router = useRouter()
 const cartStore = useCartStore()
 const authStore = useAuthStore()
 const { client: supabase } = useSupabase()
-const { initializePayment, verifyPayment, generateReference, eurToXof } = usePaystack()
+const { checkout: apiCheckout } = useBackendApi()
+const { initializePayment, verifyPayment, eurToXof } = usePaystack()
 
 // Redirect if cart is empty
 onMounted(() => {
@@ -558,29 +559,19 @@ function nextStep() {
 
 async function submitOrder() {
   if (!acceptTerms.value || isSubmitting.value) return
-  
+
   isSubmitting.value = true
   paymentError.value = null
 
   try {
-    // 1. Generate payment reference
-    const reference = generateReference()
-    
-    // 2. Prepare order data
-    const recipientName = sameAsCustomer.value 
-      ? `${form.firstName} ${form.lastName}` 
+    const recipientName = sameAsCustomer.value
+      ? `${form.firstName} ${form.lastName}`
       : form.recipientName
-    const recipientPhone = sameAsCustomer.value 
-      ? form.phone 
-      : form.recipientPhone
+    const recipientPhone = sameAsCustomer.value ? form.phone : form.recipientPhone
 
-    // 3. Create the order in Supabase (status: pending, payment: awaiting)
-    const orderData = {
+    // 1. Créer la commande via l'API backend (gère invités + référence unique)
+    const { orderId, reference } = await apiCheckout({
       user_id: authStore.user?.id,
-      display_id: reference,
-      status: 'pending',
-      payment_status: 'awaiting',
-      fulfillment_status: 'not_fulfilled',
       email: form.email,
       customer_first_name: form.firstName,
       customer_last_name: form.lastName,
@@ -588,17 +579,15 @@ async function submitOrder() {
       recipient_name: recipientName,
       recipient_phone: recipientPhone,
       shipping_address_1: form.address.address1,
-      shipping_address_2: form.address.address2,
+      shipping_address_2: form.address.address2 || undefined,
       shipping_city: form.address.city,
       shipping_country: form.address.country,
-      delivery_instructions: form.deliveryInstructions,
+      delivery_instructions: form.deliveryInstructions || undefined,
       subtotal: cartStore.subtotal,
       shipping_total: cartStore.shipping,
       total: cartStore.total,
-      currency: 'EUR',
-      payment_reference: reference,
       payment_method: selectedPayment.value,
-      items: cartStore.items.map(item => ({
+      items: cartStore.items.map((item) => ({
         product_id: item.productId,
         title: item.title,
         quantity: item.quantity,
@@ -606,54 +595,29 @@ async function submitOrder() {
         total: item.price * item.quantity,
         thumbnail: item.thumbnail,
       })),
-    }
+    })
 
-    const { data: order, error: orderError } = await supabase
-      .from('orders')
-      .insert(orderData)
-      .select()
-      .single()
-
-    if (orderError) {
-      console.error('Order creation failed:', orderError)
-      paymentError.value = 'Erreur lors de la création de la commande. Veuillez réessayer.'
-      return
-    }
-
-    // 4. Convert amount to XOF (Franc CFA) for Paystack
+    // 2. Ouvrir Paystack avec la référence renvoyée par l'API
     const amountInXof = eurToXof(cartStore.total)
-
-    // 5. Open Paystack payment popup
     await initializePayment({
       email: form.email,
-      amount: amountInXof * 100, // Paystack expects amount in smallest unit (kobo/centimes)
+      amount: amountInXof * 100,
       currency: 'XOF',
       reference,
       channels: paystackChannels.value,
       metadata: {
-        order_id: order.id,
+        order_id: orderId,
         customer_name: `${form.firstName} ${form.lastName}`,
         recipient_name: recipientName,
         custom_fields: [
-          {
-            display_name: 'Commande',
-            variable_name: 'order_ref',
-            value: reference,
-          },
-          {
-            display_name: 'Destinataire',
-            variable_name: 'recipient',
-            value: recipientName,
-          },
+          { display_name: 'Commande', variable_name: 'order_ref', value: reference },
+          { display_name: 'Destinataire', variable_name: 'recipient', value: recipientName },
         ],
       },
       onSuccess: async (response) => {
         try {
-          // 6. Verify payment server-side
           const verification = await verifyPayment(response.reference)
-          
           if (verification.success) {
-            // 7. Update order status in Supabase
             await supabase
               .from('orders')
               .update({
@@ -661,35 +625,32 @@ async function submitOrder() {
                 status: 'processing',
                 paid_at: new Date().toISOString(),
               })
-              .eq('id', order.id)
-
-            // 8. Clear cart and redirect to confirmation
+              .eq('id', orderId)
             cartStore.clearCart()
             navigateTo(`/checkout/confirmation?order=${reference}`)
           } else {
             paymentError.value = verification.error || 'La vérification du paiement a échoué.'
-            // Mark order as payment failed
             await supabase
               .from('orders')
               .update({ payment_status: 'failed' })
-              .eq('id', order.id)
+              .eq('id', orderId)
           }
         } catch (err) {
           console.error('Payment verification error:', err)
-          paymentError.value = 'Erreur lors de la vérification. Contactez le support avec la référence: ' + reference
+          paymentError.value =
+            'Erreur lors de la vérification. Contactez le support avec la référence: ' + reference
         } finally {
           isSubmitting.value = false
         }
       },
       onClose: () => {
-        // User closed the popup without completing payment
         isSubmitting.value = false
         paymentError.value = 'Paiement annulé. Votre commande est en attente de paiement.'
       },
     })
   } catch (error: any) {
     console.error('Order failed:', error)
-    paymentError.value = error.message || 'Une erreur est survenue. Veuillez réessayer.'
+    paymentError.value = error.data?.message || error.message || 'Une erreur est survenue. Veuillez réessayer.'
     isSubmitting.value = false
   }
 }
