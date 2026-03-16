@@ -98,7 +98,8 @@
                   required
                   autocomplete="email"
                   placeholder="votre@email.com"
-                  class="input pl-[3rem]"
+                  class="input"
+                  style="padding-left: 3rem;"
                   :disabled="isLoading"
                 />
               </div>

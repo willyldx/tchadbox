@@ -61,7 +61,8 @@
                 required
                 autocomplete="email"
                 placeholder="votre@email.com"
-                class="input pl-[3rem]"
+                class="input"
+                style="padding-left: 3rem;"
                 :disabled="authStore.isLoading"
               />
             </div>
@@ -93,7 +94,8 @@
                 required
                 autocomplete="current-password"
                 placeholder="••••••••"
-                class="input pl-[3rem] pr-[3rem]"
+                class="input"
+                style="padding-left: 3rem; padding-right: 3rem;"
                 :disabled="authStore.isLoading"
               />
               <button
