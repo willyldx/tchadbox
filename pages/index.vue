@@ -361,19 +361,21 @@ const featuredProducts = ref<any[]>([])
 
 const fetchFeaturedProducts = async () => {
   try {
-    const { getProducts } = useMedusa()
+    const { getProducts } = useProducts()
     const response = await getProducts({ limit: 4 })
-    featuredProducts.value = response.products.map(p => ({
-      id: p.id,
+    featuredProducts.value = response.products.map((p: any) => ({
+      id: p.id.toString(),
       title: p.title,
-      handle: p.handle,
+      handle: p.slug,
       subtitle: p.subtitle || '',
-      price: p.variants?.[0]?.prices?.[0]?.amount ? p.variants[0].prices[0].amount / 100 : 0,
-      thumbnail: p.thumbnail || p.images?.[0]?.url || '',
-      category: p.categories?.[0]?.name || '',
+      price: p.price || 0,
+      thumbnail: p.thumbnail || '',
+      category: p.category || '',
+      categoryHandle: p.category_handle || '',
+      inStock: p.in_stock,
     }))
   } catch (e) {
-    // Medusa pas encore configuré — section masquée
+    // Backend pas encore configuré — section masquée silencieusement
     featuredProducts.value = []
   }
 }

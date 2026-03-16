@@ -109,7 +109,7 @@ import ProductCard from '~/components/product/ProductCard.vue'
 import type { Product } from '~/types'
 
 const route = useRoute()
-const { getProducts, getCategories } = useMedusa()
+const { getProducts } = useProducts()
 
 // State
 const products = ref<Product[]>([])
@@ -135,7 +135,7 @@ const selectedCategory = ref(route.query.categorie as string || '')
 const selectedPrice = ref('')
 const searchQuery = ref('')
 
-// Fetch products from Medusa
+// Fetch products from Laravel API
 const fetchProducts = async () => {
   isLoading.value = true
   error.value = null
@@ -143,20 +143,18 @@ const fetchProducts = async () => {
   try {
     const response = await getProducts({ limit: 100 })
     
-    // Transformer les produits Medusa vers notre format
-    products.value = response.products.map(p => ({
-      id: p.id,
+    products.value = response.products.map((p: any) => ({
+      id: p.id.toString(),
       title: p.title,
-      handle: p.handle,
+      handle: p.slug,
       subtitle: p.subtitle || '',
       description: p.description || '',
-      price: p.variants?.[0]?.prices?.[0]?.amount ? p.variants[0].prices[0].amount / 100 : 0,
-      thumbnail: p.thumbnail || p.images?.[0]?.url || '',
-      images: p.images?.map(img => img.url) || [],
-      category: p.categories?.[0]?.name || '',
-      categoryHandle: p.categories?.[0]?.handle || '',
-      inStock: p.variants?.[0]?.inventory_quantity > 0,
-      variants: p.variants || [],
+      price: p.price || 0,
+      thumbnail: p.thumbnail || '',
+      images: p.images || [],
+      category: p.category || '',
+      categoryHandle: p.category_handle || '',
+      inStock: p.in_stock,
     }))
   } catch (e: any) {
     console.error('Error fetching products:', e)
