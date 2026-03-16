@@ -21,7 +21,7 @@ export const useAuthStore = defineStore('auth', {
   getters: {
     fullName: (state): string => {
       if (!state.user) return ''
-      return `${state.user.firstName} ${state.user.lastName}`.trim()
+      return `${state.user.firstName} ${state.user.lastName || ''}`.trim()
     },
 
     initials: (state): string => {
@@ -41,61 +41,76 @@ export const useAuthStore = defineStore('auth', {
     },
 
     // =============================================
-    // ROLE GETTERS
+    // ROLE GETTERS (Adapté pour Laravel Spatie)
     // =============================================
     userRole: (state): UserRole => {
-      return state.user?.role || 'client'
+      // Dans Spatie, les rôles sont un tableau. On prend le premier.
+      if (state.user?.roles && state.user.roles.length > 0) {
+          return state.user.roles[0].name as UserRole;
+      }
+      return 'client'
     },
 
-    isClient: (state): boolean => {
-      return state.user?.role === 'client'
+    isClient(): boolean {
+      return this.userRole === 'client'
     },
 
-    isLivreur: (state): boolean => {
-      return state.user?.role === 'livreur'
+    isLivreur(): boolean {
+      return this.userRole === 'livreur'
     },
 
-    isAdmin: (state): boolean => {
-      return state.user?.role === 'admin' || state.user?.role === 'super_admin'
+    isAdmin(): boolean {
+      return this.userRole === 'admin' || this.userRole === 'super-admin'
     },
 
-    isSuperAdmin: (state): boolean => {
-      return state.user?.role === 'super_admin'
+    isSuperAdmin(): boolean {
+      return this.userRole === 'super-admin'
     },
 
-    canAccessAdmin: (state): boolean => {
-      return ['admin', 'super_admin'].includes(state.user?.role || '')
+    canAccessAdmin(): boolean {
+      return ['admin', 'super-admin'].includes(this.userRole)
     },
 
-    canAccessLivreur: (state): boolean => {
-      return ['livreur', 'admin', 'super_admin'].includes(state.user?.role || '')
+    canAccessLivreur(): boolean {
+      return ['livreur', 'admin', 'super-admin'].includes(this.userRole)
     },
 
-    canManageTeam: (state): boolean => {
-      return state.user?.role === 'super_admin'
+    canManageTeam(): boolean {
+      return this.isSuperAdmin
     },
 
-    canViewFinances: (state): boolean => {
-      return state.user?.role === 'super_admin'
+    canViewFinances(): boolean {
+      return this.isSuperAdmin
     },
   },
 
   actions: {
+    getApiUrl() {
+        const config = useRuntimeConfig()
+        return config.public.apiUrl
+    },
+
+    getApiHeaders() {
+        const token = useCookie('auth_token').value
+        const headers: Record<string, string> = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`
+        }
+        return headers
+    },
+
     async checkSession() {
       if (this.sessionChecked) return
 
-      const { getSession } = useSupabase()
-
-      try {
-        const { session } = await getSession()
-
-        if (session?.user) {
-          await this.fetchUserProfile(session.user.id)
-        }
-      } catch (error) {
-        console.error('Session check failed:', error)
-      } finally {
-        this.sessionChecked = true
+      const token = useCookie('auth_token').value
+      
+      if (token) {
+          await this.fetchUserProfile()
+      } else {
+          this.sessionChecked = true
       }
     },
 
@@ -103,24 +118,27 @@ export const useAuthStore = defineStore('auth', {
       this.isLoading = true
       this.error = null
 
-      const { signIn } = useSupabase()
-
       try {
-        const { data, error } = await signIn(email, password)
+        const response: any = await $fetch(`${this.getApiUrl()}/login`, {
+            method: 'POST',
+            body: { email, password },
+            headers: {
+               'Accept': 'application/json'
+            }
+        })
 
-        if (error) {
-          this.error = translateAuthError(error.message)
-          return { success: false, error: this.error }
+        if (response.token) {
+            const tokenCookie = useCookie('auth_token', { maxAge: 60 * 60 * 24 * 7 }) // 7 jours
+            tokenCookie.value = response.token
+            
+            this.mapLaravelUser(response.user)
+            this.isAuthenticated = true
+            return { success: true, role: this.userRole }
         }
 
-        if (data.user) {
-          await this.fetchUserProfile(data.user.id)
-          return { success: true, role: this.user?.role }
-        }
-
-        return { success: false, error: 'Erreur de connexion' }
+        return { success: false, error: 'Token manquant dans la réponse' }
       } catch (error: any) {
-        this.error = error.message || 'Erreur de connexion'
+        this.error = error.response?._data?.message || 'Erreur de connexion'
         return { success: false, error: this.error }
       } finally {
         this.isLoading = false
@@ -137,101 +155,83 @@ export const useAuthStore = defineStore('auth', {
       this.isLoading = true
       this.error = null
 
-      const { signUp, client } = useSupabase()
-
       try {
-        const { data: authData, error: authError } = await signUp(
-          data.email,
-          data.password,
-          {
-            first_name: data.firstName,
-            last_name: data.lastName,
-            phone: data.phone,
-          }
-        )
+        const nomComplet = `${data.firstName} ${data.lastName}`.trim()
+        const response: any = await $fetch(`${this.getApiUrl()}/register`, {
+            method: 'POST',
+            body: { 
+                name: nomComplet,
+                email: data.email, 
+                password: data.password 
+            },
+            headers: {
+               'Accept': 'application/json'
+            }
+        })
 
-        if (authError) {
-          this.error = translateAuthError(authError.message)
-          return { success: false, error: this.error }
-        }
-
-        if (authData.user) {
-          const { error: profileError } = await client
-            .from('profiles')
-            .insert({
-              id: authData.user.id,
-              email: data.email,
-              first_name: data.firstName,
-              last_name: data.lastName,
-              phone: data.phone,
-              role: 'client',
-            })
-
-          if (profileError) {
-            console.error('Profile creation error:', profileError)
-          }
-
-          await this.fetchUserProfile(authData.user.id)
-
-          return { success: true, requiresConfirmation: !authData.session }
+        if (response.token) {
+             const tokenCookie = useCookie('auth_token', { maxAge: 60 * 60 * 24 * 7 })
+             tokenCookie.value = response.token
+             
+             this.mapLaravelUser(response.user)
+             this.isAuthenticated = true
+             return { success: true, requiresConfirmation: false }
         }
 
         return { success: false, error: 'Erreur lors de l\'inscription' }
       } catch (error: any) {
-        this.error = error.message || 'Erreur lors de l\'inscription'
+        this.error = error.response?._data?.message || 'Erreur lors de l\'inscription'
         return { success: false, error: this.error }
       } finally {
         this.isLoading = false
       }
     },
 
-    async fetchUserProfile(userId: string) {
-      const { client } = useSupabase()
+    async fetchUserProfile() {
+      const token = useCookie('auth_token').value
+      if (!token) {
+          this.sessionChecked = true
+          return
+      }
 
       try {
-        const { data: profile, error } = await client
-          .from('profiles')
-          .select(`
-            *,
-            addresses (*)
-          `)
-          .eq('id', userId)
-          .single()
-
-        if (error) {
-          console.error('Profile fetch error:', error)
-          return
-        }
-
-        if (profile) {
-          this.user = {
-            id: profile.id,
-            email: profile.email,
-            firstName: profile.first_name,
-            lastName: profile.last_name,
-            phone: profile.phone,
-            role: profile.role || 'client',
-            avatarUrl: profile.avatar_url,
-            createdAt: profile.created_at,
-            addresses: (profile.addresses || []).map((a: any) => ({
-              id: a.id,
-              firstName: a.first_name,
-              lastName: a.last_name,
-              address1: a.address_1,
-              address2: a.address_2,
-              city: a.city,
-              province: a.province,
-              postalCode: a.postal_code,
-              country: a.country,
-              phone: a.phone,
-              isDefault: a.is_default,
-            })),
-          }
-          this.isAuthenticated = true
+        const response: any = await $fetch(`${this.getApiUrl()}/user`, {
+            method: 'GET',
+            headers: this.getApiHeaders()
+        })
+        
+        if (response.user) {
+            this.mapLaravelUser(response.user)
+            this.isAuthenticated = true
         }
       } catch (error) {
         console.error('Failed to fetch profile:', error)
+        // Token invalide ou expiré
+        useCookie('auth_token').value = null
+        this.user = null
+        this.isAuthenticated = false
+      } finally {
+        this.sessionChecked = true
       }
+    },
+
+    mapLaravelUser(laravelUser: any) {
+        // Adaptateur pour transformer le User Laravel en Customer Nuxt
+        const nameParts = laravelUser.name ? laravelUser.name.split(' ') : ['']
+        const firstName = nameParts[0]
+        const lastName = nameParts.slice(1).join(' ')
+
+        this.user = {
+            id: laravelUser.id.toString(),
+            email: laravelUser.email,
+            firstName: firstName,
+            lastName: lastName,
+            phone: '', // Ajouter migration dans laravel plus tard si nécessaire
+            roles: laravelUser.roles || [], // Tableau des rôles spatie
+            role: (laravelUser.roles && laravelUser.roles.length > 0) ? laravelUser.roles[0].name : 'client',
+            createdAt: laravelUser.created_at,
+            addresses: [], // A implémenter plus tard sur le backend si besoin
+        }
     },
 
     async updateProfile(updates: Partial<{
@@ -240,204 +240,46 @@ export const useAuthStore = defineStore('auth', {
       phone: string
     }>) {
       if (!this.user) return { success: false, error: 'Non connecté' }
-
-      this.isLoading = true
-      const { client } = useSupabase()
-
-      try {
-        const { error } = await client
-          .from('profiles')
-          .update({
-            first_name: updates.firstName,
-            last_name: updates.lastName,
-            phone: updates.phone,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', this.user.id)
-
-        if (error) {
-          return { success: false, error: error.message }
-        }
-
-        if (updates.firstName) this.user.firstName = updates.firstName
-        if (updates.lastName) this.user.lastName = updates.lastName
-        if (updates.phone) this.user.phone = updates.phone
-
-        return { success: true }
-      } catch (error: any) {
-        return { success: false, error: error.message }
-      } finally {
-        this.isLoading = false
-      }
+      // TODO: Implémenter l'endpoint Côté Laravel
+      return { success: false, error: 'Non implémenté sur le backend' }
     },
 
-    // =============================================
-    // ROLE MANAGEMENT (Super Admin only)
-    // =============================================
     async updateUserRole(userId: string, newRole: UserRole) {
       if (!this.isSuperAdmin) {
         return { success: false, error: 'Permission refusée' }
       }
-
-      const { client } = useSupabase()
-
-      try {
-        const { error } = await client
-          .from('profiles')
-          .update({ role: newRole, updated_at: new Date().toISOString() })
-          .eq('id', userId)
-
-        if (error) {
-          return { success: false, error: error.message }
-        }
-
-        return { success: true }
-      } catch (error: any) {
-        return { success: false, error: error.message }
-      }
-    },
-
-    async addAddress(address: Omit<Address, 'id'>) {
-      if (!this.user) return { success: false, error: 'Non connecté' }
-
-      const { client } = useSupabase()
-
-      try {
-        if (address.isDefault) {
-          await client
-            .from('addresses')
-            .update({ is_default: false })
-            .eq('user_id', this.user.id)
-        }
-
-        const { data, error } = await client
-          .from('addresses')
-          .insert({
-            user_id: this.user.id,
-            first_name: address.firstName,
-            last_name: address.lastName,
-            address_1: address.address1,
-            address_2: address.address2,
-            city: address.city,
-            province: address.province,
-            postal_code: address.postalCode,
-            country: address.country,
-            phone: address.phone,
-            is_default: address.isDefault,
-          })
-          .select()
-          .single()
-
-        if (error) {
-          return { success: false, error: error.message }
-        }
-
-        await this.fetchUserProfile(this.user.id)
-
-        return { success: true, address: data }
-      } catch (error: any) {
-        return { success: false, error: error.message }
-      }
-    },
-
-    async updateAddress(addressId: string, updates: Partial<Address>) {
-      if (!this.user) return { success: false, error: 'Non connecté' }
-
-      const { client } = useSupabase()
-
-      try {
-        if (updates.isDefault) {
-          await client
-            .from('addresses')
-            .update({ is_default: false })
-            .eq('user_id', this.user.id)
-        }
-
-        const { error } = await client
-          .from('addresses')
-          .update({
-            first_name: updates.firstName,
-            last_name: updates.lastName,
-            address_1: updates.address1,
-            address_2: updates.address2,
-            city: updates.city,
-            province: updates.province,
-            postal_code: updates.postalCode,
-            country: updates.country,
-            phone: updates.phone,
-            is_default: updates.isDefault,
-          })
-          .eq('id', addressId)
-
-        if (error) {
-          return { success: false, error: error.message }
-        }
-
-        await this.fetchUserProfile(this.user.id)
-        return { success: true }
-      } catch (error: any) {
-        return { success: false, error: error.message }
-      }
-    },
-
-    async deleteAddress(addressId: string) {
-      if (!this.user) return { success: false, error: 'Non connecté' }
-
-      const { client } = useSupabase()
-
-      try {
-        const { error } = await client
-          .from('addresses')
-          .delete()
-          .eq('id', addressId)
-
-        if (error) {
-          return { success: false, error: error.message }
-        }
-
-        await this.fetchUserProfile(this.user.id)
-        return { success: true }
-      } catch (error: any) {
-        return { success: false, error: error.message }
-      }
+      // TODO: Implémenter l'endpoint Côté Laravel
+      return { success: false, error: 'Non implémenté sur le backend' }
     },
 
     async logout() {
-      const { signOut } = useSupabase()
-
       try {
-        await signOut()
+        if (this.isAuthenticated) {
+            await $fetch(`${this.getApiUrl()}/logout`, {
+                method: 'POST',
+                headers: this.getApiHeaders()
+            })
+        }
+      } catch (e) {
+          console.error("Logout error", e)
       } finally {
+        useCookie('auth_token').value = null
         this.user = null
         this.isAuthenticated = false
         this.error = null
 
         const cartStore = useCartStore()
-        cartStore.clearCart()
+        if (cartStore && typeof cartStore.clearCart === 'function') {
+           cartStore.clearCart()
+        }
 
         navigateTo('/')
       }
     },
 
     async requestPasswordReset(email: string) {
-      this.isLoading = true
-      const { client } = useSupabase()
-
-      try {
-        const { error } = await client.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/auth/reset-password`,
-        })
-
-        if (error) {
-          return { success: false, error: translateAuthError(error.message) }
-        }
-
-        return { success: true }
-      } catch (error: any) {
-        return { success: false, error: error.message }
-      } finally {
-        this.isLoading = false
-      }
+       // TODO: Implémenter coté Laravel
+       return { success: false, error: 'Non implémenté sur le backend' }
     },
 
     clearError() {
@@ -450,8 +292,8 @@ export const useAuthStore = defineStore('auth', {
     getRedirectPath(): string {
       if (!this.user) return '/'
 
-      switch (this.user.role) {
-        case 'super_admin':
+      switch (this.userRole) {
+        case 'super-admin':
         case 'admin':
           return '/admin'
         case 'livreur':
@@ -462,20 +304,3 @@ export const useAuthStore = defineStore('auth', {
     },
   },
 })
-
-function translateAuthError(message: string): string {
-  const translations: Record<string, string> = {
-    'Invalid login credentials': 'Email ou mot de passe incorrect',
-    'Email not confirmed': 'Veuillez confirmer votre email',
-    'User already registered': 'Un compte existe déjà avec cet email',
-    'Password should be at least 6 characters': 'Le mot de passe doit contenir au moins 6 caractères',
-    'Unable to validate email address: invalid format': 'Format d\'email invalide',
-    'For security purposes, you can only request this after': 'Pour des raisons de sécurité, veuillez patienter avant de réessayer',
-  }
-
-  for (const [key, value] of Object.entries(translations)) {
-    if (message.includes(key)) return value
-  }
-
-  return message
-}

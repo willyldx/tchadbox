@@ -56,46 +56,6 @@ export const useSupabase = () => {
     return getImageUrl(bucket, data.path)
   }
 
-  // Auth helpers
-  const signUp = async (email: string, password: string, metadata?: object) => {
-    const { data, error } = await client.auth.signUp({
-      email,
-      password,
-      options: {
-        data: metadata
-      }
-    })
-    return { data, error }
-  }
-
-  const signIn = async (email: string, password: string) => {
-    const { data, error } = await client.auth.signInWithPassword({
-      email,
-      password
-    })
-    return { data, error }
-  }
-
-  const signOut = async () => {
-    const { error } = await client.auth.signOut()
-    return { error }
-  }
-
-  const getUser = async () => {
-    const { data: { user }, error } = await client.auth.getUser()
-    return { user, error }
-  }
-
-  const getSession = async () => {
-    const { data: { session }, error } = await client.auth.getSession()
-    return { session, error }
-  }
-
-  // Listen to auth changes
-  const onAuthStateChange = (callback: (event: string, session: any) => void) => {
-    return client.auth.onAuthStateChange(callback)
-  }
-
   return {
     client,
     
@@ -103,13 +63,5 @@ export const useSupabase = () => {
     getImageUrl,
     getProductImageUrl,
     uploadImage,
-    
-    // Auth
-    signUp,
-    signIn,
-    signOut,
-    getUser,
-    getSession,
-    onAuthStateChange,
   }
 }
