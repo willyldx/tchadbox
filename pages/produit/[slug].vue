@@ -21,10 +21,10 @@
         <NuxtLink to="/catalogue" class="text-[var(--color-text-muted)] hover:text-[var(--color-accent-dark)]">Catalogue</NuxtLink>
         <ChevronRightIcon class="w-4 h-4 text-[var(--color-text-muted)]" />
         <NuxtLink 
-          :to="`/catalogue?category=${product.category?.handle}`" 
+          :to="`/catalogue?categorie=${product.categoryHandle}`" 
           class="text-[var(--color-text-muted)] hover:text-[var(--color-accent-dark)]"
         >
-          {{ product.category?.name }}
+          {{ product.category }}
         </NuxtLink>
         <ChevronRightIcon class="w-4 h-4 text-[var(--color-text-muted)]" />
         <span class="text-[var(--color-text)] font-medium truncate">{{ product.title }}</span>
@@ -90,7 +90,7 @@
           <!-- Category -->
           <div class="flex items-center gap-2">
             <span class="text-sm text-amber-600 font-medium bg-amber-50 px-3 py-1 rounded-full">
-              {{ product.category?.name }}
+              {{ product.category }}
             </span>
             <span v-if="product.inStock" class="text-sm text-green-600 font-medium bg-green-50 px-3 py-1 rounded-full flex items-center gap-1">
               <CheckIcon class="w-4 h-4" />
@@ -375,68 +375,60 @@ onMounted(async () => {
 
 async function fetchProduct() {
   const slug = route.params.slug as string
-  const { client } = useSupabase()
+  const { getProduct, getProducts } = useProducts()
   
   try {
-    // Fetch product from Supabase by handle
-    const { data, error } = await client
-      .from('products')
-      .select(`
-        *,
-        category:categories(*)
-      `)
-      .eq('handle', slug)
-      .single()
+    // Fetch product from Laravel API by slug
+    const response = await getProduct(slug)
+    const p = response.product
 
-    if (error || !data) {
+    if (!p) {
       isLoading.value = false
       return
     }
 
     product.value = {
-      id: data.id,
-      title: data.title,
-      handle: data.handle,
-      description: data.description,
-      subtitle: data.subtitle,
-      price: data.price,
-      compareAtPrice: data.compare_at_price,
-      images: data.images || [],
-      thumbnail: data.thumbnail || (data.images?.[0] ?? ''),
-      category: data.category ? {
-        id: data.category.id,
-        name: data.category.name,
-        handle: data.category.handle,
-      } : { id: '', name: '', handle: '' },
-      categoryId: data.category_id,
-      inStock: data.in_stock ?? true,
-      stockQuantity: data.stock_quantity,
-      createdAt: data.created_at,
-      updatedAt: data.updated_at,
+      id: p.id.toString(),
+      title: p.title,
+      handle: p.slug,
+      description: p.description || '',
+      subtitle: p.subtitle || '',
+      price: p.price || 0,
+      compareAtPrice: undefined,
+      images: p.images || [],
+      thumbnail: p.thumbnail || (p.images?.[0] ?? ''),
+      category: p.category || '',
+      categoryHandle: p.category_handle || '',
+      inStock: p.in_stock ?? true,
+      stockQuantity: p.stock_quantity,
+      createdAt: p.created_at,
+      updatedAt: p.updated_at,
     }
     
     // Fetch related products from same category
-    if (data.category_id) {
-      const { data: related } = await client
-        .from('products')
-        .select('*')
-        .eq('category_id', data.category_id)
-        .neq('id', data.id)
-        .limit(4)
-      
-      relatedProducts.value = (related || []).map((p: any) => ({
-        id: p.id,
-        title: p.title,
-        handle: p.handle,
-        price: p.price,
-        thumbnail: p.thumbnail || (p.images?.[0] ?? ''),
-        category: data.category,
-        categoryId: p.category_id,
-        images: p.images || [],
-        inStock: p.in_stock ?? true,
-        createdAt: p.created_at,
-        updatedAt: p.updated_at,
-      }))
+    if (p.category_handle) {
+      try {
+        const relatedResponse = await getProducts({ category: p.category_handle, limit: 4 })
+        relatedProducts.value = relatedResponse.products
+          .filter((rp: any) => rp.id !== p.id)
+          .slice(0, 4)
+          .map((rp: any) => ({
+            id: rp.id.toString(),
+            title: rp.title,
+            handle: rp.slug,
+            price: rp.price || 0,
+            thumbnail: rp.thumbnail || (rp.images?.[0] ?? ''),
+            category: rp.category || '',
+            categoryHandle: rp.category_handle || '',
+            images: rp.images || [],
+            inStock: rp.in_stock ?? true,
+            createdAt: rp.created_at,
+            updatedAt: rp.updated_at,
+          }))
+      } catch (e) {
+        // Related products non-critiques
+        relatedProducts.value = []
+      }
     }
   } catch (e) {
     console.error('Failed to fetch product:', e)
@@ -473,7 +465,7 @@ async function addToCart() {
     title: product.value.title,
     price: product.value.price,
     thumbnail: product.value.thumbnail,
-    category: product.value.category?.name,
+    category: product.value.category,
   }, quantity.value)
   
   isAddingToCart.value = false

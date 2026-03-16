@@ -3,7 +3,7 @@
 // =============================================
 // USER ROLES
 // =============================================
-export type UserRole = 'client' | 'livreur' | 'admin' | 'super_admin'
+export type UserRole = 'client' | 'livreur' | 'admin' | 'super-admin'
 
 // =============================================
 // PRODUCTS
@@ -18,14 +18,14 @@ export interface Product {
   compareAtPrice?: number
   images: string[]
   thumbnail?: string
-  category: Category
-  categoryId: string
+  category?: string
+  categoryHandle?: string
   inStock: boolean
   stockQuantity?: number
   variants?: ProductVariant[]
   metadata?: Record<string, any>
-  createdAt: string
-  updatedAt: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface ProductVariant {
