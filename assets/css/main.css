@@ -629,9 +629,7 @@
    ============================================ */
 
 .input {
-  @apply w-full py-3 rounded-xl transition-all duration-300;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  @apply w-full py-3 px-4 rounded-xl transition-all duration-300;
   background: var(--color-bg-card);
   border: 1.5px solid var(--color-border);
   color: var(--color-text);
