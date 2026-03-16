@@ -63,8 +63,8 @@
         <div class="flex-grow">
           <div class="card p-4 mb-6 flex gap-4 items-center">
             <div class="relative flex-grow">
-              <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input v-model="searchQuery" type="text" placeholder="Rechercher..." class="input pl-12" />
+              <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
+              <input v-model="searchQuery" type="text" placeholder="Rechercher un produit..." class="input w-full" style="padding-left: 3rem;" />
             </div>
           </div>
 
