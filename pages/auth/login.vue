@@ -61,7 +61,7 @@
                 required
                 autocomplete="email"
                 placeholder="votre@email.com"
-                class="input pl-12"
+                class="input pl-[3rem]"
                 :disabled="authStore.isLoading"
               />
             </div>
@@ -93,7 +93,7 @@
                 required
                 autocomplete="current-password"
                 placeholder="••••••••"
-                class="input pl-12 pr-12"
+                class="input pl-[3rem] pr-[3rem]"
                 :disabled="authStore.isLoading"
               />
               <button

@@ -114,7 +114,7 @@
                 required
                 autocomplete="email"
                 placeholder="votre@email.com"
-                class="input pl-12"
+                class="input pl-[3rem]"
                 :disabled="authStore.isLoading"
               />
             </div>
@@ -137,7 +137,7 @@
                 type="tel"
                 autocomplete="tel"
                 placeholder="+235 XX XX XX XX"
-                class="input pl-12"
+                class="input pl-[3rem]"
                 :disabled="authStore.isLoading"
               />
             </div>
@@ -162,7 +162,7 @@
                 autocomplete="new-password"
                 placeholder="••••••••"
                 minlength="6"
-                class="input pl-12 pr-12"
+                class="input pl-[3rem] pr-[3rem]"
                 :disabled="authStore.isLoading"
               />
               <button
@@ -213,7 +213,7 @@
                 required
                 autocomplete="new-password"
                 placeholder="••••••••"
-                class="input pl-12"
+                class="input pl-[3rem]"
                 :class="{ 'border-red-300 focus:border-red-500': form.confirmPassword && !passwordsMatch }"
                 :disabled="authStore.isLoading"
               />
