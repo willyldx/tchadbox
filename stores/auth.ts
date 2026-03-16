@@ -133,6 +133,13 @@ export const useAuthStore = defineStore('auth', {
             
             this.mapLaravelUser(response.user)
             this.isAuthenticated = true
+            
+            // Lier le panier Convex au nouvel utilisateur connecté
+            const { mergeOnLogin } = useCart()
+            if (this.user?.id) {
+               await mergeOnLogin(this.user.id)
+            }
+
             return { success: true, role: this.userRole }
         }
 
@@ -175,6 +182,13 @@ export const useAuthStore = defineStore('auth', {
              
              this.mapLaravelUser(response.user)
              this.isAuthenticated = true
+
+             // Lier le panier Convex au nouvel utilisateur inscrit
+             const { mergeOnLogin } = useCart()
+             if (this.user?.id) {
+                 await mergeOnLogin(this.user.id)
+             }
+
              return { success: true, requiresConfirmation: false }
         }
 
