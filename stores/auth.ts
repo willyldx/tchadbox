@@ -180,9 +180,17 @@ export const useAuthStore = defineStore('auth', {
             await window.Clerk.setActive({ session: signInAttempt.createdSessionId })
             this.syncWithClerk(true, window.Clerk.user)
             return { success: true, role: this.userRole }
-        } else if (signInAttempt.status === 'needs_first_factor' || signInAttempt.status === 'needs_second_factor') {
-            this.error = "Vérification d'email ou 2FA requise selon Clerk. Rendez-vous sur votre tableau de bord Clerk pour désactiver l'obligation d'email."
-            return { success: false, error: this.error, status: signInAttempt.status }
+        } else if (['needs_first_factor', 'needs_second_factor', 'needs_client_trust'].includes(signInAttempt.status)) {
+            // Prépare l'envoi du code par email face à un blocage de sécurité Clerk
+            const emailFactor: any = signInAttempt.supportedFirstFactors?.find((f: any) => f.strategy === 'email_code')
+            if (emailFactor) {
+                await window.Clerk.client.signIn.prepareFirstFactor({
+                    strategy: 'email_code',
+                    emailAddressId: emailFactor.emailAddressId
+                })
+            }
+            this.error = null // On efface l'erreur pour la vue de confirmation
+            return { success: false, error: null, requiresAction: true, status: signInAttempt.status }
         } else {
             this.error = "Action supplémentaire requise pour la connexion: " + signInAttempt.status
             return { success: false, error: this.error }
