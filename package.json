@@ -20,6 +20,7 @@
     "@vueuse/motion": "^2.2.3",
     "convex": "^1.17.0",
     "lucide-vue-next": "^0.447.0",
+    "meilisearch": "^0.44.0",
     "nuxt": "^3.14.0",
     "pinia": "^2.2.6",
     "vue": "^3.5.12"

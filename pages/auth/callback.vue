@@ -9,6 +9,8 @@
 </template>
 
 <script setup lang="ts">
+import { useClerk } from '@clerk/vue'
+
 definePageMeta({
   layout: false,
 })
@@ -17,29 +19,20 @@ const authStore = useAuthStore()
 const route = useRoute()
 
 onMounted(async () => {
-  // Handle the OAuth callback
-  const { client } = useSupabase()
+  const { handleRedirectCallback } = useClerk()
   
   try {
-    // Get session from URL
-    const { data: { session }, error } = await client.auth.getSession()
+    // Let Clerk finalize the OAuth process (exchange code for session, set cookie)
+    await handleRedirectCallback({
+        redirectUrl: route.query.redirect as string || '/compte'
+    })
     
-    if (error) {
-      console.error('Auth callback error:', error)
-      navigateTo('/auth/login?error=callback_failed')
-      return
-    }
+    // Check session to pull state down into Pinia
+    await authStore.checkSession()
     
-    if (session?.user) {
-      // Fetch or create user profile
-      await authStore.fetchUserProfile(session.user.id)
-      
-      // Redirect to intended page or account
-      const redirect = route.query.redirect as string || '/compte'
-      navigateTo(redirect)
-    } else {
-      navigateTo('/auth/login')
-    }
+    // Redirect logic is typically handled by Clerk, but just in case
+    const redirect = route.query.redirect as string || '/compte'
+    navigateTo(redirect)
   } catch (error) {
     console.error('Callback error:', error)
     navigateTo('/auth/login?error=unknown')

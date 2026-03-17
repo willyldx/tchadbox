@@ -54,6 +54,9 @@ export default defineNuxtConfig({
       siteUrl: process.env.SITE_URL || 'https://tchadbox.vercel.app',
       convexUrl: process.env.CONVEX_URL || 'https://ceaseless-alpaca-976.convex.cloud',
       paystackPublicKey: process.env.PAYSTACK_PUBLIC_KEY || '',
+      clerkPublishableKey: process.env.NUXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '',
+      meilisearchHost: process.env.NUXT_PUBLIC_MEILISEARCH_HOST || '',
+      meilisearchKey: process.env.NUXT_PUBLIC_MEILISEARCH_KEY || '',
     }
   },
   nitro: {

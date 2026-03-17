@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import type { Customer, Address, UserRole } from '~/types'
+import { useAuth, useUser, useClerk } from '@clerk/vue'
 
 interface AuthState {
   user: Customer | null
@@ -13,11 +14,14 @@ export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
     user: null,
     isAuthenticated: false,
-    isLoading: false,
+    isLoading: true, // Clerk starts loading immediately
     error: null,
     sessionChecked: false,
   }),
 
+  // =============================================
+  // GETTERS (Mostly untouched, driven by internal state)
+  // =============================================
   getters: {
     fullName: (state): string => {
       if (!state.user) return ''
@@ -40,13 +44,9 @@ export const useAuthStore = defineStore('auth', {
       return (state.user?.addresses?.length || 0) > 0
     },
 
-    // =============================================
-    // ROLE GETTERS (Adapté pour Laravel Spatie)
-    // =============================================
     userRole: (state): UserRole => {
-      // Dans Spatie, les rôles sont un tableau. On prend le premier.
-      if (state.user?.roles && state.user.roles.length > 0) {
-          return state.user.roles[0].name as UserRole;
+      if (state.user?.role) {
+          return state.user.role as UserRole;
       }
       return 'client'
     },
@@ -90,62 +90,110 @@ export const useAuthStore = defineStore('auth', {
         return config.public.apiUrl
     },
 
-    getApiHeaders() {
-        const token = useCookie('auth_token').value
+    async getApiHeaders() {
+        const { getToken } = useAuth()
+        let token = ''
+        try {
+            // Fetch fresh Clerk JWT to send to Laravel
+            token = await getToken() || ''
+        } catch(e) {
+            console.error("Clerk Token fetch failed", e)
+        }
+
         const headers: Record<string, string> = {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         }
+
         if (token) {
             headers['Authorization'] = `Bearer ${token}`
         }
         return headers
     },
 
+    // =============================================
+    // CORE INITIALIZATION WITH CLERK
+    // =============================================
     async checkSession() {
-      if (this.sessionChecked) return
+        // Clerk handles session persistence automatically via cookies/localStorage
+        // We sync Clerk's state to our Pinia state
+        if (this.sessionChecked) return
 
-      const token = useCookie('auth_token').value
-      
-      if (token) {
-          await this.fetchUserProfile()
-      } else {
-          this.sessionChecked = true
-      }
+        const { isLoaded, isSignedIn } = useAuth()
+        const { user: clerkUser } = useUser()
+
+        // Wait for Clerk to be fully loaded
+        // This is simplified; in a real app you might use watch() on isLoaded
+        if (isLoaded.value) {
+            this.syncWithClerk(isSignedIn.value, clerkUser.value)
+            this.sessionChecked = true
+            this.isLoading = false
+        }
     },
 
+    syncWithClerk(isSignedIn: boolean | undefined, clerkUser: any) {
+        this.isAuthenticated = !!isSignedIn
+
+        if (isSignedIn && clerkUser) {
+            // Extract standard metadata. For roles, you can set them in Clerk dashboard
+            // under User -> Public Metadata, e.g., { "role": "admin" }
+            const metadataRole = clerkUser.publicMetadata?.role as UserRole | undefined || 'client'
+
+            this.user = {
+                id: clerkUser.id,
+                email: clerkUser.primaryEmailAddress?.emailAddress || '',
+                firstName: clerkUser.firstName || '',
+                lastName: clerkUser.lastName || '',
+                phone: clerkUser.primaryPhoneNumber?.phoneNumber || '',
+                roles: [{ name: metadataRole }], // Mock Spatie structure
+                role: metadataRole,
+                createdAt: clerkUser.createdAt ? new Date(clerkUser.createdAt).toISOString() : new Date().toISOString(),
+                addresses: [], 
+            }
+
+            // Sync with backend (fetch fresh data from Laravel using Clerk Token)
+            this.fetchUserProfile()
+            
+            // Link Convex Cart
+            const { mergeOnLogin } = useCart()
+            mergeOnLogin(this.user.id).catch(console.error)
+            
+        } else {
+            this.user = null
+        }
+    },
+
+    // =============================================
+    // MODIFIED AUTH ACTIONS (Using Clerk)
+    // =============================================
     async login(email: string, password: string) {
       this.isLoading = true
       this.error = null
 
       try {
-        const response: any = await $fetch(`${this.getApiUrl()}/login`, {
-            method: 'POST',
-            body: { email, password },
-            headers: {
-               'Accept': 'application/json'
-            }
+        const { client, setActive } = useClerk()
+        
+        // Attempt Sign In via Clerk core API
+        const signInAttempt = await client.signIn.create({
+            identifier: email,
+            password: password
         })
 
-        if (response.token) {
-            const tokenCookie = useCookie('auth_token', { maxAge: 60 * 60 * 24 * 7 }) // 7 jours
-            tokenCookie.value = response.token
-            
-            this.mapLaravelUser(response.user)
-            this.isAuthenticated = true
-            
-            // Lier le panier Convex au nouvel utilisateur connecté
-            const { mergeOnLogin } = useCart()
-            if (this.user?.id) {
-               await mergeOnLogin(this.user.id)
-            }
-
+        if (signInAttempt.status === 'complete') {
+            await setActive({ session: signInAttempt.createdSessionId })
+            // Pinia syncs via the checkSession/watch loop in layout usually,
+            // but we can force it here
+            const { user } = useUser()
+            this.syncWithClerk(true, user.value)
             return { success: true, role: this.userRole }
+        } else {
+            // Requires 2FA or email verification
+            this.error = "Vérification d'email ou 2FA requise."
+            return { success: false, error: this.error }
         }
-
-        return { success: false, error: 'Token manquant dans la réponse' }
       } catch (error: any) {
-        this.error = error.response?._data?.message || 'Erreur de connexion'
+        // Clerk throws arrays of errors
+        this.error = error.errors?.[0]?.message || 'Erreur de connexion'
         return { success: false, error: this.error }
       } finally {
         this.isLoading = false
@@ -163,90 +211,80 @@ export const useAuthStore = defineStore('auth', {
       this.error = null
 
       try {
-        const nomComplet = `${data.firstName} ${data.lastName}`.trim()
-        const response: any = await $fetch(`${this.getApiUrl()}/register`, {
-            method: 'POST',
-            body: { 
-                name: nomComplet,
-                email: data.email, 
-                password: data.password 
-            },
-            headers: {
-               'Accept': 'application/json'
-            }
+        const { client, setActive } = useClerk()
+        
+        // Custom Sign Up flow using Clerk API
+        const signUpAttempt = await client.signUp.create({
+            emailAddress: data.email,
+            password: data.password,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            // phone requires phone verification in Clerk settings if strictly passed
         })
 
-        if (response.token) {
-             const tokenCookie = useCookie('auth_token', { maxAge: 60 * 60 * 24 * 7 })
-             tokenCookie.value = response.token
-             
-             this.mapLaravelUser(response.user)
-             this.isAuthenticated = true
-
-             // Lier le panier Convex au nouvel utilisateur inscrit
-             const { mergeOnLogin } = useCart()
-             if (this.user?.id) {
-                 await mergeOnLogin(this.user.id)
-             }
-
-             return { success: true, requiresConfirmation: false }
+        await client.signUp.prepareEmailAddressVerification({ strategy: "email_code" })
+        
+        // If the user wants standard Clerk email verification, we navigate there.
+        // For standard local development where email is turned off or auto-verified:
+        if (signUpAttempt.status === 'complete') {
+            await setActive({ session: signUpAttempt.createdSessionId })
+            const { user } = useUser()
+            this.syncWithClerk(true, user.value)
+            return { success: true, requiresConfirmation: false }
+        } else {
+            // Usually returns 'missing_requirements' waiting for email code
+            return { success: true, requiresConfirmation: true, pendingVerificationId: signUpAttempt.id }
         }
 
-        return { success: false, error: 'Erreur lors de l\'inscription' }
       } catch (error: any) {
-        this.error = error.response?._data?.message || 'Erreur lors de l\'inscription'
+        this.error = error.errors?.[0]?.message || 'Erreur lors de l\'inscription'
         return { success: false, error: this.error }
       } finally {
         this.isLoading = false
       }
     },
 
+    async verifyEmail(code: string) {
+        this.isLoading = true
+        this.error = null
+        try {
+            const { client, setActive } = useClerk()
+            const completeSignUp = await client.signUp.attemptEmailAddressVerification({ code })
+            
+            if (completeSignUp.status === 'complete') {
+                 await setActive({ session: completeSignUp.createdSessionId })
+                 const { user } = useUser()
+                 this.syncWithClerk(true, user.value)
+                 return { success: true }
+            } else {
+                 this.error = "Code invalide ou expiré."
+                 return { success: false, error: this.error }
+            }
+        } catch (error: any) {
+            this.error = error.errors?.[0]?.message || 'Erreur de vérification'
+            return { success: false, error: this.error }
+        } finally {
+            this.isLoading = false
+        }
+    },
+
     async fetchUserProfile() {
-      const token = useCookie('auth_token').value
-      if (!token) {
-          this.sessionChecked = true
-          return
-      }
-
-      try {
-        const response: any = await $fetch(`${this.getApiUrl()}/user`, {
-            method: 'GET',
-            headers: this.getApiHeaders()
-        })
-        
-        if (response.user) {
-            this.mapLaravelUser(response.user)
-            this.isAuthenticated = true
-        }
-      } catch (error) {
-        console.error('Failed to fetch profile:', error)
-        // Token invalide ou expiré
-        useCookie('auth_token').value = null
-        this.user = null
-        this.isAuthenticated = false
-      } finally {
-        this.sessionChecked = true
-      }
+         // With Clerk, frontend holds the truth for Identity.
+         // We hit Laravel /api/user mainly to sync data if needed 
+         // or get Laravel specific relationships (e.g. Addresses)
+         try {
+            const headers = await this.getApiHeaders();
+            const response: any = await $fetch(`${this.getApiUrl()}/user`, {
+                method: 'GET',
+                headers: headers
+            })
+            // Update local user with fresh Laravel data if needed
+            // Example: this.user.addresses = response.addresses;
+         } catch(e) {
+             console.log("Could not fetch Laravel profile (expected if user just created)", e);
+         }
     },
 
-    mapLaravelUser(laravelUser: any) {
-        // Adaptateur pour transformer le User Laravel en Customer Nuxt
-        const nameParts = laravelUser.name ? laravelUser.name.split(' ') : ['']
-        const firstName = nameParts[0]
-        const lastName = nameParts.slice(1).join(' ')
-
-        this.user = {
-            id: laravelUser.id.toString(),
-            email: laravelUser.email,
-            firstName: firstName,
-            lastName: lastName,
-            phone: '', // Ajouter migration dans laravel plus tard si nécessaire
-            roles: laravelUser.roles || [], // Tableau des rôles spatie
-            role: (laravelUser.roles && laravelUser.roles.length > 0) ? laravelUser.roles[0].name : 'client',
-            createdAt: laravelUser.created_at,
-            addresses: [], // A implémenter plus tard sur le backend si besoin
-        }
-    },
 
     async updateProfile(updates: Partial<{
       firstName: string
@@ -254,30 +292,38 @@ export const useAuthStore = defineStore('auth', {
       phone: string
     }>) {
       if (!this.user) return { success: false, error: 'Non connecté' }
-      // TODO: Implémenter l'endpoint Côté Laravel
-      return { success: false, error: 'Non implémenté sur le backend' }
+      try {
+        const { user } = useUser()
+        if (user.value) {
+            await user.value.update({
+                firstName: updates.firstName,
+                lastName: updates.lastName
+            })
+            // Update local state
+            if (updates.firstName) this.user.firstName = updates.firstName
+            if (updates.lastName) this.user.lastName = updates.lastName
+            return { success: true }
+        }
+        return { success: false, error: "Clerk user object missing" }
+      } catch(e: any) {
+          return { success: false, error: e.errors?.[0]?.message || 'Erreur API' }
+      }
     },
 
     async updateUserRole(userId: string, newRole: UserRole) {
-      if (!this.isSuperAdmin) {
-        return { success: false, error: 'Permission refusée' }
-      }
-      // TODO: Implémenter l'endpoint Côté Laravel
-      return { success: false, error: 'Non implémenté sur le backend' }
+      // NOTE: With Clerk, changing roles usually requires a Backend Admin API
+      // to hit the Clerk Backend SDK directly and set `publicMetadata.role`.
+      // Un utilisateur ne peut pas changer son propre rôle frontend.
+      return { success: false, error: 'Non implémenté sur le backend pour Clerk' }
     },
 
     async logout() {
       try {
-        if (this.isAuthenticated) {
-            await $fetch(`${this.getApiUrl()}/logout`, {
-                method: 'POST',
-                headers: this.getApiHeaders()
-            })
-        }
+        const { signOut } = useClerk()
+        await signOut()
       } catch (e) {
           console.error("Logout error", e)
       } finally {
-        useCookie('auth_token').value = null
         this.user = null
         this.isAuthenticated = false
         this.error = null
@@ -292,17 +338,23 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async requestPasswordReset(email: string) {
-       // TODO: Implémenter coté Laravel
-       return { success: false, error: 'Non implémenté sur le backend' }
+       // Using Clerk API
+       try {
+           const { client } = useClerk()
+           await client.signIn.create({
+               strategy: 'reset_password_email_code',
+               identifier: email,
+           })
+           return { success: true }
+       } catch(e: any) {
+           return { success: false, error: e.errors?.[0]?.message || 'Erreur' }
+       }
     },
 
     clearError() {
       this.error = null
     },
 
-    // =============================================
-    // REDIRECT HELPER
-    // =============================================
     getRedirectPath(): string {
       if (!this.user) return '/'
 

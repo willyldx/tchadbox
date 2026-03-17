@@ -85,7 +85,7 @@ const isSearching = ref(false)
 
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
 
-// Debounced Supabase search
+// Debounced Meilisearch query
 watch(query, (q) => {
   if (searchTimeout) clearTimeout(searchTimeout)
   
@@ -96,20 +96,17 @@ watch(query, (q) => {
 
   isSearching.value = true
   searchTimeout = setTimeout(async () => {
-    const { client } = useSupabase()
-    const { data } = await client
-      .from('products')
-      .select('id, title, handle, price, thumbnail, category:categories(name)')
-      .ilike('title', `%${q}%`)
-      .limit(8)
+    const { performSearch } = useMeilisearch()
+    const results = await performSearch(q, { limit: 8 })
 
-    searchResults.value = (data || []).map((p: any) => ({
+    // Map Meilisearch hits to our expected format
+    searchResults.value = (results.hits || []).map((p: any) => ({
       id: p.id,
       title: p.title,
-      handle: p.handle,
+      handle: p.slug || p.handle || p.id, // Fallback handle using slug or ID
       price: p.price,
       thumbnail: p.thumbnail,
-      category: p.category?.name || '',
+      category: p.category || '',
     }))
     isSearching.value = false
   }, 300)

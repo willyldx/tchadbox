@@ -19,7 +19,7 @@
           <span class="text-white">Catalogue</span>
         </div>
         <h1 class="heading-section text-white">Notre Catalogue</h1>
-        <p class="text-white/60 mt-2">{{ filteredProducts.length }} produits disponibles</p>
+        <p class="text-white/60 mt-2">{{ filteredProducts.length }} produit{{ filteredProducts.length > 1 ? 's' : '' }} {{ hasFilters ? 'trouvé' + (filteredProducts.length > 1 ? 's' : '') : 'disponible' + (filteredProducts.length > 1 ? 's' : '') }}</p>
       </div>
     </section>
 
@@ -115,8 +115,9 @@ const { getProducts } = useProducts()
 const products = ref<Product[]>([])
 const isLoading = ref(true)
 const error = ref<string | null>(null)
+const isSearchMode = ref(false) // true when using Meilisearch results
 
-// Categories (statiques pour les icônes, mais on peut les rendre dynamiques aussi)
+// Categories
 const categories = [
   { name: 'Alimentaire', handle: 'alimentaire', icon: Wheat },
   { name: 'Scolarité', handle: 'scolarite', icon: BookOpen },
@@ -135,7 +136,10 @@ const selectedCategory = ref(route.query.categorie as string || '')
 const selectedPrice = ref('')
 const searchQuery = ref('')
 
-// Fetch products from Laravel API
+// Keep a copy of the full product list from Laravel (for counts + reset)
+const allProducts = ref<Product[]>([])
+
+// Fetch products from Laravel API (initial load)
 const fetchProducts = async () => {
   isLoading.value = true
   error.value = null
@@ -143,7 +147,7 @@ const fetchProducts = async () => {
   try {
     const response = await getProducts({ limit: 100 })
     
-    products.value = response.products.map((p: any) => ({
+    const mapped = response.products.map((p: any) => ({
       id: p.id.toString(),
       title: p.title,
       handle: p.slug,
@@ -156,6 +160,9 @@ const fetchProducts = async () => {
       categoryHandle: p.category_handle || '',
       inStock: p.in_stock,
     }))
+
+    allProducts.value = mapped
+    products.value = mapped
   } catch (e: any) {
     console.error('Error fetching products:', e)
     error.value = 'Impossible de charger le catalogue. Vérifiez votre connexion internet et réessayez.'
@@ -164,8 +171,101 @@ const fetchProducts = async () => {
   }
 }
 
-// Filtrage
+// Build Meilisearch filter string from active filters
+const buildMeilisearchFilter = (): string[] => {
+  const filters: string[] = []
+  
+  if (selectedCategory.value) {
+    filters.push(`category_handle = "${selectedCategory.value}"`)
+  }
+  
+  if (selectedPrice.value) {
+    const [min, max] = selectedPrice.value.split('-').map(Number)
+    if (max) {
+      filters.push(`price >= ${min}`)
+      filters.push(`price <= ${max}`)
+    } else {
+      // "60+" case
+      filters.push(`price >= ${min}`)
+    }
+  }
+
+  // Always filter active products
+  filters.push('is_active = true')
+
+  return filters
+}
+
+// Perform Meilisearch search
+const doMeilisearch = async (query: string) => {
+  isLoading.value = true
+  
+  try {
+    const { performSearch } = useMeilisearch()
+    const filter = buildMeilisearchFilter()
+    
+    const results = await performSearch(query, {
+      limit: 50,
+      filter,
+    })
+
+    products.value = (results.hits || []).map((p: any) => ({
+      id: p.id.toString(),
+      title: p.title,
+      handle: p.slug || p.id.toString(),
+      subtitle: p.subtitle || '',
+      description: p.description || '',
+      price: p.price || 0,
+      thumbnail: p.thumbnail || '',
+      images: [],
+      category: p.category || '',
+      categoryHandle: p.category_handle || '',
+      inStock: p.in_stock ?? true,
+    }))
+
+    isSearchMode.value = true
+  } catch (e) {
+    console.error('Meilisearch error, falling back to frontend filter:', e)
+    // Fallback: filter from allProducts
+    isSearchMode.value = false
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// Debounced search watcher
+let searchTimeout: ReturnType<typeof setTimeout> | null = null
+
+watch(searchQuery, (q) => {
+  if (searchTimeout) clearTimeout(searchTimeout)
+
+  if (!q || q.length < 2) {
+    // Revert to full list from Laravel
+    isSearchMode.value = false
+    products.value = [...allProducts.value]
+    return
+  }
+
+  searchTimeout = setTimeout(() => doMeilisearch(q), 300)
+})
+
+// When category or price filters change while searching, re-run Meilisearch
+watch([selectedCategory, selectedPrice], () => {
+  if (searchQuery.value && searchQuery.value.length >= 2) {
+    // Re-run search with new filters
+    if (searchTimeout) clearTimeout(searchTimeout)
+    searchTimeout = setTimeout(() => doMeilisearch(searchQuery.value), 150)
+  }
+})
+
+// Filtered products (frontend filtering when NOT in search mode)
 const filteredProducts = computed(() => {
+  // If Meilisearch handled the query + filters, just return the results as-is
+  if (isSearchMode.value) {
+    return products.value
+  }
+
+  // Frontend filtering for initial load / no search query
   let result = [...products.value]
   
   if (selectedCategory.value) {
@@ -179,26 +279,20 @@ const filteredProducts = computed(() => {
       : result.filter(p => p.price >= min)
   }
   
-  if (searchQuery.value) {
-    const q = searchQuery.value.toLowerCase()
-    result = result.filter(p => 
-      p.title.toLowerCase().includes(q) || 
-      p.category?.toLowerCase().includes(q) ||
-      p.subtitle?.toLowerCase().includes(q)
-    )
-  }
-  
   return result
 })
 
 const hasFilters = computed(() => selectedCategory.value || selectedPrice.value || searchQuery.value)
 
-const getCount = (handle: string) => products.value.filter(p => p.categoryHandle === handle).length
+// Counts always use the full list from Laravel
+const getCount = (handle: string) => allProducts.value.filter(p => p.categoryHandle === handle).length
 
 const resetFilters = () => { 
   selectedCategory.value = ''
   selectedPrice.value = ''
-  searchQuery.value = '' 
+  searchQuery.value = ''
+  isSearchMode.value = false
+  products.value = [...allProducts.value]
 }
 
 // Watch route query

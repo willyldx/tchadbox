@@ -236,24 +236,22 @@ async function handleSubmit() {
 }
 
 async function handleGoogleLogin() {
-  const { client } = useSupabase()
+  const { client } = useClerk()
   
-  await client.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: `${window.location.origin}/auth/callback`,
-    },
+  await client.signIn.authenticateWithRedirect({
+    strategy: 'oauth_google',
+    redirectUrl: `${window.location.origin}/auth/callback`,
+    redirectUrlComplete: '/compte',
   })
 }
 
 async function handleAppleLogin() {
-  const { client } = useSupabase()
+  const { client } = useClerk()
   
-  await client.auth.signInWithOAuth({
-    provider: 'apple',
-    options: {
-      redirectTo: `${window.location.origin}/auth/callback`,
-    },
+  await client.signIn.authenticateWithRedirect({
+    strategy: 'oauth_apple',
+    redirectUrl: `${window.location.origin}/auth/callback`,
+    redirectUrlComplete: '/compte',
   })
 }
 </script>
