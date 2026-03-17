@@ -36,8 +36,10 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: 'TchadBox - La diaspora tchadienne envoie des biens à sa famille. Livraison garantie avec photo à N\'Djamena.' },
         { name: 'theme-color', content: '#002395' },
-      ],
-      link: [{ rel: 'icon', type: 'image/png', href: '/logo.png' }]
+      link: [
+        { rel: 'icon', type: 'image/png', href: '/logo.png' },
+        { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/amazon-fonts@1.0.1/fonts/stylesheet.css' }
+      ]
     }
   },
   runtimeConfig: {
