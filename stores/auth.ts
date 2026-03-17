@@ -181,8 +181,16 @@ export const useAuthStore = defineStore('auth', {
             this.syncWithClerk(true, window.Clerk.user)
             return { success: true, role: this.userRole }
         } else if (signInAttempt.status === 'needs_first_factor' || signInAttempt.status === 'needs_second_factor') {
-            this.error = "Vérification d'email ou 2FA requise."
-            return { success: false, error: this.error, requiresAction: true, status: signInAttempt.status }
+            // Prépare l'envoi du code par email si applicable
+            const emailFactor: any = signInAttempt.supportedFirstFactors?.find((f: any) => f.strategy === 'email_code')
+            if (emailFactor) {
+                await window.Clerk.client.signIn.prepareFirstFactor({
+                    strategy: 'email_code',
+                    emailAddressId: emailFactor.emailAddressId
+                })
+            }
+            this.error = null // On efface l'erreur pour la vue de confirmation
+            return { success: false, error: null, requiresAction: true, status: signInAttempt.status }
         } else {
             this.error = "Action supplémentaire requise pour la connexion: " + signInAttempt.status
             return { success: false, error: this.error }
@@ -257,6 +265,32 @@ export const useAuthStore = defineStore('auth', {
             }
         } catch (error: any) {
             this.error = error.errors?.[0]?.message || 'Erreur de vérification'
+            return { success: false, error: this.error }
+        } finally {
+            this.isLoading = false
+        }
+    },
+
+    async verifySignIn(code: string) {
+        this.isLoading = true
+        this.error = null
+        try {
+            if (!window.Clerk) throw new Error("Clerk is not loaded")
+            const completeSignIn = await window.Clerk!.client!.signIn.attemptFirstFactor({
+                strategy: 'email_code',
+                code
+            })
+            
+            if (completeSignIn.status === 'complete') {
+                 await window.Clerk.setActive({ session: completeSignIn.createdSessionId })
+                 this.syncWithClerk(true, window.Clerk.user)
+                 return { success: true }
+            } else {
+                 this.error = "Code invalide ou vérification incomplète."
+                 return { success: false, error: this.error }
+            }
+        } catch (error: any) {
+            this.error = error.errors?.[0]?.message || 'Code invalide ou expiré'
             return { success: false, error: this.error }
         } finally {
             this.isLoading = false

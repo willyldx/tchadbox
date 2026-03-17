@@ -61,7 +61,7 @@
         </Transition>
 
         <!-- Register Form -->
-        <form @submit.prevent="handleSubmit" class="space-y-5">
+        <form v-if="!showVerification" @submit.prevent="handleSubmit" class="space-y-5">
           <!-- Name Fields -->
           <div class="grid grid-cols-2 gap-4">
             <div>
@@ -258,8 +258,38 @@
           </button>
         </form>
 
+        <!-- Verification Form -->
+        <form v-else @submit.prevent="handleVerification" class="space-y-5">
+          <div>
+            <label for="code" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
+              Code de vérification (6 chiffres)
+            </label>
+            <input
+              id="code"
+              v-model="verificationCode"
+              type="text"
+              required
+              placeholder="123456"
+              maxlength="6"
+              class="input text-center text-2xl tracking-widest font-mono"
+              :disabled="authStore.isLoading"
+            />
+          </div>
+          <button
+            type="submit"
+            :disabled="authStore.isLoading || verificationCode.length < 6"
+            class="w-full py-3.5 btn-gold !rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            <svg v-if="authStore.isLoading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>{{ authStore.isLoading ? 'Vérification...' : 'Valider mon compte' }}</span>
+          </button>
+        </form>
+
         <!-- Login Link -->
-        <p class="text-center text-[var(--color-text-secondary)] mt-8">
+        <p v-if="!showVerification" class="text-center text-[var(--color-text-secondary)] mt-8">
           Déjà un compte ?
           <NuxtLink to="/auth/login" class="text-[var(--color-accent-dark)] hover:text-[var(--color-accent)] font-semibold transition-colors">
             Se connecter
@@ -311,6 +341,8 @@ const form = reactive({
 
 const showPassword = ref(false)
 const showSuccess = ref(false)
+const showVerification = ref(false)
+const verificationCode = ref('')
 
 // Password strength calculation
 const passwordStrength = computed(() => {
@@ -364,9 +396,17 @@ async function handleSubmit() {
   if (result.success) {
     if (result.requiresConfirmation) {
       showSuccess.value = true
+      showVerification.value = true
     } else {
       navigateTo('/compte')
     }
+  }
+}
+
+async function handleVerification() {
+  const result = await authStore.verifyEmail(verificationCode.value)
+  if (result.success) {
+    navigateTo('/compte')
   }
 }
 </script>
