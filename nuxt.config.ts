@@ -17,9 +17,7 @@ export default defineNuxtConfig({
   },
   googleFonts: {
     families: {
-      'Plus Jakarta Sans': [400, 500, 600, 700, 800],
-      'Inter': [300, 400, 500, 600, 700],
-      'JetBrains Mono': [400, 500],
+      // System sans-serif used as Amazon Ember fallback, no external fonts needed for UI
     },
     display: 'swap',
   },
