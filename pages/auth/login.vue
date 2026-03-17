@@ -8,13 +8,15 @@
 
     <div class="w-full max-w-md relative">
       <!-- Logo -->
-      <NuxtLink to="/" class="flex items-center justify-center gap-3 mb-8 group">
-        <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/25 group-hover:shadow-amber-500/40 transition-shadow">
-          <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-          </svg>
+      <NuxtLink to="/" class="flex flex-col items-center justify-center gap-4 mb-10 group">
+        <div class="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center bg-white rounded-2xl shadow-xl shadow-amber-500/10 group-hover:shadow-amber-500/20 transition-all duration-300 transform group-hover:-translate-y-1">
+          <div class="absolute inset-0 bg-gradient-to-br from-amber-50 to-white rounded-2xl border border-amber-100/50"></div>
+          <img src="/logo.png" alt="TchadBox Logo" class="w-20 h-20 sm:w-24 sm:h-24 object-contain relative z-10 p-2" />
         </div>
-        <span class="text-2xl font-bold text-[var(--color-text)]">TchadBox</span>
+        <div class="text-center">
+          <span class="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-amber-400 tracking-tight">TchadBox</span>
+          <div class="h-1 w-12 bg-amber-400 rounded-full mx-auto mt-2 opacity-50 group-hover:w-16 transition-all duration-300"></div>
+        </div>
       </NuxtLink>
 
       <!-- Login Card -->
