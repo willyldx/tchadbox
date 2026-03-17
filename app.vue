@@ -10,6 +10,7 @@
 </template>
 
 <script setup lang="ts">
+import { useAuth, useUser } from '@clerk/vue'
 import { useCartStore } from '~/stores/cart'
 import { useAuthStore } from '~/stores/auth'
 import { useFavoritesStore } from '~/stores/favorites'
@@ -18,10 +19,27 @@ const authStore = useAuthStore()
 const cartStore = useCartStore()
 const favoritesStore = useFavoritesStore()
 
-onMounted(async () => {
-  // Restore session from Supabase token
-  await authStore.checkSession()
-  
+if (import.meta.client) {
+  // Clerk reactive refs
+  const { isLoaded, isSignedIn } = useAuth()
+  const { user: clerkUser } = useUser()
+
+  // Watch Clerk auth state and sync to Pinia
+  watch(
+    [isLoaded, isSignedIn, clerkUser],
+    ([loaded, signedIn, user]) => {
+      if (loaded) {
+        authStore.syncWithClerk(signedIn, user)
+        authStore.sessionChecked = true
+        authStore.isLoading = false
+      }
+    },
+    { immediate: true }
+  )
+}
+
+
+onMounted(() => {
   // Load cart from localStorage
   cartStore.loadFromStorage()
   

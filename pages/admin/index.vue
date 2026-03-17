@@ -97,7 +97,6 @@ definePageMeta({
 })
 
 const authStore = useAuthStore()
-const { client } = useSupabase()
 
 // Stats
 const stats = ref([
@@ -113,47 +112,26 @@ const activeDeliveries = ref<any[]>([])
 // Fetch dashboard data
 const fetchDashboardData = async () => {
   try {
-    // Utiliser RPC pour récupérer toutes les commandes
-    const { data: allOrders, error } = await client.rpc('get_all_orders')
+    const data = await useBackendApi().adminStats()
     
-    if (error) {
-      console.error('Error fetching orders:', error)
-      return
+    if (data && data.stats) {
+      // Stats du jour
+      stats.value[0].value = data.stats.today.count.toString()
+      stats.value[0].subtext = `${formatPrice(data.stats.today.revenue)} de CA`
+
+      // En attente
+      stats.value[1].value = data.stats.pending.toString()
+
+      // En livraison
+      stats.value[2].value = data.stats.active.toString()
+
+      // Livrées ce mois
+      stats.value[3].value = data.stats.monthly_delivered.toString()
+
+      // Listes 
+      pendingOrders.value = data.pending_orders || []
+      activeDeliveries.value = data.active_deliveries || []
     }
-
-    const orders = allOrders || []
-
-    // Filtrer les commandes en attente
-    pendingOrders.value = orders
-      .filter((o: any) => o.status === 'pending')
-      .slice(0, 5)
-    
-    stats.value[1].value = orders.filter((o: any) => o.status === 'pending').length.toString()
-
-    // Filtrer les livraisons en cours
-    activeDeliveries.value = orders
-      .filter((o: any) => ['fulfilled', 'shipped'].includes(o.fulfillment_status))
-      .slice(0, 5)
-    
-    stats.value[2].value = activeDeliveries.value.length.toString()
-
-    // Stats du jour
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    
-    const todayOrders = orders.filter((o: any) => new Date(o.created_at) >= today)
-    const todayRevenue = todayOrders.reduce((sum: number, o: any) => sum + (Number(o.total) || 0), 0)
-    stats.value[0].value = todayOrders.length.toString()
-    stats.value[0].subtext = `${formatPrice(todayRevenue)} de CA`
-
-    // Livrées ce mois
-    const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
-    const monthlyDelivered = orders.filter((o: any) => 
-      o.fulfillment_status === 'delivered' && 
-      new Date(o.delivered_at || o.created_at) >= firstOfMonth
-    ).length
-    stats.value[3].value = monthlyDelivered.toString()
-
   } catch (error) {
     console.error('Error fetching dashboard data:', error)
   }

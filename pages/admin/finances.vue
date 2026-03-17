@@ -133,7 +133,6 @@ definePageMeta({
 })
 
 const authStore = useAuthStore()
-const { client } = useSupabase()
 
 // Redirect if not super_admin
 if (!authStore.isSuperAdmin) {
@@ -166,79 +165,32 @@ const recentOrders = ref<any[]>([])
 // Fetch financial data
 const fetchFinancialData = async () => {
   try {
-    // Fetch all orders using RPC
-    const { data: orders, error } = await client.rpc('get_all_orders')
+    const data = await useBackendApi().adminFinances()
+    if (!data) return
 
-    if (error) throw error
-
-    if (!orders) return
-
-    // Calculate dates
-    const now = new Date()
-    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-    const startOfWeek = new Date(startOfToday)
-    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay())
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
-    const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-    const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0)
-
-    // Calculate stats
-    stats.value.totalOrders = orders.length
-    stats.value.totalRevenue = orders.reduce((sum: number, o: any) => sum + (Number(o.total) || 0), 0)
-
-    const todayOrders = orders.filter((o: any) => new Date(o.created_at) >= startOfToday)
-    stats.value.todayOrders = todayOrders.length
-    stats.value.todayRevenue = todayOrders.reduce((sum: number, o: any) => sum + (Number(o.total) || 0), 0)
-
-    const weekOrders = orders.filter((o: any) => new Date(o.created_at) >= startOfWeek)
-    stats.value.weekOrders = weekOrders.length
-    stats.value.weekRevenue = weekOrders.reduce((sum: number, o: any) => sum + (Number(o.total) || 0), 0)
-
-    const monthOrders = orders.filter((o: any) => new Date(o.created_at) >= startOfMonth)
-    stats.value.monthRevenue = monthOrders.reduce((sum: number, o: any) => sum + (Number(o.total) || 0), 0)
-
-    const lastMonthOrders = orders.filter((o: any) => {
-      const d = new Date(o.created_at)
-      return d >= startOfLastMonth && d <= endOfLastMonth
-    })
-    const lastMonthRevenue = lastMonthOrders.reduce((sum: number, o: any) => sum + (Number(o.total) || 0), 0)
-    stats.value.monthGrowth = lastMonthRevenue > 0 
-      ? Math.round(((stats.value.monthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100)
-      : 0
+    // Update stats
+    stats.value.totalOrders = data.stats.total_orders
+    stats.value.totalRevenue = data.stats.total_revenue
+    stats.value.todayOrders = data.stats.today_orders
+    stats.value.todayRevenue = data.stats.today_revenue
+    stats.value.weekOrders = data.stats.week_orders
+    stats.value.weekRevenue = data.stats.week_revenue
+    stats.value.monthRevenue = data.stats.month_revenue
+    stats.value.monthGrowth = data.stats.month_growth
 
     // Payment stats
-    const capturedAmount = orders.filter((o: any) => o.payment_status === 'captured').reduce((sum: number, o: any) => sum + (Number(o.total) || 0), 0)
-    const awaitingAmount = orders.filter((o: any) => o.payment_status === 'awaiting').reduce((sum: number, o: any) => sum + (Number(o.total) || 0), 0)
-    const refundedAmount = orders.filter((o: any) => o.payment_status === 'refunded').reduce((sum: number, o: any) => sum + (Number(o.total) || 0), 0)
-    const total = capturedAmount + awaitingAmount + refundedAmount || 1
-
+    const t = data.payment_stats.captured + data.payment_stats.awaiting + data.payment_stats.refunded || 1
     paymentStats.value = [
-      { status: 'captured', label: 'Payé', amount: capturedAmount, percent: (capturedAmount / total) * 100, color: 'bg-green-500', bgColor: 'bg-green-500' },
-      { status: 'awaiting', label: 'En attente', amount: awaitingAmount, percent: (awaitingAmount / total) * 100, color: 'bg-amber-500', bgColor: 'bg-amber-500' },
-      { status: 'refunded', label: 'Remboursé', amount: refundedAmount, percent: (refundedAmount / total) * 100, color: 'bg-red-500', bgColor: 'bg-red-500' }
+      { status: 'captured', label: 'Payé', amount: data.payment_stats.captured, percent: (data.payment_stats.captured / t) * 100, color: 'bg-green-500', bgColor: 'bg-green-500' },
+      { status: 'awaiting', label: 'En attente', amount: data.payment_stats.awaiting, percent: (data.payment_stats.awaiting / t) * 100, color: 'bg-amber-500', bgColor: 'bg-amber-500' },
+      { status: 'refunded', label: 'Remboursé', amount: data.payment_stats.refunded, percent: (data.payment_stats.refunded / t) * 100, color: 'bg-red-500', bgColor: 'bg-red-500' }
     ]
 
     // Recent orders
-    recentOrders.value = orders.slice(0, 5)
+    recentOrders.value = data.recent_orders || []
 
-    // Top products (from order_items)
-    const { data: items } = await client
-      .from('order_items')
-      .select('product_id, title, quantity, total')
-
-    if (items) {
-      const productMap = new Map<string, { title: string; quantity: number; revenue: number }>()
-      items.forEach((item: any) => {
-        const existing = productMap.get(item.product_id) || { title: item.title, quantity: 0, revenue: 0 }
-        existing.quantity += item.quantity
-        existing.revenue += Number(item.total) || 0
-        productMap.set(item.product_id, existing)
-      })
-      topProducts.value = Array.from(productMap.entries())
-        .map(([id, data]) => ({ id, ...data }))
-        .sort((a, b) => b.revenue - a.revenue)
-        .slice(0, 5)
-    }
+    // Top products
+    topProducts.value = data.top_products || []
 
   } catch (error) {
     console.error('Error fetching financial data:', error)

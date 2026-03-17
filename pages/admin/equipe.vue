@@ -125,7 +125,6 @@ definePageMeta({
 })
 
 const authStore = useAuthStore()
-const { client } = useSupabase()
 const toast = useToast()
 
 // Redirect if not super_admin
@@ -144,20 +143,15 @@ const showAddModal = ref(false)
 const selectedUser = ref<string | null>(null)
 const availableUsers = ref<{ label: string; value: string }[]>([])
 
-// Fetch team
+// Fetch team & available users (Combined in Laravel API now)
 const fetchTeam = async () => {
   loading.value = true
   try {
-    // Fetch admins (not super_admin, which is you)
-    const { data: adminData, error } = await client.rpc('get_profiles_by_role', { target_role: 'admin' })
-
-    if (error) throw error
-
-    admins.value = adminData || []
-
-    // Count livreurs
-    const { data: livreurData } = await client.rpc('get_all_delivery_agents')
-    livreursCount.value = (livreurData || []).filter((l: any) => l.is_active).length
+    const data = await useBackendApi().adminTeam()
+    
+    admins.value = data.admins || []
+    livreursCount.value = data.livreurs_count || 0
+    availableUsers.value = data.available_users || []
   } catch (error) {
     console.error('Error fetching team:', error)
   } finally {
@@ -165,24 +159,8 @@ const fetchTeam = async () => {
   }
 }
 
-// Fetch available users
-const fetchAvailableUsers = async () => {
-  try {
-    const { data, error } = await client.rpc('get_all_profiles')
-
-    if (error) throw error
-
-    // Filter users who can be promoted (client or livreur)
-    const promotable = (data || []).filter((u: any) => ['client', 'livreur'].includes(u.role))
-    
-    availableUsers.value = promotable.map((u: any) => ({
-      label: `${u.first_name} ${u.last_name} (${u.email})`,
-      value: u.id
-    }))
-  } catch (error) {
-    console.error('Error fetching available users:', error)
-  }
-}
+// (Optional alias, as they are now fetched together)
+const fetchAvailableUsers = () => {}
 
 // Promote to admin
 const promoteToAdmin = async () => {
@@ -190,18 +168,12 @@ const promoteToAdmin = async () => {
 
   saving.value = true
   try {
-    const { error } = await client.rpc('update_user_role', {
-      target_user_id: selectedUser.value,
-      new_role: 'admin'
-    })
-
-    if (error) throw error
+    await useBackendApi().adminPromoteTeam(selectedUser.value, 'admin')
 
     toast.add({ title: 'Succès', description: 'Utilisateur promu administrateur', color: 'green' })
     showAddModal.value = false
     selectedUser.value = null
     fetchTeam()
-    fetchAvailableUsers()
   } catch (error) {
     console.error('Error promoting user:', error)
     toast.add({ title: 'Erreur', description: 'Impossible de promouvoir cet utilisateur', color: 'red' })
@@ -215,16 +187,10 @@ const demoteAdmin = async (admin: any) => {
   if (!confirm(`Retirer les droits admin de ${admin.first_name} ${admin.last_name} ?`)) return
 
   try {
-    const { error } = await client.rpc('update_user_role', {
-      target_user_id: admin.id,
-      new_role: 'client'
-    })
-
-    if (error) throw error
+    await useBackendApi().adminPromoteTeam(admin.id, 'client')
 
     toast.add({ title: 'Succès', description: 'Droits admin retirés', color: 'green' })
     fetchTeam()
-    fetchAvailableUsers()
   } catch (error) {
     console.error('Error demoting admin:', error)
     toast.add({ title: 'Erreur', description: 'Impossible de retirer les droits', color: 'red' })

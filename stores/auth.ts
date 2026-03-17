@@ -91,11 +91,11 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async getApiHeaders() {
-        const { getToken } = useAuth()
         let token = ''
         try {
-            // Fetch fresh Clerk JWT to send to Laravel
-            token = await getToken() || ''
+            if (import.meta.client && window.Clerk && window.Clerk.session) {
+                token = await window.Clerk.session.getToken() || ''
+            }
         } catch(e) {
             console.error("Clerk Token fetch failed", e)
         }
@@ -115,17 +115,15 @@ export const useAuthStore = defineStore('auth', {
     // CORE INITIALIZATION WITH CLERK
     // =============================================
     async checkSession() {
-        // Clerk handles session persistence automatically via cookies/localStorage
-        // We sync Clerk's state to our Pinia state
         if (this.sessionChecked) return
 
-        const { isLoaded, isSignedIn } = useAuth()
-        const { user: clerkUser } = useUser()
+        if (import.meta.server) {
+            return
+        }
 
-        // Wait for Clerk to be fully loaded
-        // This is simplified; in a real app you might use watch() on isLoaded
-        if (isLoaded.value) {
-            this.syncWithClerk(isSignedIn.value, clerkUser.value)
+        // Wait for window.Clerk to be ready
+        if (window.Clerk) {
+            this.syncWithClerk(window.Clerk.session !== null, window.Clerk.user)
             this.sessionChecked = true
             this.isLoading = false
         }
@@ -145,7 +143,6 @@ export const useAuthStore = defineStore('auth', {
                 firstName: clerkUser.firstName || '',
                 lastName: clerkUser.lastName || '',
                 phone: clerkUser.primaryPhoneNumber?.phoneNumber || '',
-                roles: [{ name: metadataRole }], // Mock Spatie structure
                 role: metadataRole,
                 createdAt: clerkUser.createdAt ? new Date(clerkUser.createdAt).toISOString() : new Date().toISOString(),
                 addresses: [], 
@@ -171,20 +168,17 @@ export const useAuthStore = defineStore('auth', {
       this.error = null
 
       try {
-        const { client, setActive } = useClerk()
+        if (!window.Clerk) throw new Error("Clerk is not loaded")
         
         // Attempt Sign In via Clerk core API
-        const signInAttempt = await client.signIn.create({
+        const signInAttempt = await window.Clerk!.client!.signIn.create({
             identifier: email,
             password: password
         })
 
         if (signInAttempt.status === 'complete') {
-            await setActive({ session: signInAttempt.createdSessionId })
-            // Pinia syncs via the checkSession/watch loop in layout usually,
-            // but we can force it here
-            const { user } = useUser()
-            this.syncWithClerk(true, user.value)
+            await window.Clerk.setActive({ session: signInAttempt.createdSessionId })
+            this.syncWithClerk(true, window.Clerk.user)
             return { success: true, role: this.userRole }
         } else {
             // Requires 2FA or email verification
@@ -211,10 +205,10 @@ export const useAuthStore = defineStore('auth', {
       this.error = null
 
       try {
-        const { client, setActive } = useClerk()
+        if (!window.Clerk) throw new Error("Clerk is not loaded")
         
         // Custom Sign Up flow using Clerk API
-        const signUpAttempt = await client.signUp.create({
+        const signUpAttempt = await window.Clerk!.client!.signUp.create({
             emailAddress: data.email,
             password: data.password,
             firstName: data.firstName,
@@ -222,14 +216,11 @@ export const useAuthStore = defineStore('auth', {
             // phone requires phone verification in Clerk settings if strictly passed
         })
 
-        await client.signUp.prepareEmailAddressVerification({ strategy: "email_code" })
+        await window.Clerk!.client!.signUp.prepareEmailAddressVerification({ strategy: "email_code" })
         
-        // If the user wants standard Clerk email verification, we navigate there.
-        // For standard local development where email is turned off or auto-verified:
         if (signUpAttempt.status === 'complete') {
-            await setActive({ session: signUpAttempt.createdSessionId })
-            const { user } = useUser()
-            this.syncWithClerk(true, user.value)
+            await window.Clerk.setActive({ session: signUpAttempt.createdSessionId })
+            this.syncWithClerk(true, window.Clerk.user)
             return { success: true, requiresConfirmation: false }
         } else {
             // Usually returns 'missing_requirements' waiting for email code
@@ -248,13 +239,12 @@ export const useAuthStore = defineStore('auth', {
         this.isLoading = true
         this.error = null
         try {
-            const { client, setActive } = useClerk()
-            const completeSignUp = await client.signUp.attemptEmailAddressVerification({ code })
+            if (!window.Clerk) throw new Error("Clerk is not loaded")
+            const completeSignUp = await window.Clerk!.client!.signUp.attemptEmailAddressVerification({ code })
             
             if (completeSignUp.status === 'complete') {
-                 await setActive({ session: completeSignUp.createdSessionId })
-                 const { user } = useUser()
-                 this.syncWithClerk(true, user.value)
+                 await window.Clerk.setActive({ session: completeSignUp.createdSessionId })
+                 this.syncWithClerk(true, window.Clerk.user)
                  return { success: true }
             } else {
                  this.error = "Code invalide ou expiré."
@@ -293,9 +283,8 @@ export const useAuthStore = defineStore('auth', {
     }>) {
       if (!this.user) return { success: false, error: 'Non connecté' }
       try {
-        const { user } = useUser()
-        if (user.value) {
-            await user.value.update({
+        if (window.Clerk && window.Clerk.user) {
+            await window.Clerk.user.update({
                 firstName: updates.firstName,
                 lastName: updates.lastName
             })
@@ -319,8 +308,9 @@ export const useAuthStore = defineStore('auth', {
 
     async logout() {
       try {
-        const { signOut } = useClerk()
-        await signOut()
+        if (window.Clerk) {
+           await window.Clerk.signOut()
+        }
       } catch (e) {
           console.error("Logout error", e)
       } finally {
@@ -340,8 +330,8 @@ export const useAuthStore = defineStore('auth', {
     async requestPasswordReset(email: string) {
        // Using Clerk API
        try {
-           const { client } = useClerk()
-           await client.signIn.create({
+           if (!window.Clerk) throw new Error("Clerk not loaded")
+           await window.Clerk!.client!.signIn.create({
                strategy: 'reset_password_email_code',
                identifier: email,
            })

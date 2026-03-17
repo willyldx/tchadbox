@@ -236,9 +236,9 @@ async function handleSubmit() {
 }
 
 async function handleGoogleLogin() {
-  const { client } = useClerk()
+  if (!window.Clerk) return
   
-  await client.signIn.authenticateWithRedirect({
+  await window.Clerk.client.signIn.authenticateWithRedirect({
     strategy: 'oauth_google',
     redirectUrl: `${window.location.origin}/auth/callback`,
     redirectUrlComplete: '/compte',
@@ -246,9 +246,9 @@ async function handleGoogleLogin() {
 }
 
 async function handleAppleLogin() {
-  const { client } = useClerk()
+  if (!window.Clerk) return
   
-  await client.signIn.authenticateWithRedirect({
+  await window.Clerk.client.signIn.authenticateWithRedirect({
     strategy: 'oauth_apple',
     redirectUrl: `${window.location.origin}/auth/callback`,
     redirectUrlComplete: '/compte',

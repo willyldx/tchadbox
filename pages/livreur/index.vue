@@ -126,7 +126,6 @@ definePageMeta({
 })
 
 const authStore = useAuthStore()
-const { client } = useSupabase()
 
 // State
 const loading = ref(true)
@@ -186,23 +185,17 @@ const fetchDeliveries = async () => {
   
   loading.value = true
   try {
-    const { data, error } = await client
-      .from('orders')
-      .select('*')
-      .eq('assigned_to', authStore.user.id)
-      .in('fulfillment_status', ['fulfilled', 'shipped', 'delivered'])
-      .order('assigned_at', { ascending: false })
-
-    if (error) throw error
+    const data = await useBackendApi().livreurOrders()
 
     const { normalizeOrder } = useOrderNormalizer()
-    deliveries.value = (data || []).map((order) => normalizeOrder(order))
+    deliveries.value = (data?.data || []).map((order: any) => normalizeOrder(order))
   } catch (error) {
     console.error('Error fetching deliveries:', error)
   } finally {
     loading.value = false
   }
 }
+
 
 // Map order from database (legacy, préférer normalizeOrder)
 const mapOrder = (o: any): Order => ({
