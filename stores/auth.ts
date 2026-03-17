@@ -180,9 +180,11 @@ export const useAuthStore = defineStore('auth', {
             await window.Clerk.setActive({ session: signInAttempt.createdSessionId })
             this.syncWithClerk(true, window.Clerk.user)
             return { success: true, role: this.userRole }
-        } else {
-            // Requires 2FA or email verification
+        } else if (signInAttempt.status === 'needs_first_factor' || signInAttempt.status === 'needs_second_factor') {
             this.error = "Vérification d'email ou 2FA requise."
+            return { success: false, error: this.error, requiresAction: true, status: signInAttempt.status }
+        } else {
+            this.error = "Action supplémentaire requise pour la connexion: " + signInAttempt.status
             return { success: false, error: this.error }
         }
       } catch (error: any) {
@@ -222,9 +224,12 @@ export const useAuthStore = defineStore('auth', {
             await window.Clerk.setActive({ session: signUpAttempt.createdSessionId })
             this.syncWithClerk(true, window.Clerk.user)
             return { success: true, requiresConfirmation: false }
-        } else {
+        } else if (signUpAttempt.status === 'missing_requirements' || signUpAttempt.unverifiedFields.includes('email_address')) {
             // Usually returns 'missing_requirements' waiting for email code
             return { success: true, requiresConfirmation: true, pendingVerificationId: signUpAttempt.id }
+        } else {
+            this.error = "Action supplémentaire requise lors de l'inscription: " + signUpAttempt.status
+            return { success: false, error: this.error }
         }
 
       } catch (error: any) {
