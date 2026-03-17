@@ -1,12 +1,23 @@
 <template>
-  <div class="min-h-screen bg-[var(--color-bg)] flex items-center justify-center p-4">
+  <div class="min-h-screen relative flex items-center justify-center p-4 overflow-hidden">
+    <!-- Dynamic Background Image -->
+    <Transition name="fade">
+      <div 
+        v-if="currentBg" 
+        class="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-transform duration-[40000ms] ease-out scale-105"
+        :style="{ backgroundImage: `url(${currentBg})` }"
+      ></div>
+    </Transition>
+    <!-- Background Overlay for readability -->
+    <div class="absolute inset-0 z-0 bg-black/60 backdrop-blur-[4px]"></div>
+
     <!-- Background decoration -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-40 mix-blend-screen">
       <div class="orb orb-amber w-80 h-80 -top-40 -right-40"></div>
       <div class="orb orb-warm w-80 h-80 -bottom-40 -left-40"></div>
     </div>
 
-    <div class="w-full max-w-md relative">
+    <div class="w-full max-w-md relative z-10">
       <!-- Logo -->
       <NuxtLink to="/" class="flex flex-col items-center justify-center gap-4 mb-10 group">
         <div class="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center bg-white rounded-2xl shadow-xl shadow-amber-500/10 group-hover:shadow-amber-500/20 transition-all duration-300 transform group-hover:-translate-y-1">
@@ -220,7 +231,7 @@
       </div>
 
       <!-- Security Note -->
-      <p class="text-center text-xs text-[var(--color-text-muted)] mt-6">
+      <p class="text-center text-xs text-white/70 mt-6 font-medium tracking-wide">
         <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
@@ -229,6 +240,23 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+.card-glass {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+</style>
 
 <script setup lang="ts">
 definePageMeta({
@@ -254,9 +282,16 @@ const showPassword = ref(false)
 const showVerification = ref(false)
 const verificationCode = ref('')
 
+const currentBg = ref('/auth-bg.png')
+
 // Clear errors when component mounts
 onMounted(() => {
   authStore.clearError()
+  // Add a slight delay to trigger the slow zoom animation
+  setTimeout(() => {
+    const bgElement = document.querySelector('.bg-cover') as HTMLElement
+    if (bgElement) bgElement.style.transform = 'scale(1.15)'
+  }, 100)
 })
 
 async function handleSubmit() {
