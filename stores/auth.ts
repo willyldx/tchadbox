@@ -169,6 +169,11 @@ export const useAuthStore = defineStore('auth', {
 
       try {
         if (!window.Clerk) throw new Error("Clerk is not loaded")
+
+        // Prevent "Session already exists" error by signing out any stale session
+        if (window.Clerk.session) {
+            await window.Clerk.signOut()
+        }
         
         // Attempt Sign In via Clerk core API
         const signInAttempt = await window.Clerk!.client!.signIn.create({
@@ -217,6 +222,11 @@ export const useAuthStore = defineStore('auth', {
       try {
         if (!window.Clerk) throw new Error("Clerk is not loaded")
         
+        // Prevent "Session already exists" error
+        if (window.Clerk.session) {
+            await window.Clerk.signOut()
+        }
+
         // Custom Sign Up flow using Clerk API
         const signUpAttempt = await window.Clerk!.client!.signUp.create({
             emailAddress: data.email,
