@@ -451,21 +451,53 @@ const { client: supabase } = useSupabase()
 const { checkout: apiCheckout } = useBackendApi()
 const { initializePayment, verifyPayment, eurToXof } = usePaystack()
 
-// Redirect if cart is empty
-onMounted(() => {
-  if (cartStore.isEmpty) {
+// Redirect if cart is empty (wait for hydration)
+watchEffect(() => {
+  if (cartStore.isHydrated && cartStore.isEmpty) {
     navigateTo('/catalogue')
   }
 })
 
-// Steps
-const steps = [
-  { id: 'info', label: 'Informations' },
-  { id: 'payment', label: 'Paiement' },
-  { id: 'confirm', label: 'Confirmation' },
+// Currency Selection
+const currencies = [
+  { id: 'EUR', label: 'Euro (€)', icon: '€' },
+  { id: 'USD', label: 'Dollar ($)', icon: '$' },
+  { id: 'XAF', label: 'FCFA (CFA)', icon: 'FC' },
 ]
 
-const currentStep = ref(0)
+// Validation
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const phoneRegex = /^\+?[\d\s-]{8,}$/
+
+const errors = reactive({
+  email: '',
+  phone: '',
+  recipientPhone: '',
+})
+
+function validateStep1() {
+  let isValid = true
+  errors.email = !emailRegex.test(form.email) ? 'Email invalide' : ''
+  errors.phone = !phoneRegex.test(form.phone) ? 'Téléphone invalide' : ''
+  
+  if (!sameAsCustomer.value) {
+    errors.recipientPhone = !phoneRegex.test(form.recipientPhone) ? 'Téléphone destinataire invalide' : ''
+  } else {
+    errors.recipientPhone = ''
+  }
+
+  if (errors.email || errors.phone || errors.recipientPhone) isValid = false
+  return isValid
+}
+
+function nextStep() {
+  if (currentStep.value === 0 && !validateStep1()) return
+  
+  if (canProceed.value && currentStep.value < 2) {
+    currentStep.value++
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+}
 
 // Form
 const form = reactive({

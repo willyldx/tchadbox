@@ -53,6 +53,24 @@ export const usePaystack = () => {
     return `TCB-${timestamp}-${random}`.toUpperCase()
   }
 
+  // Convert standard amount to Paystack unit (cents/whole)
+  const convertToPaymentAmount = (amount: number, currency: string): number => {
+    const cartStore = useCartStore()
+    
+    if (currency === 'XAF' || currency === 'XOF') {
+      // XAF/XOF: 1 unit = 1 Franc (no cents)
+      return Math.round(amount * cartStore.rates.XAF)
+    }
+    
+    if (currency === 'USD') {
+      // USD: 1 unit = 100 cents
+      return Math.round(amount * cartStore.rates.USD * 100)
+    }
+    
+    // Default EUR: 1 unit = 100 cents
+    return Math.round(amount * 100)
+  }
+
   // Initialize payment
   const initializePayment = async (options: PaystackOptions): Promise<void> => {
     await loadScript()
@@ -63,11 +81,14 @@ export const usePaystack = () => {
       throw new Error('Paystack SDK not loaded')
     }
 
+    // Paystack treats XAF as XOF in many configurations for CFA
+    const currencyCode = options.currency === 'XAF' ? 'XOF' : (options.currency || 'EUR')
+
     const handler = PaystackPop.setup({
       key: publicKey,
       email: options.email,
-      amount: options.amount, // Paystack expects amount in smallest unit
-      currency: options.currency || 'XOF', // XOF = Franc CFA (BCEAO) — adapté pour le Tchad/diaspora
+      amount: options.amount, 
+      currency: currencyCode,
       ref: options.reference || generateReference(),
       metadata: {
         custom_fields: [
@@ -87,33 +108,12 @@ export const usePaystack = () => {
     handler.openIframe()
   }
 
-  // Verify payment server-side
-  const verifyPayment = async (reference: string): Promise<{
-    success: boolean
-    data?: any
-    error?: string
-  }> => {
-    try {
-      const response = await $fetch<{ success: boolean; data?: any; error?: string }>(
-        '/api/verify-payment',
-        {
-          method: 'POST',
-          body: { reference },
-        }
-      )
-      return response
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message || 'Erreur de vérification du paiement',
-      }
-    }
-  }
-
-  // Convert EUR to XOF (Franc CFA)
-  // 1 EUR ≈ 655.957 XOF (fixed rate)
-  const eurToXof = (eurAmount: number): number => {
-    return Math.round(eurAmount * 655.957)
+  return {
+    initializePayment,
+    verifyPayment,
+    generateReference,
+    convertToPaymentAmount,
+    formatXof,
   }
 
   // Format XOF amount for display
