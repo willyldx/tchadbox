@@ -46,6 +46,29 @@
 
           <!-- Actions -->
           <div class="flex items-center gap-2">
+            <!-- Currency Selector -->
+            <div class="hidden sm:block mr-2">
+              <USelectMenu
+                v-model="selectedCurrency"
+                :options="currencies"
+                value-attribute="id"
+                option-attribute="label"
+                class="w-24"
+                variant="none"
+                :ui="{ 
+                  trigger: 'bg-transparent hover:bg-gray-100 rounded-xl px-3 py-2 transition-colors',
+                  base: 'text-sm font-semibold text-gray-700'
+                }"
+              >
+                <template #label>
+                  <span class="flex items-center gap-1.5">
+                    <span class="text-xs opacity-60">{{ getCurrencyIcon(selectedCurrency) }}</span>
+                    {{ selectedCurrency }}
+                  </span>
+                </template>
+              </USelectMenu>
+            </div>
+
             <!-- Search -->
             <button 
               @click="isSearchOpen = true"
@@ -366,6 +389,28 @@ const cartStore = useCartStore()
 const authStore = useAuthStore()
 const favoritesStore = useFavoritesStore()
 const route = useRoute()
+
+// Currency management
+const currencies = [
+  { id: 'EUR', label: 'EUR - €' },
+  { id: 'USD', label: 'USD - $' },
+  { id: 'XAF', label: 'XAF - FCFA' },
+]
+
+const selectedCurrency = computed({
+  get: () => cartStore.currency,
+  set: (val: any) => cartStore.setCurrency(val)
+})
+
+const getCurrencyIcon = (id: string) => {
+  switch(id) {
+    case 'EUR': return '€'
+    case 'USD': return '$'
+    case 'XAF': return 'FC'
+    default: return '€'
+  }
+}
+
 const isMobileMenuOpen = ref(false)
 const isSearchOpen = ref(false)
 const isScrolled = ref(false)

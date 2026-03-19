@@ -39,11 +39,14 @@ if (import.meta.client) {
 }
 
 
-onMounted(() => {
-  // Load cart from localStorage
+onMounted(async () => {
+  // 1. Initialiser le panier d'abord pour l'UI
   cartStore.loadFromStorage()
   
-  // Sync favorites (local + server)
+  // 2. Charger les taux en temps réel pour corriger les prix
+  await cartStore.fetchRates()
+  
+  // 3. Charger les favoris
   favoritesStore.initialize()
 })
 

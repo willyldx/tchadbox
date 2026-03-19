@@ -84,37 +84,37 @@
 
         <!-- Footer -->
         <div v-if="!cartStore.isEmpty" class="border-t border-gray-100 p-6 bg-gray-50">
-          <div class="space-y-3 mb-6">
-            <div class="flex justify-between text-[var(--color-text-secondary)]">
-              <span>Sous-total</span>
-              <span>{{ cartStore.subtotalFormatted }}</span>
-            </div>
-            <div class="flex justify-between text-[var(--color-text-secondary)]">
-              <span class="flex items-center gap-2"><Truck class="w-4 h-4" />Livraison</span>
-              <span>{{ cartStore.shippingFormatted }}</span>
-            </div>
-            <div class="border-t border-gray-200 pt-3 flex justify-between">
-              <span class="font-semibold text-[var(--color-text)]">Total</span>
-              <div class="text-right">
-                <span class="text-xl font-bold text-[var(--color-primary)]">{{ cartStore.totalFormatted }}</span>
-                <p class="text-xs text-[var(--color-text-muted)]">≈ {{ cartStore.totalFCFA }}</p>
-              </div>
+        <div class="space-y-3 mb-6">
+          <div class="flex justify-between text-[var(--color-text-secondary)]">
+            <span>Sous-total</span>
+            <span>{{ cartStore.formattedSubtotal }}</span>
+          </div>
+          <div class="flex justify-between text-[var(--color-text-secondary)]">
+            <span class="flex items-center gap-2"><Truck class="w-4 h-4" />Livraison</span>
+            <span>{{ cartStore.formattedShipping }}</span>
+          </div>
+          <div class="border-t border-gray-200 pt-3 flex justify-between">
+            <span class="font-semibold text-[var(--color-text)]">Total</span>
+            <div class="text-right">
+              <span class="text-xl font-bold text-[var(--color-primary)]">{{ cartStore.formattedTotal }}</span>
+              <p v-if="cartStore.currency !== 'XAF'" class="text-xs text-[var(--color-text-muted)]">≈ {{ cartStore.totalXAF }} FCFA</p>
             </div>
           </div>
-          <NuxtLink to="/panier" class="btn-primary w-full text-center mb-3" @click="cartStore.closeCart">
-            <span>Finaliser la commande</span>
-          </NuxtLink>
-          <button @click="cartStore.closeCart" class="btn-ghost w-full">Continuer mes achats</button>
         </div>
-      </div>
-    </Transition>
-  </Teleport>
-</template>
+        <NuxtLink to="/panier" class="btn-primary w-full text-center mb-3" @click="cartStore.closeCart">
+          <span>Finaliser la commande</span>
+        </NuxtLink>
+        <button @click="cartStore.closeCart" class="btn-ghost w-full">Continuer mes achats</button>
+        </div>
+        </div>
+        </Transition>
+        </Teleport>
+        </template>
 
-<script setup lang="ts">
-import { ShoppingBag, X, Package, Trash2, Minus, Plus, Truck } from 'lucide-vue-next'
-import { useCartStore } from '~/stores/cart'
+        <script setup lang="ts">
+        import { ShoppingBag, X, Package, Trash2, Minus, Plus, Truck } from 'lucide-vue-next'
+        import { useCartStore } from '~/stores/cart'
 
-const cartStore = useCartStore()
-const formatPrice = (price: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price)
-</script>
+        const cartStore = useCartStore()
+        </script>
+
