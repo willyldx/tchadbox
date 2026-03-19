@@ -60,19 +60,19 @@ export const useAuthStore = defineStore('auth', {
     },
 
     isAdmin(): boolean {
-      return this.userRole === 'admin' || this.userRole === 'super-admin'
+      return this.userRole === 'admin' || this.userRole === 'super_admin'
     },
 
     isSuperAdmin(): boolean {
-      return this.userRole === 'super-admin'
+      return this.userRole === 'super_admin'
     },
 
     canAccessAdmin(): boolean {
-      return ['admin', 'super-admin'].includes(this.userRole)
+      return ['admin', 'super_admin'].includes(this.userRole)
     },
 
     canAccessLivreur(): boolean {
-      return ['livreur', 'admin', 'super-admin'].includes(this.userRole)
+      return ['livreur', 'admin', 'super_admin'].includes(this.userRole)
     },
 
     canManageTeam(): boolean {
@@ -121,7 +121,15 @@ export const useAuthStore = defineStore('auth', {
             return
         }
 
-        // Wait for window.Clerk to be ready
+        // Wait for window.Clerk to be fully loaded (up to 5 seconds)
+        const maxWait = 5000
+        const interval = 100
+        let waited = 0
+        while (!window.Clerk?.loaded && waited < maxWait) {
+            await new Promise(resolve => setTimeout(resolve, interval))
+            waited += interval
+        }
+
         if (window.Clerk) {
             this.syncWithClerk(window.Clerk.session !== null, window.Clerk.user)
             this.sessionChecked = true
@@ -442,7 +450,7 @@ export const useAuthStore = defineStore('auth', {
       if (!this.user) return '/'
 
       switch (this.userRole) {
-        case 'super-admin':
+        case 'super_admin':
         case 'admin':
           return '/admin'
         case 'livreur':

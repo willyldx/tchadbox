@@ -3,7 +3,7 @@
 // =============================================
 // USER ROLES
 // =============================================
-export type UserRole = 'client' | 'livreur' | 'admin' | 'super-admin'
+export type UserRole = 'client' | 'livreur' | 'admin' | 'super_admin'
 
 // =============================================
 // PRODUCTS
