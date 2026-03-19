@@ -8,27 +8,31 @@
    ============================================ */
 
 :root {
-  /* Backgrounds — warm & creamy */
-  --color-bg: #FFFBF5;
-  --color-bg-warm: #FFF7ED;
+  /* Backgrounds — clean & professional retail */
+  --color-bg: #F2F4F8;
+  --color-bg-warm: #FFFFFF;
   --color-bg-card: #FFFFFF;
   --color-bg-elevated: #FFFFFF;
-  --color-bg-dark: #0F172A;
+  --color-bg-dark: #232F3E;
 
-  /* Primary — deep slate/midnight */
-  --color-primary: #0F172A;
-  --color-primary-light: #1E293B;
-  --color-primary-dark: #020617;
+  /* Primary — Amazon Navy */
+  --color-primary: #232F3E;
+  --color-primary-light: #37475A;
+  --color-primary-dark: #131A22;
 
-  /* Accent — warm amber */
-  --color-accent: #F59E0B;
-  --color-accent-light: #FCD34D;
-  --color-accent-dark: #D97706;
-  --color-accent-hover: #E88B00;
+  /* Accent — Amazon Gold / Orange */
+  --color-accent: #FF9900;
+  --color-accent-light: #FFD814;
+  --color-accent-dark: #FFA41C;
+  --color-accent-hover: #F3A847;
 
-  /* Terracotta — earthy warmth */
-  --color-terracotta: #C2410C;
-  --color-terracotta-light: #EA580C;
+  /* Links & Success */
+  --color-link: #007185;
+  --color-link-hover: #C40000;
+
+  /* Alerts / Terracotta */
+  --color-terracotta: #B12704;
+  --color-terracotta-light: #C40000;
 
   /* Success */
   --color-success: #059669;
@@ -46,9 +50,9 @@
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
   --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
   --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.06);
-  --shadow-accent: 0 8px 30px rgba(245, 158, 11, 0.3);
-  --shadow-primary: 0 8px 30px rgba(15, 23, 42, 0.2);
-  --shadow-glow: 0 0 40px rgba(245, 158, 11, 0.15);
+  --shadow-accent: 0 4px 10px rgba(255, 153, 0, 0.2);
+  --shadow-primary: 0 4px 10px rgba(35, 47, 62, 0.15);
+  --shadow-glow: 0 0 40px rgba(255, 153, 0, 0.1);
 
   /* Typography - Amazon Inspired */
   --font-display: "Amazon Ember", Arial, sans-serif;
@@ -181,30 +185,22 @@
 @layer components {
   .btn-primary {
     @apply relative inline-flex items-center justify-center font-semibold overflow-hidden;
-    padding: 0.875rem 2rem;
+    padding: 0.75rem 2rem;
     background: var(--color-primary);
     color: white;
-    border-radius: 0.875rem;
-    transition: all 0.4s var(--ease-out-expo);
-    box-shadow: var(--shadow-primary);
+    border-radius: 100px;
+    transition: all 0.2s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
   }
 
   .btn-primary::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--color-primary-light);
-    opacity: 0;
-    transition: opacity 0.4s;
+    display: none;
   }
 
   .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 16px 48px rgba(15, 23, 42, 0.3);
-  }
-
-  .btn-primary:hover::before {
-    opacity: 1;
+    background: var(--color-primary-light);
+    transform: none;
+    box-shadow: 0 2px 5px rgba(15, 23, 42, 0.2);
   }
 
   .btn-primary span {
@@ -217,19 +213,20 @@
 
   .btn-gold {
     @apply relative inline-flex items-center justify-center font-bold overflow-hidden;
-    padding: 0.95rem 2.25rem;
-    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
-    color: white;
-    border-radius: 0.875rem;
-    transition: all 0.4s var(--ease-out-expo);
-    box-shadow: var(--shadow-accent);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    padding: 0.75rem 2rem;
+    background: var(--color-accent-light);
+    color: #0F1111;
+    border: 1px solid #FCD200;
+    border-radius: 100px;
+    transition: all 0.2s;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   }
 
   .btn-gold:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 16px 48px rgba(245, 158, 11, 0.4);
-    filter: brightness(1.05);
+    background: #F7CA00;
+    border-color: #F2C200;
+    transform: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   .btn-gold span {
@@ -242,20 +239,21 @@
 
   .btn-outline {
     @apply inline-flex items-center justify-center font-semibold;
-    padding: 0.875rem 2rem;
-    background: transparent;
-    color: var(--color-text);
-    border: 2px solid var(--color-border);
-    border-radius: 0.875rem;
-    transition: all 0.3s var(--ease-out-expo);
+    padding: 0.75rem 2rem;
+    background: #FFFFFF;
+    color: #0F1111;
+    border: 1px solid #D5D9D9;
+    border-radius: 100px;
+    transition: all 0.2s;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   }
 
   .btn-outline:hover {
-    border-color: var(--color-accent);
-    background: var(--color-accent);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-accent);
+    border-color: #A6A6A6;
+    background: #F7F8F8;
+    color: #0F1111;
+    transform: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
 
@@ -279,42 +277,32 @@
 
 @layer components {
   .card {
-    @apply relative rounded-2xl overflow-hidden;
+    @apply relative overflow-hidden;
     background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-sm);
-    transition: all 0.5s var(--ease-out-expo);
+    border: 1px solid #D5D9D9;
+    border-radius: 8px; /* Standard retail border radius */
+    box-shadow: none; /* Retail cards are flat */
+    transition: all 0.2s;
   }
 
   .card:hover {
-    border-color: var(--color-border-hover);
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-4px);
+    border-color: #A6A6A6;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transform: none; /* Flat interaction */
   }
 
   .card-product {
     @apply card cursor-pointer;
-    border-radius: 1.25rem;
   }
 
   .card-product::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.04) 0%, transparent 50%);
-    opacity: 0;
-    transition: opacity 0.5s;
-    pointer-events: none;
-  }
-
-  .card-product:hover::after {
-    opacity: 1;
+    display: none;
   }
 
   .card-product:hover {
-    border-color: rgba(245, 158, 11, 0.2);
-    box-shadow: var(--shadow-xl), 0 0 0 1px rgba(245, 158, 11, 0.1);
-    transform: translateY(-8px);
+    border-color: #A6A6A6;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* slight float on hover for products */
+    transform: none;
   }
 
   .card-glass {
