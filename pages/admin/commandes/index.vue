@@ -159,7 +159,7 @@ definePageMeta({
   middleware: ['admin']
 })
 
-const { client } = useSupabase()
+const api = useBackendApi()
 const toast = useToast()
 
 // State
@@ -219,7 +219,7 @@ const filteredOrders = computed(() => {
   if (search.value) {
     const s = search.value.toLowerCase()
     result = result.filter(o => 
-      (o.display_id || o.id)?.toLowerCase().includes(s) ||
+      (o.display_id || String(o.id))?.toLowerCase().includes(s) ||
       o.email?.toLowerCase().includes(s) ||
       o.customer_first_name?.toLowerCase().includes(s) ||
       o.customer_last_name?.toLowerCase().includes(s) ||
@@ -244,11 +244,8 @@ const totalPages = computed(() => Math.ceil(filteredOrders.value.length / pageSi
 const fetchOrders = async () => {
   loading.value = true
   try {
-    const { data, error } = await client.rpc('get_all_orders')
-
-    if (error) throw error
-
-    orders.value = data || []
+    const result = await api.adminOrders({ limit: 200 })
+    orders.value = result?.data || []
   } catch (error) {
     console.error('Error fetching orders:', error)
     toast.add({ title: 'Erreur', description: 'Impossible de charger les commandes', color: 'red' })
@@ -259,14 +256,11 @@ const fetchOrders = async () => {
 
 const fetchLivreurs = async () => {
   try {
-    const { data, error } = await client.rpc('get_profiles_by_role', { target_role: 'livreur' })
-
-    if (error) throw error
-
-    if (data) {
-      livreurs.value = data.map((l: any) => ({
+    const result = await api.adminLivreurs()
+    if (result?.data) {
+      livreurs.value = result.data.map((l: any) => ({
         label: `${l.first_name} ${l.last_name}`,
-        value: l.id
+        value: l.user_id
       }))
     }
   } catch (error) {
@@ -285,12 +279,10 @@ const assignLivreur = async () => {
 
   assigning.value = true
   try {
-    const { error } = await client.rpc('assign_delivery_agent', {
-      order_id: selectedOrder.value.id,
-      agent_id: selectedLivreur.value
+    await api.adminOrderUpdate(selectedOrder.value.id, {
+      assigned_to: selectedLivreur.value,
+      fulfillment_status: 'fulfilled'
     })
-
-    if (error) throw error
 
     toast.add({ title: 'Succès', description: 'Livreur assigné avec succès', color: 'green' })
     showAssignModal.value = false
@@ -381,3 +373,4 @@ useHead({
   title: 'Commandes - Admin TchadBox'
 })
 </script>
+

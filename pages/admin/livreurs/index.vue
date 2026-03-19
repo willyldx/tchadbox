@@ -124,7 +124,7 @@ definePageMeta({
 })
 
 const authStore = useAuthStore()
-const { client } = useSupabase()
+const api = useBackendApi()
 const toast = useToast()
 
 // State
@@ -152,11 +152,8 @@ const averageRating = computed(() => {
 const fetchLivreurs = async () => {
   loading.value = true
   try {
-    const { data, error } = await client.rpc('get_all_delivery_agents')
-
-    if (error) throw error
-
-    livreurs.value = data || []
+    const result = await api.adminLivreurs()
+    livreurs.value = result?.data || []
   } catch (error) {
     console.error('Error fetching livreurs:', error)
     toast.add({ title: 'Erreur', description: 'Impossible de charger les livreurs', color: 'red' })
@@ -167,13 +164,16 @@ const fetchLivreurs = async () => {
 
 // Fetch available users (clients who can be promoted to livreur)
 const fetchAvailableUsers = async () => {
-  const { data, error } = await client.rpc('get_profiles_by_role', { target_role: 'client' })
-
-  if (!error && data) {
-    availableUsers.value = data.map((u: any) => ({
-      label: `${u.first_name} ${u.last_name} (${u.email})`,
-      value: u.id
-    }))
+  try {
+    const result = await api.adminClients()
+    if (result?.data) {
+      availableUsers.value = result.data.map((u: any) => ({
+        label: `${u.first_name} ${u.last_name} (${u.email})`,
+        value: u.id
+      }))
+    }
+  } catch (error) {
+    console.error('Error fetching available users:', error)
   }
 }
 
@@ -186,25 +186,18 @@ const addLivreur = async () => {
 
   saving.value = true
   try {
-    // Update user role to livreur via RPC
-    const { error: roleError } = await client.rpc('update_user_role', {
-      target_user_id: selectedUser.value,
-      new_role: 'livreur'
+    // Find the selected user info
+    const userInfo = availableUsers.value.find(u => u.value === selectedUser.value)
+    const nameParts = (userInfo?.label || '').split(' ')
+    
+    await api.adminLivreurCreate({
+      user_id: selectedUser.value,
+      first_name: nameParts[0] || '',
+      last_name: nameParts[1] || '',
+      email: '',
+      phone: newLivreurPhone.value,
+      zone: newLivreurZone.value || "N'Djamena",
     })
-
-    if (roleError) throw roleError
-
-    // Create delivery_agent entry
-    const { error } = await client
-      .from('delivery_agents')
-      .insert({
-        user_id: selectedUser.value,
-        phone: newLivreurPhone.value,
-        zone: newLivreurZone.value || "N'Djamena",
-        is_active: true
-      })
-
-    if (error) throw error
 
     toast.add({ title: 'Succès', description: 'Livreur ajouté avec succès', color: 'green' })
     showAddModal.value = false
@@ -224,13 +217,7 @@ const addLivreur = async () => {
 // Toggle livreur status
 const toggleStatus = async (livreur: any) => {
   try {
-    const { error } = await client
-      .from('delivery_agents')
-      .update({ is_active: !livreur.is_active })
-      .eq('id', livreur.id)
-
-    if (error) throw error
-
+    await api.adminLivreurUpdate(livreur.id, { is_active: !livreur.is_active })
     toast.add({ title: 'Succès', description: 'Statut mis à jour', color: 'green' })
     fetchLivreurs()
   } catch (error) {
@@ -244,15 +231,7 @@ const removeLivreur = async (livreur: any) => {
   if (!confirm('Êtes-vous sûr de vouloir retirer ce livreur ?')) return
 
   try {
-    // Delete delivery_agent entry
-    await client.from('delivery_agents').delete().eq('id', livreur.id)
-    
-    // Revert user role to client via RPC
-    await client.rpc('update_user_role', {
-      target_user_id: livreur.user_id,
-      new_role: 'client'
-    })
-
+    await api.adminLivreurDelete(livreur.id)
     toast.add({ title: 'Succès', description: 'Livreur retiré', color: 'green' })
     fetchLivreurs()
     fetchAvailableUsers()
@@ -293,3 +272,4 @@ useHead({
   title: 'Livreurs - Admin TchadBox'
 })
 </script>
+

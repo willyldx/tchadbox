@@ -155,7 +155,7 @@ definePageMeta({
   middleware: ['admin']
 })
 
-const { client } = useSupabase()
+const api = useBackendApi()
 const toast = useToast()
 
 // State
@@ -202,17 +202,12 @@ const filteredProducts = computed(() => {
   return result
 })
 
-// Fetch products from the VIEW
+// Fetch products from backend API
 const fetchProducts = async () => {
   loading.value = true
   try {
-    const { data, error } = await client
-      .from('products')
-      .select('id, title, handle, price, thumbnail, in_stock, stock_quantity')
-      .order('title')
-
-    if (error) throw error
-    products.value = data || []
+    const result = await api.adminStocks()
+    products.value = result?.data || []
   } catch (error) {
     console.error('Error fetching products:', error)
     toast.add({ title: 'Erreur', description: 'Impossible de charger les produits', color: 'red' })
@@ -229,44 +224,16 @@ const openEditModal = (product: any) => {
   showEditModal.value = true
 }
 
-// Save stock update — updates Medusa's product_variant directly
+// Save stock update via backend API
 const saveStock = async () => {
   if (!editingProduct.value) return
   saving.value = true
 
   try {
-    // Find the variant for this product and update its inventory
-    const { data: variants, error: variantError } = await client
-      .from('product_variant')
-      .select('id')
-      .eq('product_id', editingProduct.value.id)
-      .is('deleted_at', null)
-      .limit(1)
-
-    if (variantError) throw variantError
-
-    if (variants && variants.length > 0) {
-      // Update the inventory level for this variant
-      const variantId = variants[0].id
-
-      const { data: invItems } = await client
-        .from('product_variant_inventory_item')
-        .select('inventory_item_id')
-        .eq('variant_id', variantId)
-        .limit(1)
-
-      if (invItems && invItems.length > 0) {
-        const { error: invError } = await client
-          .from('inventory_level')
-          .update({
-            stocked_quantity: editForm.stockQuantity,
-            raw_stocked_quantity: { value: editForm.stockQuantity.toString(), precision: 20 }
-          })
-          .eq('inventory_item_id', invItems[0].inventory_item_id)
-
-        if (invError) throw invError
-      }
-    }
+    await api.adminStockUpdate(editingProduct.value.id, {
+      stock_quantity: editForm.stockQuantity,
+      in_stock: editForm.inStock,
+    })
 
     toast.add({ title: 'Succès', description: 'Stock mis à jour', color: 'green' })
     showEditModal.value = false
@@ -308,3 +275,4 @@ useHead({
   title: 'Stocks - Admin TchadBox'
 })
 </script>
+

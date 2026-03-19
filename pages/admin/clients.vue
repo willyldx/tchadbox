@@ -81,7 +81,7 @@ definePageMeta({
   middleware: ['admin']
 })
 
-const { client } = useSupabase()
+const api = useBackendApi()
 const toast = useToast()
 
 // State
@@ -124,28 +124,8 @@ const activeClients = computed(() => {
 const fetchClients = async () => {
   loading.value = true
   try {
-    // Fetch profiles with role = client using RPC
-    const { data: profiles, error } = await client.rpc('get_profiles_by_role', { target_role: 'client' })
-
-    if (error) throw error
-
-    // Fetch all orders to calculate stats
-    const { data: allOrders } = await client.rpc('get_all_orders')
-
-    // Calculate stats per client
-    const clientsWithStats = (profiles || []).map((p: any) => {
-      const clientOrders = (allOrders || []).filter((o: any) => o.user_id === p.id)
-      const totalOrders = clientOrders.length
-      const totalSpent = clientOrders.reduce((sum: number, o: any) => sum + (Number(o.total) || 0), 0)
-
-      return {
-        ...p,
-        totalOrders,
-        totalSpent
-      }
-    })
-
-    clients.value = clientsWithStats
+    const result = await api.adminClients()
+    clients.value = result?.data || []
   } catch (error) {
     console.error('Error fetching clients:', error)
     toast.add({ title: 'Erreur', description: 'Impossible de charger les clients', color: 'red' })
@@ -176,3 +156,4 @@ useHead({
   title: 'Clients - Admin TchadBox'
 })
 </script>
+
