@@ -385,6 +385,8 @@ export const useAuthStore = defineStore('auth', {
     },
 
     getRedirectPath(): string {
+      // Prevent redirecting authenticated users to '/' if user object is temporarily missing
+      if (this.isAuthenticated && !this.user) return '/compte'
       if (!this.user) return '/'
 
       switch (this.userRole) {

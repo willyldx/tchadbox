@@ -21,14 +21,14 @@ const favoritesStore = useFavoritesStore()
 
 if (import.meta.client) {
   // Clerk reactive refs
-  const { isLoaded, isSignedIn } = useAuth()
-  const { user: clerkUser } = useUser()
+  const { isLoaded: isAuthLoaded, isSignedIn } = useAuth()
+  const { isLoaded: isUserLoaded, user: clerkUser } = useUser()
 
   // Watch Clerk auth state and sync to Pinia
   watch(
-    [isLoaded, isSignedIn, clerkUser],
-    ([loaded, signedIn, user]) => {
-      if (loaded) {
+    [isAuthLoaded, isUserLoaded, isSignedIn, clerkUser],
+    ([authLoaded, userLoaded, signedIn, user]) => {
+      if (authLoaded && (!signedIn || userLoaded)) {
         authStore.syncWithClerk(signedIn, user)
         authStore.sessionChecked = true
         authStore.isLoading = false
