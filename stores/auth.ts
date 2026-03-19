@@ -204,7 +204,9 @@ export const useAuthStore = defineStore('auth', {
         // Clerk throws arrays of errors
         const errorCode = error.errors?.[0]?.code
         if (errorCode === 'session_exists') {
-           this.error = "Une ancienne session bloque la connexion. Veuillez rafraîchir la page (F5) et réessayer."
+           // Delete ghost cookies forcefully
+           await window.Clerk.signOut()
+           this.error = "Un compte fantôme bloquait l'accès. Le système a été nettoyé. Veuillez cliquer de nouveau sur 'Se connecter'."
            return { success: false, error: this.error }
         }
         this.error = error.errors?.[0]?.message || 'Erreur de connexion'
@@ -258,7 +260,8 @@ export const useAuthStore = defineStore('auth', {
       } catch (error: any) {
         const errorCode = error.errors?.[0]?.code
         if (errorCode === 'session_exists') {
-           this.error = "Une ancienne session bloque l'inscription. Veuillez rafraîchir la page (F5) et réessayer."
+           await window.Clerk.signOut()
+           this.error = "Un compte fantôme bloquait l'accès. Le système a été nettoyé. Veuillez cliquer de nouveau sur 'Valider'."
            return { success: false, error: this.error }
         }
         this.error = error.errors?.[0]?.message || 'Erreur lors de l\'inscription'
