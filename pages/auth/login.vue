@@ -284,6 +284,14 @@ const verificationCode = ref('')
 
 const currentBg = ref('/auth-bg.png')
 
+// Automatically redirect if Clerk loads and finds an active session
+watch(() => authStore.isAuthenticated, (isAuth) => {
+   if (isAuth) {
+      const redirect = route.query.redirect as string || authStore.getRedirectPath()
+      navigateTo(redirect)
+   }
+}, { immediate: true })
+
 // Clear errors when component mounts
 onMounted(() => {
   authStore.clearError()

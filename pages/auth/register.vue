@@ -377,6 +377,13 @@ const isFormValid = computed(() => {
 
 const currentBg = ref('/auth-bg.png')
 
+// Automatically redirect if Clerk loads and finds an active session
+watch(() => authStore.isAuthenticated, (isAuth) => {
+   if (isAuth) {
+      navigateTo(authStore.getRedirectPath())
+   }
+}, { immediate: true })
+
 // Clear errors when component mounts
 onMounted(() => {
   authStore.clearError()
