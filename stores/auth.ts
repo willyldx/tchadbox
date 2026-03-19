@@ -170,12 +170,24 @@ export const useAuthStore = defineStore('auth', {
       try {
         if (!window.Clerk) throw new Error("Clerk is not loaded")
 
-        // Fix stale "Session already exists" bug WITHOUT triggering a page reload
-        if (window.Clerk.session || window.Clerk.client?.activeSessions?.length > 0) {
-            await window.Clerk.setActive({ session: null })
+        // ========================================================
+        // STEP 1: If Clerk already has an active session, reuse it
+        // This handles the "Session already exists" error completely
+        // ========================================================
+        const activeSessions = window.Clerk.client?.activeSessions
+        if (activeSessions && activeSessions.length > 0) {
+            // There's already a valid session — just activate & use it
+            const existingSession = activeSessions[0]
+            await window.Clerk.setActive({ session: existingSession.id })
+            // Wait a tick for Clerk to fully update user
+            await new Promise(resolve => setTimeout(resolve, 300))
+            this.syncWithClerk(true, window.Clerk.user)
+            return { success: true, role: this.userRole }
         }
-        
-        // Attempt Sign In via Clerk core API
+
+        // ========================================================
+        // STEP 2: No active session — proceed with normal sign in
+        // ========================================================
         const signInAttempt = await window.Clerk!.client!.signIn.create({
             identifier: email,
             password: password
@@ -186,7 +198,6 @@ export const useAuthStore = defineStore('auth', {
             this.syncWithClerk(true, window.Clerk.user)
             return { success: true, role: this.userRole }
         } else if (['needs_first_factor', 'needs_second_factor', 'needs_client_trust'].includes(signInAttempt.status)) {
-            // Prépare l'envoi du code par email face à un blocage de sécurité Clerk
             const emailFactor: any = signInAttempt.supportedFirstFactors?.find((f: any) => f.strategy === 'email_code')
             if (emailFactor) {
                 await window.Clerk.client.signIn.prepareFirstFactor({
@@ -194,20 +205,27 @@ export const useAuthStore = defineStore('auth', {
                     emailAddressId: emailFactor.emailAddressId
                 })
             }
-            this.error = null // On efface l'erreur pour la vue de confirmation
+            this.error = null
             return { success: false, error: null, requiresAction: true, status: signInAttempt.status }
         } else {
             this.error = "Action supplémentaire requise pour la connexion: " + signInAttempt.status
             return { success: false, error: this.error }
         }
       } catch (error: any) {
-        // Clerk throws arrays of errors
         const errorCode = error.errors?.[0]?.code
+        // Last resort: if session_exists still somehow fires, try to grab the session
         if (errorCode === 'session_exists') {
-           // Delete ghost cookies forcefully
-           await window.Clerk.signOut()
-           this.error = "Un compte fantôme bloquait l'accès. Le système a été nettoyé. Veuillez cliquer de nouveau sur 'Se connecter'."
-           return { success: false, error: this.error }
+            try {
+                const sessions = window.Clerk?.client?.activeSessions
+                if (sessions && sessions.length > 0) {
+                    await window.Clerk!.setActive({ session: sessions[0].id })
+                    await new Promise(resolve => setTimeout(resolve, 300))
+                    this.syncWithClerk(true, window.Clerk!.user)
+                    return { success: true, role: this.userRole }
+                }
+            } catch (_) { /* fall through to error */ }
+            this.error = "Session bloquée. Essayez de vider les cookies de ce site puis rafraîchir."
+            return { success: false, error: this.error }
         }
         this.error = error.errors?.[0]?.message || 'Erreur de connexion'
         return { success: false, error: this.error }
@@ -229,9 +247,14 @@ export const useAuthStore = defineStore('auth', {
       try {
         if (!window.Clerk) throw new Error("Clerk is not loaded")
         
-        // Fix stale "Session already exists" bug WITHOUT triggering a page reload
-        if (window.Clerk.session || window.Clerk.client?.activeSessions?.length > 0) {
-            await window.Clerk.setActive({ session: null })
+        // If Clerk already has an active session, reuse it
+        const activeSessions = window.Clerk.client?.activeSessions
+        if (activeSessions && activeSessions.length > 0) {
+            const existingSession = activeSessions[0]
+            await window.Clerk.setActive({ session: existingSession.id })
+            await new Promise(resolve => setTimeout(resolve, 300))
+            this.syncWithClerk(true, window.Clerk.user)
+            return { success: true, requiresConfirmation: false }
         }
 
         // Custom Sign Up flow using Clerk API
@@ -240,7 +263,6 @@ export const useAuthStore = defineStore('auth', {
             password: data.password,
             firstName: data.firstName,
             lastName: data.lastName,
-            // phone requires phone verification in Clerk settings if strictly passed
         })
 
         await window.Clerk!.client!.signUp.prepareEmailAddressVerification({ strategy: "email_code" })
@@ -250,7 +272,6 @@ export const useAuthStore = defineStore('auth', {
             this.syncWithClerk(true, window.Clerk.user)
             return { success: true, requiresConfirmation: false }
         } else if (signUpAttempt.status === 'missing_requirements' || signUpAttempt.unverifiedFields.includes('email_address')) {
-            // Usually returns 'missing_requirements' waiting for email code
             return { success: true, requiresConfirmation: true, pendingVerificationId: signUpAttempt.id }
         } else {
             this.error = "Action supplémentaire requise lors de l'inscription: " + signUpAttempt.status
@@ -260,9 +281,17 @@ export const useAuthStore = defineStore('auth', {
       } catch (error: any) {
         const errorCode = error.errors?.[0]?.code
         if (errorCode === 'session_exists') {
-           await window.Clerk.signOut()
-           this.error = "Un compte fantôme bloquait l'accès. Le système a été nettoyé. Veuillez cliquer de nouveau sur 'Valider'."
-           return { success: false, error: this.error }
+            try {
+                const sessions = window.Clerk?.client?.activeSessions
+                if (sessions && sessions.length > 0) {
+                    await window.Clerk!.setActive({ session: sessions[0].id })
+                    await new Promise(resolve => setTimeout(resolve, 300))
+                    this.syncWithClerk(true, window.Clerk!.user)
+                    return { success: true, requiresConfirmation: false }
+                }
+            } catch (_) { /* fall through */ }
+            this.error = "Session bloquée. Essayez de vider les cookies de ce site puis rafraîchir."
+            return { success: false, error: this.error }
         }
         this.error = error.errors?.[0]?.message || 'Erreur lors de l\'inscription'
         return { success: false, error: this.error }
