@@ -169,6 +169,11 @@ export const useAuthStore = defineStore('auth', {
 
       try {
         if (!window.Clerk) throw new Error("Clerk is not loaded")
+
+        // Fix stale "Session already exists" bug WITHOUT triggering a page reload
+        if (window.Clerk.session || window.Clerk.client?.activeSessions?.length > 0) {
+            await window.Clerk.setActive({ session: null })
+        }
         
         // Attempt Sign In via Clerk core API
         const signInAttempt = await window.Clerk!.client!.signIn.create({
@@ -197,6 +202,11 @@ export const useAuthStore = defineStore('auth', {
         }
       } catch (error: any) {
         // Clerk throws arrays of errors
+        const errorCode = error.errors?.[0]?.code
+        if (errorCode === 'session_exists') {
+           this.error = "Une ancienne session bloque la connexion. Veuillez rafraîchir la page (F5) et réessayer."
+           return { success: false, error: this.error }
+        }
         this.error = error.errors?.[0]?.message || 'Erreur de connexion'
         return { success: false, error: this.error }
       } finally {
@@ -217,6 +227,11 @@ export const useAuthStore = defineStore('auth', {
       try {
         if (!window.Clerk) throw new Error("Clerk is not loaded")
         
+        // Fix stale "Session already exists" bug WITHOUT triggering a page reload
+        if (window.Clerk.session || window.Clerk.client?.activeSessions?.length > 0) {
+            await window.Clerk.setActive({ session: null })
+        }
+
         // Custom Sign Up flow using Clerk API
         const signUpAttempt = await window.Clerk!.client!.signUp.create({
             emailAddress: data.email,
@@ -241,6 +256,11 @@ export const useAuthStore = defineStore('auth', {
         }
 
       } catch (error: any) {
+        const errorCode = error.errors?.[0]?.code
+        if (errorCode === 'session_exists') {
+           this.error = "Une ancienne session bloque l'inscription. Veuillez rafraîchir la page (F5) et réessayer."
+           return { success: false, error: this.error }
+        }
         this.error = error.errors?.[0]?.message || 'Erreur lors de l\'inscription'
         return { success: false, error: this.error }
       } finally {
