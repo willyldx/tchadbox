@@ -13,7 +13,7 @@ export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
     user: null,
     isAuthenticated: false,
-    isLoading: true, // Clerk starts loading immediately
+    isLoading: false,
     error: null,
     sessionChecked: false,
   }),
@@ -117,28 +117,35 @@ export const useAuthStore = defineStore('auth', {
         if (this.sessionChecked) return
 
         if (import.meta.server) {
+            this.sessionChecked = true
             return
         }
 
-        // Wait for window.Clerk to be fully loaded (up to 5 seconds)
-        const maxWait = 5000
-        const interval = 100
-        let waited = 0
-        while (!window.Clerk?.loaded && waited < maxWait) {
-            await new Promise(resolve => setTimeout(resolve, interval))
-            waited += interval
-        }
+        this.isLoading = true
 
-        if (window.Clerk) {
-            this.syncWithClerk(window.Clerk.session !== null, window.Clerk.user)
-        }
+        try {
+            // Wait for window.Clerk to be fully loaded (up to 5 seconds)
+            const maxWait = 5000
+            const interval = 100
+            let waited = 0
+            while (!window.Clerk?.loaded && waited < maxWait) {
+                await new Promise(resolve => setTimeout(resolve, interval))
+                waited += interval
+            }
 
-        // Always mark as checked and stop loading, even if Clerk didn't load
-        this.sessionChecked = true
-        this.isLoading = false
+            if (window.Clerk) {
+                this.syncWithClerk(window.Clerk.session !== null, window.Clerk.user)
+            }
+        } catch (e) {
+            console.error('checkSession error:', e)
+        } finally {
+            // Always mark as checked and stop loading, even if Clerk didn't load
+            this.sessionChecked = true
+            this.isLoading = false
+        }
     },
 
-    syncWithClerk(isSignedIn: boolean | undefined, clerkUser: any) {
+    async syncWithClerk(isSignedIn: boolean | undefined, clerkUser: any) {
         this.isAuthenticated = !!isSignedIn
 
         if (isSignedIn && clerkUser) {
@@ -160,10 +167,26 @@ export const useAuthStore = defineStore('auth', {
             // Sync with backend (fetch fresh data from Laravel using Clerk Token)
             this.fetchUserProfile()
             
-            // Link Convex Cart
-            const { mergeOnLogin } = useCart()
-            mergeOnLogin(this.user.id).catch(console.error)
-            
+            // Link Convex Cart — use Convex client directly (useCart() needs Vue component context)
+            if (import.meta.client) {
+              try {
+                const config = useRuntimeConfig()
+                if (config.public.convexUrl) {
+                  const { ConvexClient } = await import('convex/browser')
+                  const convex = new ConvexClient(config.public.convexUrl)
+                  const visitorId = localStorage.getItem('tchadbox_visitor_id') || ''
+                  if (visitorId && this.user) {
+                    await convex.mutation('cart:mergeCartOnLogin' as any, {
+                      visitorId,
+                      userId: this.user.id,
+                    })
+                  }
+                  convex.close()
+                }
+              } catch (e) {
+                console.error('Cart merge failed (non-blocking)', e)
+              }
+            }
         } else {
             this.user = null
         }
