@@ -7,6 +7,9 @@
         <p class="text-gray-500 mt-1">Suivez et mettez à jour les niveaux de stock</p>
       </div>
       <div class="flex gap-2">
+        <UButton @click="showCreateModal = true" color="primary" icon="i-lucide-plus">
+          Ajouter un produit
+        </UButton>
         <UButton @click="fetchProducts" color="gray" variant="outline" icon="i-lucide-refresh-cw" :loading="loading">
           Actualiser
         </UButton>
@@ -58,7 +61,7 @@
       <div v-else-if="filteredProducts.length === 0" class="p-8 text-center">
         <Icon name="lucide:package" class="w-12 h-12 mx-auto text-gray-300 mb-3" />
         <p class="text-gray-500">Aucun produit trouvé</p>
-        <p class="text-sm text-gray-400 mt-1">Les produits apparaîtront ici quand vous les ajouterez via Medusa Admin</p>
+        <p class="text-sm text-gray-400 mt-1">Cliquez sur "Ajouter un produit" pour commencer</p>
       </div>
 
       <div v-else>
@@ -98,15 +101,24 @@
                 </UBadge>
               </td>
               <td class="px-6 py-4">
-                <UButton
-                  size="sm"
-                  color="primary"
-                  variant="soft"
-                  icon="i-lucide-pencil"
-                  @click="openEditModal(product)"
-                >
-                  Modifier
-                </UButton>
+                <div class="flex gap-2">
+                  <UButton
+                    size="sm"
+                    color="primary"
+                    variant="soft"
+                    icon="i-lucide-pencil"
+                    @click="openEditModal(product)"
+                  >
+                    Modifier
+                  </UButton>
+                  <UButton
+                    size="sm"
+                    color="red"
+                    variant="soft"
+                    icon="i-lucide-trash-2"
+                    @click="deleteProduct(product)"
+                  />
+                </div>
               </td>
             </tr>
           </tbody>
@@ -146,6 +158,63 @@
         </div>
       </div>
     </UModal>
+
+    <!-- Create Product Modal -->
+    <UModal v-model="showCreateModal">
+      <div class="p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-1">Ajouter un produit</h3>
+        <p class="text-sm text-gray-500 mb-6">Remplissez les informations du nouveau produit</p>
+
+        <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nom du produit *</label>
+            <UInput v-model="createForm.title" placeholder="Ex: Sac de riz 25kg" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Prix (€) *</label>
+              <UInput v-model.number="createForm.price" type="number" min="0" step="0.01" placeholder="0.00" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Stock initial</label>
+              <UInput v-model.number="createForm.stock_quantity" type="number" min="0" placeholder="0" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Sous-titre</label>
+            <UInput v-model="createForm.subtitle" placeholder="Courte description" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <UInput v-model="createForm.category" placeholder="Ex: Alimentaire" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Slug catégorie</label>
+              <UInput v-model="createForm.category_handle" placeholder="Ex: alimentaire" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">URL image (thumbnail)</label>
+            <UInput v-model="createForm.thumbnail" placeholder="https://..." />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <UTextarea v-model="createForm.description" :rows="3" placeholder="Description détaillée du produit..." />
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-3 mt-6">
+          <UButton color="gray" variant="outline" @click="showCreateModal = false">Annuler</UButton>
+          <UButton color="primary" :loading="creating" :disabled="!createForm.title || !createForm.price" @click="createProduct">Créer le produit</UButton>
+        </div>
+      </div>
+    </UModal>
   </div>
 </template>
 
@@ -161,14 +230,26 @@ const toast = useToast()
 // State
 const loading = ref(true)
 const saving = ref(false)
+const creating = ref(false)
 const products = ref<any[]>([])
 const search = ref('')
 const stockFilter = ref('')
 const showEditModal = ref(false)
+const showCreateModal = ref(false)
 const editingProduct = ref<any>(null)
 const editForm = reactive({
   stockQuantity: 0,
   inStock: true
+})
+const createForm = reactive({
+  title: '',
+  price: 0,
+  subtitle: '',
+  description: '',
+  category: '',
+  category_handle: '',
+  thumbnail: '',
+  stock_quantity: 0,
 })
 
 const stockFilterOptions = [
@@ -243,6 +324,48 @@ const saveStock = async () => {
     toast.add({ title: 'Erreur', description: error.message || 'Impossible de mettre à jour le stock', color: 'red' })
   } finally {
     saving.value = false
+  }
+}
+
+// Create new product
+const createProduct = async () => {
+  creating.value = true
+  try {
+    await api.adminProductCreate({
+      title: createForm.title,
+      price: createForm.price,
+      subtitle: createForm.subtitle || undefined,
+      description: createForm.description || undefined,
+      category: createForm.category || undefined,
+      category_handle: createForm.category_handle || undefined,
+      thumbnail: createForm.thumbnail || undefined,
+      stock_quantity: createForm.stock_quantity,
+      in_stock: true,
+    })
+
+    toast.add({ title: 'Succès', description: 'Produit créé avec succès', color: 'green' })
+    showCreateModal.value = false
+    // Reset form
+    Object.assign(createForm, { title: '', price: 0, subtitle: '', description: '', category: '', category_handle: '', thumbnail: '', stock_quantity: 0 })
+    fetchProducts()
+  } catch (error: any) {
+    console.error('Error creating product:', error)
+    toast.add({ title: 'Erreur', description: error?.data?.message || error.message || 'Impossible de créer le produit', color: 'red' })
+  } finally {
+    creating.value = false
+  }
+}
+
+// Delete product
+const deleteProduct = async (product: any) => {
+  if (!confirm(`Supprimer "${product.title}" ? Cette action est irréversible.`)) return
+
+  try {
+    await api.adminProductDelete(product.id)
+    toast.add({ title: 'Supprimé', description: 'Produit supprimé', color: 'green' })
+    fetchProducts()
+  } catch (error: any) {
+    toast.add({ title: 'Erreur', description: error.message || 'Impossible de supprimer', color: 'red' })
   }
 }
 

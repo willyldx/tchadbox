@@ -66,6 +66,12 @@ export function useBackendApi() {
     /** PATCH /api/admin/stocks/:id */
     adminStockUpdate: (id: number, body: Record<string, unknown>) =>
       fetchWithAuth<{ product: any }>(`api/admin/stocks/${id}`, { method: 'PATCH', body }),
+    /** POST /api/admin/products */
+    adminProductCreate: (body: Record<string, unknown>) =>
+      fetchWithAuth<{ product: any }>('api/admin/products', { method: 'POST', body }),
+    /** DELETE /api/admin/products/:id */
+    adminProductDelete: (id: number) =>
+      fetchWithAuth<{ success: boolean }>(`api/admin/products/${id}`, { method: 'DELETE' }),
 
     // ── Livreurs ────────────────────────────────────────────
     /** GET /api/admin/livreurs */
