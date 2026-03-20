@@ -583,12 +583,6 @@ function getStepClass(index: number): string {
   return 'bg-gray-100 text-[var(--color-text-muted)]'
 }
 
-function nextStep() {
-  if (canProceed.value && currentStep.value < 2) {
-    currentStep.value++
-  }
-}
-
 async function submitOrder() {
   if (!acceptTerms.value || isSubmitting.value) return
 
