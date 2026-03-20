@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import type { Customer, Address, UserRole } from '~/types'
-import { useAuth, useUser, useClerk } from '@clerk/vue'
 
 interface AuthState {
   user: Customer | null

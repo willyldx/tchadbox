@@ -2,25 +2,16 @@
  * Appels vers l'API backend (Nitro) avec le token Clerk.
  * Utiliser pour: /api/admin/*, /api/livreur/*, /api/checkout.
  */
-import { useAuth } from '@clerk/vue'
 
 export function useBackendApi() {
-  let auth: any = null
-  if (import.meta.client) {
-    try {
-        const { useAuth } = require('@clerk/vue')
-        auth = useAuth()
-    } catch(e) {}
-  }
-
   const fetchWithAuth = async <T>(
     path: string,
     options: { method?: any; body?: any; query?: Record<string, any> } = {}
   ): Promise<T> => {
     let token = ''
     try {
-      if (auth && auth.getToken) {
-          token = (await auth.getToken.value()) || ''
+      if (import.meta.client && window.Clerk?.session) {
+          token = await window.Clerk.session.getToken() || ''
       }
     } catch (e) {
       console.error('Clerk token fetch failed in useBackendApi', e)
