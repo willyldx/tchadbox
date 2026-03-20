@@ -131,9 +131,11 @@ export const useAuthStore = defineStore('auth', {
 
         if (window.Clerk) {
             this.syncWithClerk(window.Clerk.session !== null, window.Clerk.user)
-            this.sessionChecked = true
-            this.isLoading = false
         }
+
+        // Always mark as checked and stop loading, even if Clerk didn't load
+        this.sessionChecked = true
+        this.isLoading = false
     },
 
     syncWithClerk(isSignedIn: boolean | undefined, clerkUser: any) {
