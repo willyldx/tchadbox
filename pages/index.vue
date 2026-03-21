@@ -364,28 +364,20 @@ const fetchFeaturedProducts = async () => {
   try {
     const { getProducts } = useProducts()
     const response = await getProducts({ limit: 4 })
-    if (response && response.products && response.products.length > 0) {
-      featuredProducts.value = response.products.map((p: any) => ({
-        id: p.id.toString(),
-        title: p.title,
-        handle: p.slug,
-        subtitle: p.subtitle || '',
-        price: p.price || 0,
-        thumbnail: p.thumbnail || '',
-        category: p.category || '',
-        isNew: true
-      }))
-    } else {
-      throw new Error('No products found')
-    }
+    featuredProducts.value = response.products.map((p: any) => ({
+      id: p.id.toString(),
+      title: p.title,
+      handle: p.slug,
+      subtitle: p.subtitle || '',
+      price: p.price || 0,
+      thumbnail: p.thumbnail || '',
+      category: p.category || '',
+      categoryHandle: p.category_handle || '',
+      inStock: p.in_stock,
+    }))
   } catch (e) {
-    // FALLBACK: Mock products for a 'Retail' feel even without a backend
-    featuredProducts.value = [
-      { id: 'm1', title: 'Pack Alimentaire Familial (Riz, Huile, Sucre)', subtitle: 'Essentiels de cuisine - 25kg', price: 45.50, category: 'Alimentaire', isNew: true },
-      { id: 'm2', title: 'Kit Scolaire Primaire Complet', subtitle: 'Sacs, cahiers, stylos inclus', price: 29.90, category: 'Scolarité' },
-      { id: 'm3', title: 'Carton de couches Premium (T4)', subtitle: 'Soin & Protection Bébé', price: 35.00, category: 'Santé & Bébé' },
-      { id: 'm4', title: 'Panier Fruits & Légumes Frais', subtitle: 'Produits locaux de saison', price: 15.00, category: 'Alimentaire' },
-    ]
+    // Si erreur ou pas de backend, on ne montre rien
+    featuredProducts.value = []
   }
 }
 
