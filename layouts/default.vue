@@ -27,55 +27,42 @@
             <img 
               src="/logo.png" 
               alt="TchadBox" 
-              class="h-14 w-auto transition-transform duration-300 group-hover:scale-105"
+              class="h-10 sm:h-12 w-auto transition-transform duration-300 group-hover:scale-105"
             />
           </NuxtLink>
 
-          <!-- Navigation -->
-          <nav class="hidden lg:flex items-center gap-8">
-            <NuxtLink 
-              v-for="link in navLinks" 
-              :key="link.to" 
-              :to="link.to"
-              class="nav-link"
-              :class="{ 'nav-link-active': isActive(link.to) }"
-            >
-              {{ link.label }}
-            </NuxtLink>
-          </nav>
+          <!-- Desktop Search Bar — Central Component -->
+          <div class="hidden md:flex flex-1 max-w-xl mx-8">
+            <div class="relative w-full group">
+              <input 
+                type="text"
+                placeholder="Rechercher un produit, une marque, une catégorie..."
+                class="w-full h-11 pl-4 pr-12 rounded-lg border-2 border-[var(--color-primary)]/10 focus:border-[var(--color-accent)] outline-none transition-all text-sm bg-gray-50/50 focus:bg-white"
+                @click="isSearchOpen = true"
+                readonly
+              />
+              <button 
+                @click="isSearchOpen = true"
+                class="absolute right-0 top-0 h-full px-4 bg-[var(--color-accent)] text-[var(--color-primary)] rounded-r-lg hover:bg-[var(--color-accent-dark)] transition-colors"
+              >
+                <Search class="w-5 h-5" />
+              </button>
+            </div>
+          </div>
 
           <!-- Actions -->
-          <div class="flex items-center gap-2">
-            <!-- Currency Selector -->
-            <div class="hidden sm:block mr-2">
-              <USelectMenu
-                v-model="selectedCurrency"
-                :options="currencies"
-                value-attribute="id"
-                option-attribute="label"
-                class="w-24"
-                variant="none"
-                :ui="{ 
-                  trigger: 'bg-transparent hover:bg-gray-100 rounded-xl px-3 py-2 transition-colors',
-                  base: 'text-sm font-semibold text-gray-700'
-                }"
+          <div class="flex items-center gap-1 sm:gap-2">
+            <!-- Navigation (Desktop only, hidden if search is too large) -->
+            <nav class="hidden xl:flex items-center gap-6 mr-4">
+              <NuxtLink 
+                v-for="link in navLinks.slice(1, 3)" 
+                :key="link.to" 
+                :to="link.to"
+                class="nav-link text-sm"
               >
-                <template #label>
-                  <span class="flex items-center gap-1.5">
-                    <span class="text-xs opacity-60">{{ getCurrencyIcon(selectedCurrency) }}</span>
-                    {{ selectedCurrency }}
-                  </span>
-                </template>
-              </USelectMenu>
-            </div>
-
-            <!-- Search -->
-            <button 
-              @click="isSearchOpen = true"
-              class="hidden md:flex p-2.5 rounded-xl hover:bg-gray-100 transition-colors"
-            >
-              <Search class="w-5 h-5 text-gray-600" />
-            </button>
+                {{ link.label }}
+              </NuxtLink>
+            </nav>
 
             <!-- Favorites -->
             <NuxtLink

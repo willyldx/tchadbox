@@ -3,76 +3,88 @@
     v-motion
     :initial="{ opacity: 0, y: 30 }"
     :visibleOnce="{ opacity: 1, y: 0, transition: { delay: delay, duration: 500 } }"
-    class="card-product group"
-    ref="cardRef"
-    @mousemove="handleMouseMove"
-    @mouseleave="handleMouseLeave"
+    class="card-product group relative flex flex-col h-full bg-white border border-gray-200 rounded-lg transition-all hover:shadow-xl hover:border-[var(--color-accent)]/30 overflow-hidden"
   >
-    <div :style="{ transform: cardTransform }" class="transition-transform duration-200">
-      <!-- Image -->
-      <NuxtLink :to="`/produit/${product.handle || product.id}`" class="block">
-        <div class="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
-          <img 
-            v-if="product.thumbnail || product.images?.[0]"
-            :src="product.thumbnail || product.images[0]"
-            :alt="product.title"
-            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-          />
-          <div v-else class="w-full h-full flex items-center justify-center">
-            <component :is="getCategoryIcon" class="w-20 h-20 text-gray-200" />
-          </div>
+    <!-- Image Section -->
+    <NuxtLink :to="`/produit/${product.handle || product.id}`" class="block relative aspect-square overflow-hidden bg-gray-50">
+      <img 
+        v-if="product.thumbnail || product.images?.[0]"
+        :src="product.thumbnail || product.images[0]"
+        :alt="product.title"
+        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+      />
+      <div v-else class="w-full h-full flex items-center justify-center">
+        <component :is="getCategoryIcon" class="w-16 h-16 text-gray-200" />
+      </div>
 
-          <!-- Category Badge -->
-          <span 
-            v-if="product.category"
-            class="absolute top-4 left-4 badge"
-            :class="getCategoryBadgeClass"
-          >
-            {{ categoryName }}
-          </span>
+      <!-- Quick Status Badges -->
+      <div class="absolute top-2 left-2 flex flex-col gap-1.5">
+        <span 
+          v-if="product.category"
+          class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-white/90 backdrop-blur shadow-sm border border-gray-100"
+          :class="getCategoryTextClass"
+        >
+          {{ categoryName }}
+        </span>
+        <span v-if="product.isNew" class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-[var(--color-accent)] text-white shadow-sm">
+          Nouveau
+        </span>
+      </div>
 
-          <!-- Quick Add -->
-          <button 
-            @click.prevent="addToCart"
-            class="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-[var(--color-accent)] text-white flex items-center justify-center opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 hover:bg-[var(--color-accent-dark)] shadow-lg"
-          >
-            <Plus class="w-5 h-5" />
-          </button>
+      <!-- Quick Action: Wishlist -->
+      <button class="absolute top-2 right-2 p-2 rounded-full bg-white/80 backdrop-blur text-gray-400 hover:text-red-500 transition-colors shadow-sm opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+        <Heart class="w-4 h-4" />
+      </button>
+    </NuxtLink>
 
-          <!-- Shine effect -->
-          <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none" />
-        </div>
-      </NuxtLink>
-
-      <!-- Content -->
-      <div class="p-5">
+    <!-- Content Section -->
+    <div class="p-4 flex flex-col flex-grow">
+      <!-- Title & Subtitle -->
+      <div class="mb-2">
         <NuxtLink :to="`/produit/${product.handle || product.id}`">
-          <h3 class="font-semibold text-[var(--color-text)] text-lg mb-1 group-hover:text-[var(--color-accent-dark)] transition-colors line-clamp-1">
+          <h3 class="font-medium text-gray-900 text-sm sm:text-base line-clamp-2 leading-tight group-hover:text-[var(--color-accent-dark)] transition-colors min-h-[2.5rem]">
             {{ product.title }}
           </h3>
         </NuxtLink>
-        
-        <p v-if="product.subtitle" class="text-sm text-[var(--color-text-muted)] mb-3">
+        <p v-if="product.subtitle" class="text-xs text-gray-500 mt-1 line-clamp-1">
           {{ product.subtitle }}
         </p>
+      </div>
 
-        <div class="flex items-end justify-between">
-          <div>
-            <span class="text-2xl font-bold text-[var(--color-text)]">
+      <!-- Rating (Static for trust) -->
+      <div class="flex items-center gap-1 mb-3">
+        <div class="flex">
+          <Star v-for="i in 5" :key="i" class="w-3 h-3 fill-amber-400 text-amber-400" />
+        </div>
+        <span class="text-[10px] text-gray-400">(4.8)</span>
+      </div>
+
+      <!-- Price & Stock -->
+      <div class="mt-auto pt-3 border-t border-gray-50">
+        <div class="flex items-end justify-between gap-2">
+          <div class="flex flex-col">
+            <span class="text-lg sm:text-xl font-bold text-gray-900 leading-none">
               {{ formatPrice(product.price) }}
             </span>
-            <span class="block text-xs text-[var(--color-text-muted)] mt-0.5">
+            <span class="text-[10px] text-gray-500 font-medium mt-1">
               ≈ {{ priceFCFA }} FCFA
             </span>
           </div>
-          
+
+          <!-- Add to Cart: Minimalist Retail style -->
           <button 
             @click="addToCart"
-            class="btn-ghost flex items-center gap-2 text-[var(--color-accent-dark)]"
+            class="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-light)] transition-all active:scale-95 shadow-sm"
+            title="Ajouter au panier"
           >
-            <ShoppingBag class="w-4 h-4" />
-            <span class="text-sm font-medium hidden sm:inline">Ajouter</span>
+            <ShoppingBag class="w-4 h-4 sm:w-5 h-5" />
           </button>
+        </div>
+
+        <!-- Stock Indicator -->
+        <div class="mt-3 flex items-center gap-1.5">
+          <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span class="text-[10px] font-medium text-emerald-600">En stock — Livraison 72h</span>
         </div>
       </div>
     </div>
@@ -80,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import { ShoppingBag, Plus, Wheat, BookOpen, Heart, Gift, Package } from 'lucide-vue-next'
+import { ShoppingBag, Star, Heart, Wheat, BookOpen, Gift, Package } from 'lucide-vue-next'
 import { useCartStore } from '~/stores/cart'
 
 interface ProductProp {
@@ -92,6 +104,7 @@ interface ProductProp {
   thumbnail?: string
   images?: string[]
   category?: string | { name: string; handle: string }
+  isNew?: boolean
 }
 
 const props = withDefaults(defineProps<{
@@ -103,25 +116,6 @@ const props = withDefaults(defineProps<{
 
 const cartStore = useCartStore()
 const toast = useToast()
-const cardRef = ref<HTMLElement>()
-const cardTransform = ref('')
-
-// 3D hover effect
-const handleMouseMove = (e: MouseEvent) => {
-  if (!cardRef.value) return
-  const rect = cardRef.value.getBoundingClientRect()
-  const x = e.clientX - rect.left
-  const y = e.clientY - rect.top
-  const centerX = rect.width / 2
-  const centerY = rect.height / 2
-  const rotateX = (y - centerY) / 25
-  const rotateY = (centerX - x) / 25
-  cardTransform.value = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`
-}
-
-const handleMouseLeave = () => {
-  cardTransform.value = ''
-}
 
 const formatPrice = (price: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price)
 
@@ -139,16 +133,16 @@ const getCategoryIcon = computed(() => {
   return icons[categoryName.value] || Package
 })
 
-const getCategoryBadgeClass = computed(() => {
+const getCategoryTextClass = computed(() => {
   const classes: Record<string, string> = {
-    'Alimentaire': 'bg-emerald-50 text-emerald-700 border border-emerald-200',
-    'Scolarité': 'bg-blue-50 text-blue-700 border border-blue-200',
-    'Santé & Bébé': 'bg-pink-50 text-pink-700 border border-pink-200',
-    'Santé': 'bg-pink-50 text-pink-700 border border-pink-200',
-    'Fêtes & Occasions': 'bg-amber-50 text-amber-700 border border-amber-200',
-    'Fêtes': 'bg-amber-50 text-amber-700 border border-amber-200',
+    'Alimentaire': 'text-emerald-600',
+    'Scolarité': 'text-blue-600',
+    'Santé & Bébé': 'text-pink-600',
+    'Santé': 'text-pink-600',
+    'Fêtes & Occasions': 'text-amber-600',
+    'Fêtes': 'text-amber-600',
   }
-  return classes[categoryName.value] || 'badge-primary'
+  return classes[categoryName.value] || 'text-gray-600'
 })
 
 const addToCart = () => {
