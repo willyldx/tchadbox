@@ -19,19 +19,19 @@
 
     <div class="w-full max-w-md relative z-10">
       <!-- Logo -->
-      <NuxtLink to="/" class="flex flex-col items-center justify-center gap-4 mb-10 group">
-        <div class="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center bg-white rounded-2xl shadow-xl shadow-amber-500/10 group-hover:shadow-amber-500/20 transition-all duration-300 transform group-hover:-translate-y-1">
-          <div class="absolute inset-0 bg-gradient-to-br from-amber-50 to-white rounded-2xl border border-amber-100/50"></div>
-          <img src="/logo.png" alt="TchadBox Logo" class="w-20 h-20 sm:w-24 sm:h-24 object-contain relative z-10 p-2" />
+      <NuxtLink to="/" class="flex flex-col items-center justify-center gap-4 mb-8 group">
+        <div class="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center rounded-3xl backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500 transform group-hover:-translate-y-1">
+          <div class="absolute inset-0 bg-white/10 rounded-3xl"></div>
+          <img src="/logo.png" alt="TchadBox Logo" class="w-16 h-16 sm:w-20 sm:h-20 object-contain relative z-10" />
         </div>
         <div class="text-center">
-          <span class="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-amber-400 tracking-tight">TchadBox</span>
-          <div class="h-1 w-12 bg-amber-400 rounded-full mx-auto mt-2 opacity-50 group-hover:w-16 transition-all duration-300"></div>
+          <span class="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-amber-200 tracking-tight drop-shadow-sm">TchadBox</span>
+          <div class="h-1 w-8 bg-amber-400 rounded-full mx-auto mt-1.5 opacity-40 group-hover:w-12 transition-all duration-300"></div>
         </div>
       </NuxtLink>
 
       <!-- Login Card -->
-      <div class="card-glass rounded-2xl shadow-xl p-8">
+      <div class="card-glass rounded-[2rem] shadow-2xl p-8 sm:p-10">
         <div class="text-center mb-8">
           <h1 class="text-2xl font-bold text-[var(--color-text)] mb-2">Bon retour !</h1>
           <p class="text-[var(--color-text-muted)]">Connectez-vous à votre compte TchadBox</p>
@@ -190,17 +190,18 @@
             <div class="w-full border-t border-[var(--color-border)]"></div>
           </div>
           <div class="relative flex justify-center text-sm">
-            <span class="px-4 bg-white text-[var(--color-text-muted)]">ou continuer avec</span>
+            <span class="px-4 text-[var(--color-text-muted)] bg-transparent">ou continuer avec</span>
           </div>
         </div>
 
         <!-- Social Login -->
-        <div v-if="!showVerification" class="grid grid-cols-2 gap-3">
+        <div v-if="!showVerification" class="grid grid-cols-2 gap-4">
           <button
             type="button"
             @click="handleGoogleLogin"
-            class="flex items-center justify-center gap-2 py-3 px-4 border border-[var(--color-border)] rounded-xl hover:bg-[var(--color-bg-warm)] transition-colors"
+            class="flex items-center justify-center gap-2 py-3.5 px-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all duration-300 group/social"
           >
+            <!-- Google Icon SVG remains same but cleaner container -->
             <svg class="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -251,10 +252,11 @@
   opacity: 0;
 }
 .card-glass {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
 }
 </style>
 

@@ -20,15 +20,15 @@
   --color-primary-light: #37475A;
   --color-primary-dark: #131A22;
 
-  /* Accent — Amazon Gold / Orange */
-  --color-accent: #FF9900;
-  --color-accent-light: #FFD814;
-  --color-accent-dark: #FFA41C;
-  --color-accent-hover: #F3A847;
+  /* Accent — Elegant Amber Gold (Softer, less 'neon') */
+  --color-accent: #F59E0B;
+  --color-accent-light: #FBBF24;
+  --color-accent-dark: #D97706;
+  --color-accent-hover: #B45309;
 
   /* Links & Success */
-  --color-link: #007185;
-  --color-link-hover: #C40000;
+  --color-link: #0369a1;
+  --color-link-hover: #075985;
 
   /* Alerts / Terracotta */
   --color-terracotta: #B12704;
