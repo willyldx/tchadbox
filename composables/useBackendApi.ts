@@ -4,22 +4,49 @@
  */
 
 export function useBackendApi() {
+  const getBaseUrl = () => {
+    const config = useRuntimeConfig()
+    let url = config.public.apiUrl || 'https://tchadbox-backend-production.up.railway.app'
+    // Ensure baseUrl does NOT end with /api — we add it in paths
+    url = url.replace(/\/api\/?$/, '')
+    // Remove trailing slash
+    url = url.replace(/\/$/, '')
+    return url
+  }
+
   const fetchWithAuth = async <T>(
     path: string,
     options: { method?: any; body?: any; query?: Record<string, any> } = {}
   ): Promise<T> => {
+    // Wait briefly for Clerk to be ready if not yet loaded
     let token = ''
     try {
-      if (import.meta.client && window.Clerk?.session) {
+      if (import.meta.client) {
+        // If Clerk isn't loaded yet, wait up to 3 seconds for it
+        if (!window.Clerk?.session) {
+          const maxWait = 3000
+          const interval = 100
+          let waited = 0
+          while (!window.Clerk?.loaded && waited < maxWait) {
+            await new Promise(resolve => setTimeout(resolve, interval))
+            waited += interval
+          }
+        }
+        if (window.Clerk?.session) {
           token = await window.Clerk.session.getToken() || ''
+        }
       }
     } catch (e) {
       console.error('Clerk token fetch failed in useBackendApi', e)
     }
 
-    const config = useRuntimeConfig()
-    const baseUrl = config.public.apiUrl || 'https://tchadbox-backend-production.up.railway.app/api'
-    const url = path.startsWith('http') ? path : `${baseUrl}/${path}`
+    const baseUrl = getBaseUrl()
+    // Ensure path starts with /api/
+    let cleanPath = path.replace(/^\/+/, '')
+    if (!cleanPath.startsWith('api/')) {
+      cleanPath = `api/${cleanPath}`
+    }
+    const url = `${baseUrl}/${cleanPath}`
     
     return $fetch<T>(url, {
       method: options.method || 'GET',
