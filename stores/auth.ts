@@ -121,28 +121,38 @@ export const useAuthStore = defineStore('auth', {
             return
         }
 
-        this.isLoading = true
-
-        try {
-            // Wait for window.Clerk to be fully loaded (up to 5 seconds)
-            const maxWait = 5000
-            const interval = 100
-            let waited = 0
-            while (!window.Clerk?.loaded && waited < maxWait) {
-                await new Promise(resolve => setTimeout(resolve, interval))
-                waited += interval
-            }
-
-            if (window.Clerk) {
-                this.syncWithClerk(window.Clerk.session !== null, window.Clerk.user)
-            }
-        } catch (e) {
-            console.error('checkSession error:', e)
-        } finally {
-            // Always mark as checked and stop loading, even if Clerk didn't load
+        // Quick check: if Clerk is already loaded, sync immediately
+        if (window.Clerk?.loaded) {
+            this.syncWithClerk(window.Clerk.session !== null, window.Clerk.user)
             this.sessionChecked = true
-            this.isLoading = false
+            return
         }
+
+        // Clerk is NOT yet loaded — don't block the page.
+        // Mark session as checked (unauthenticated for now), then listen
+        // for Clerk to finish loading in background.
+        this.sessionChecked = true
+
+        // Background: wait for Clerk and sync when ready
+        this._waitForClerkInBackground()
+    },
+
+    _waitForClerkInBackground() {
+        if (import.meta.server) return
+        
+        const maxWait = 8000
+        const interval = 150
+        let waited = 0
+
+        const poll = setInterval(() => {
+            if (window.Clerk?.loaded || waited >= maxWait) {
+                clearInterval(poll)
+                if (window.Clerk?.loaded) {
+                    this.syncWithClerk(window.Clerk.session !== null, window.Clerk.user)
+                }
+            }
+            waited += interval
+        }, interval)
     },
 
     async syncWithClerk(isSignedIn: boolean | undefined, clerkUser: any) {
