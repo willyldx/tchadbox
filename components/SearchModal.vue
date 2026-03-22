@@ -46,8 +46,8 @@
                   <Package v-else class="w-5 h-5 text-gray-400" />
                 </div>
                 <div class="flex-grow">
-                  <h4 class="font-medium text-[var(--color-text)]">{{ product.title }}</h4>
-                  <p class="text-sm text-[var(--color-text-muted)]">{{ product.category }}</p>
+                  <h4 class="font-medium text-[var(--color-text)]" v-html="product.title"></h4>
+                  <p class="text-sm text-[var(--color-text-muted)]" v-html="product.category"></p>
                 </div>
                 <span class="font-semibold text-[var(--color-primary)]">{{ formatPrice(product.price) }}</span>
               </NuxtLink>
@@ -74,6 +74,7 @@
 
 <script setup lang="ts">
 import { Search, X, Package, SearchX } from 'lucide-vue-next'
+import { useMeilisearch } from '~/composables/useMeilisearch'
 
 const props = defineProps<{ modelValue: boolean }>()
 const emit = defineEmits<{ 'update:modelValue': [value: boolean] }>()
@@ -83,7 +84,11 @@ const searchInput = ref<HTMLInputElement>()
 const searchResults = ref<any[]>([])
 const isSearching = ref(false)
 
+// Instantiate Meilisearch once outside the watcher
+const { performSearch } = useMeilisearch()
+
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
+let currentQueryId = 0
 
 // Debounced Meilisearch query
 watch(query, (q) => {
@@ -91,25 +96,42 @@ watch(query, (q) => {
   
   if (!q || q.length < 2) {
     searchResults.value = []
+    isSearching.value = false
     return
   }
 
+  const queryId = ++currentQueryId
   isSearching.value = true
+  
   searchTimeout = setTimeout(async () => {
-    const { performSearch } = useMeilisearch()
-    const results = await performSearch(q, { limit: 8 })
+    try {
+      const results = await performSearch(q, { 
+        limit: 8,
+        attributesToHighlight: ['title', 'category'],
+        highlightPreTag: '<em class="bg-amber-100 text-amber-900 not-italic rounded px-0.5">',
+        highlightPostTag: '</em>'
+      })
 
-    // Map Meilisearch hits to our expected format
-    searchResults.value = (results.hits || []).map((p: any) => ({
-      id: p.id,
-      title: p.title,
-      handle: p.slug || p.handle || p.id, // Fallback handle using slug or ID
-      price: p.price,
-      thumbnail: p.thumbnail,
-      category: p.category || '',
-    }))
-    isSearching.value = false
-  }, 300)
+      // Ignore results if a newer search has been started
+      if (queryId !== currentQueryId) return
+
+      // Map Meilisearch hits to our expected format
+      searchResults.value = (results.hits || []).map((p: any) => ({
+        id: p.id,
+        title: p._highlightResult?.title?.value || p.title,
+        handle: p.slug || p.handle || p.id,
+        price: p.price,
+        thumbnail: p.thumbnail,
+        category: p._highlightResult?.category?.value || p.category || '',
+      }))
+    } catch (e) {
+      console.error('Search failed', e)
+    } finally {
+      if (queryId === currentQueryId) {
+        isSearching.value = false
+      }
+    }
+  }, 250) // Slightly faster debounce for snappier feel
 })
 
 const formatPrice = (price: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price)

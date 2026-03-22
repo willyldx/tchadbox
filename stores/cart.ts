@@ -21,39 +21,69 @@ export const useCartStore = defineStore('cart', {
     isHydrated: false,
     currency: 'EUR',
     rates: {
-      USD: 1.08, // Default fallback
+      USD: 1.08,
       XAF: 655.957,
     },
   }),
 
   getters: {
-    // ... itemCount unchanged ...
-    
+    isEmpty(): boolean {
+      return this.items.length === 0
+    },
+
+    itemCount(): number {
+      return this.items.reduce((total, item) => total + item.quantity, 0)
+    },
+
+    subtotal(): number {
+      return this.items.reduce((total, item) => total + item.price * item.quantity, 0)
+    },
+
+    shipping(): number {
+      if (this.isEmpty) return 0
+      // Gratuit à partir de 150€
+      return this.subtotal >= 150 ? 0 : 15
+    },
+
+    total(): number {
+      return this.subtotal + this.shipping
+    },
+
+    // Progress to free shipping (0 to 100)
+    freeShippingThreshold(): number {
+      return 150
+    },
+
+    freeShippingProgress(): number {
+      return Math.min(100, (this.subtotal / this.freeShippingThreshold) * 100)
+    },
+
+    amountToFreeShipping(): number {
+      return Math.max(0, this.freeShippingThreshold - this.subtotal)
+    },
+
     // Multi-currency conversions
     totalXAF(): number {
       return Math.round(this.total * this.rates.XAF)
     },
 
-    totalUSD(): number {
-      return Number((this.total * this.rates.USD).toFixed(2))
+    // Formatted strings for UI (Consolidated)
+    subtotalFormatted(): string { return this.formatPrice(this.subtotal) },
+    shippingFormatted(): string { 
+      return this.shipping === 0 ? 'Gratuit' : this.formatPrice(this.shipping) 
+    },
+    totalFormatted(): string { return this.formatPrice(this.total) },
+    totalFCFA(): string { 
+      return new Intl.NumberFormat('fr-FR').format(this.totalXAF) + ' FCFA'
     },
 
-    // ... isEmpty and other getters unchanged ...
+    // Aliases for compatibility with older components
+    formattedSubtotal(): string { return this.subtotalFormatted },
+    formattedShipping(): string { return this.shippingFormatted },
+    formattedTotal(): string { return this.totalFormatted }
   },
 
   actions: {
-    async fetchRates() {
-      try {
-        const { rates } = await $fetch<{ rates: any }>('/api/exchange-rates')
-        if (rates) {
-          this.rates.USD = rates.USD
-          this.rates.XAF = rates.XAF
-        }
-      } catch (e) {
-        console.warn('Failed to fetch real-time rates, using fallbacks.')
-      }
-    },
-
     formatPrice(amount: number): string {
       const currencyCode = this.currency
       
@@ -70,69 +100,71 @@ export const useCartStore = defineStore('cart', {
         currency: currencyCode 
       }).format(finalAmount)
     },
-    // ... rest of actions unchanged ...
+
+    setCurrency(currency: 'EUR' | 'USD' | 'XAF') {
+      this.currency = currency
+    },
+
+    toggleCart() {
+      this.isOpen = !this.isOpen
+    },
+
+    closeCart() {
+      this.isOpen = false
+    },
 
     addItem(product: Omit<CartItem, 'quantity'>, quantity: number = 1) {
       const existingItem = this.items.find(item => item.productId === product.productId)
-      
       if (existingItem) {
         existingItem.quantity += quantity
       } else {
         this.items.push({ ...product, quantity })
       }
-      
       this.saveToStorage()
       this.isOpen = true
-      
-      setTimeout(() => {
-        this.isOpen = false
-      }, 3000)
     },
-// ... rest of methods unchanged, but ensure saveToStorage is called
+
     removeItem(productId: string) {
-      const index = this.items.findIndex(item => item.productId === productId)
-      if (index > -1) {
-        this.items.splice(index, 1)
+      this.items = this.items.filter(item => item.productId !== productId)
+      this.saveToStorage()
+    },
+
+    incrementQuantity(productId: string) {
+      const item = this.items.find(item => item.productId === productId)
+      if (item) {
+        item.quantity++
         this.saveToStorage()
       }
     },
 
-    updateQuantity(productId: string, quantity: number) {
+    decrementQuantity(productId: string) {
       const item = this.items.find(item => item.productId === productId)
-      if (item) {
-        if (quantity <= 0) {
-          this.removeItem(productId)
-        } else {
-          item.quantity = quantity
-          this.saveToStorage()
-        }
+      if (item && item.quantity > 1) {
+        item.quantity--
+        this.saveToStorage()
+      } else {
+        this.removeItem(productId)
       }
-    },
-
-    clearCart() {
-      this.items = []
-      this.saveToStorage()
     },
 
     saveToStorage() {
       if (process.client) {
-        localStorage.setItem('tchadbox-cart-v2', JSON.stringify(this.items))
+        localStorage.setItem('tchadbox-cart', JSON.stringify(this.items))
       }
     },
 
     loadFromStorage() {
       if (process.client) {
-        const saved = localStorage.getItem('tchadbox-cart-v2')
+        const saved = localStorage.getItem('tchadbox-cart')
         if (saved) {
           try {
             this.items = JSON.parse(saved)
           } catch (e) {
-            console.error('Failed to parse cart:', e)
             this.items = []
           }
         }
         this.isHydrated = true
       }
-    },
-  },
+    }
+  }
 })

@@ -38,6 +38,35 @@
           </button>
         </div>
 
+        <!-- Free Shipping Progress -->
+        <div v-if="!cartStore.isEmpty" class="px-6 py-4 bg-amber-50/50 border-b border-amber-100">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-medium text-amber-800 flex items-center gap-1.5">
+              <template v-if="cartStore.amountToFreeShipping > 0">
+                <Truck class="w-3.5 h-3.5" />
+                Plus que <span class="font-bold">{{ cartStore.formatPrice(cartStore.amountToFreeShipping) }}</span> pour la livraison offerte !
+              </template>
+              <template v-else>
+                <div class="w-4 h-4 rounded-full bg-green-500 flex items-center justify-center">
+                  <Check class="w-2.5 h-2.5 text-white" />
+                </div>
+                Félicitations ! La livraison est <span class="font-bold uppercase">offerte</span>
+              </template>
+            </span>
+            <span class="text-[10px] font-bold text-amber-600 bg-white px-1.5 py-0.5 rounded shadow-sm">
+              Objectif: {{ cartStore.formatPrice(cartStore.freeShippingThreshold) }}
+            </span>
+          </div>
+          <div class="h-2 w-full bg-amber-100 rounded-full overflow-hidden shadow-inner">
+            <div 
+              class="h-full bg-gradient-to-r from-amber-400 to-amber-500 transition-all duration-1000 ease-out relative"
+              :style="{ width: `${cartStore.freeShippingProgress}%` }"
+            >
+              <div class="absolute inset-0 bg-white/20 animate-pulse" />
+            </div>
+          </div>
+        </div>
+
         <!-- Content -->
         <div class="flex-grow overflow-y-auto">
           <!-- Empty -->
@@ -112,7 +141,7 @@
         </template>
 
         <script setup lang="ts">
-        import { ShoppingBag, X, Package, Trash2, Minus, Plus, Truck } from 'lucide-vue-next'
+        import { ShoppingBag, X, Package, Trash2, Minus, Plus, Truck, Check } from 'lucide-vue-next'
         import { useCartStore } from '~/stores/cart'
 
         const cartStore = useCartStore()
