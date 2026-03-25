@@ -165,6 +165,23 @@ export const useCartStore = defineStore('cart', {
         }
         this.isHydrated = true
       }
+    },
+
+    async fetchRates() {
+      // Fetch live EUR→USD and EUR→XAF rates
+      // Falls back to hardcoded defaults on failure
+      try {
+        const data = await $fetch<any>('https://api.exchangerate-api.com/v4/latest/EUR', {
+          timeout: 5000,
+        })
+        if (data?.rates) {
+          this.rates.USD = data.rates.USD ?? this.rates.USD
+          this.rates.XAF = data.rates.XAF ?? this.rates.XAF
+        }
+      } catch (e) {
+        // Keep hardcoded defaults
+        console.warn('Exchange rate fetch failed, using defaults')
+      }
     }
   }
 })

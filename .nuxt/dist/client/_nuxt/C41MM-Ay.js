@@ -1,0 +1,1 @@
+import{aX as i,X as n,aY as o,a4 as s}from"./SrlNEhpa.js";const u=i(async r=>{let t,a;const e=n();if(e.sessionChecked||([t,a]=o(()=>e.checkSession()),await t,a()),!e.isAuthenticated)return s("/auth/login?redirect="+encodeURIComponent(r.fullPath));if(!e.canAccessLivreur)return s("/403")});export{u as default};
