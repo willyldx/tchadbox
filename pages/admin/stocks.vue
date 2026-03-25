@@ -368,10 +368,10 @@ const onImageSelected = async (e: any) => {
   try {
     const res = await api.adminUploadFile(file)
     createForm.thumbnail = res.url
-    toast.add({ title: 'Aperçu généré', description: 'L\\'image est prête !', color: 'green' })
+    toast.add({ title: 'Aperçu généré', description: `L'image est prête !`, color: 'green' })
   } catch (error: any) {
     console.error('Upload failed:', error)
-    toast.add({ title: 'Erreur', description: 'Impossible de télécharger l\\'image.', color: 'red' })
+    toast.add({ title: 'Erreur', description: `Impossible de télécharger l'image.`, color: 'red' })
   } finally {
     uploadingImage.value = false
   }

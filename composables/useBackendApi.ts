@@ -6,7 +6,7 @@
 export function useBackendApi() {
   const getBaseUrl = () => {
     const config = useRuntimeConfig()
-    let url = config.public.apiUrl || 'https://tchadbox-backend-production.up.railway.app'
+    let url = config.public.apiUrl || 'https://api.spencerai.tech'
     // Ensure baseUrl does NOT end with /api — we add it in paths
     url = url.replace(/\/api\/?$/, '')
     // Remove trailing slash
