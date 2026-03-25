@@ -87,6 +87,15 @@ export function useBackendApi() {
       fetchWithAuth<{ data: any[]; count: number }>('api/admin/clients', { query: params }),
 
     // ── Stocks ──────────────────────────────────────────────
+    /** POST /api/admin/upload */
+    adminUploadFile: (file: File) => {
+      const formData = new FormData()
+      formData.append('image', file)
+      return fetchWithAuth<{ url: string; path: string }>('api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      })
+    },
     /** GET /api/admin/stocks */
     adminStocks: () =>
       fetchWithAuth<{ data: any[] }>('api/admin/stocks'),

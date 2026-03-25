@@ -199,8 +199,11 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">URL image (thumbnail)</label>
-            <UInput v-model="createForm.thumbnail" placeholder="https://..." />
+            <label class="block text-sm font-medium text-gray-700 mb-1">Image du produit</label>
+            <div class="flex flex-col gap-2">
+              <UInput type="file" accept="image/*" :loading="uploadingImage" @change="onImageSelected" />
+              <img v-if="createForm.thumbnail" :src="createForm.thumbnail" class="h-20 w-20 object-cover rounded-md border border-gray-200" alt="Aperçu" />
+            </div>
           </div>
 
           <div>
@@ -231,6 +234,7 @@ const toast = useToast()
 const loading = ref(true)
 const saving = ref(false)
 const creating = ref(false)
+const uploadingImage = ref(false)
 const products = ref<any[]>([])
 const search = ref('')
 const stockFilter = ref('')
@@ -353,6 +357,23 @@ const createProduct = async () => {
     toast.add({ title: 'Erreur', description: error?.data?.message || error.message || 'Impossible de créer le produit', color: 'red' })
   } finally {
     creating.value = false
+  }
+}
+
+// Upload Image
+const onImageSelected = async (e: any) => {
+  const file = e.target.files?.[0]
+  if (!file) return
+  uploadingImage.value = true
+  try {
+    const res = await api.adminUploadFile(file)
+    createForm.thumbnail = res.url
+    toast.add({ title: 'Aperçu généré', description: 'L\\'image est prête !', color: 'green' })
+  } catch (error: any) {
+    console.error('Upload failed:', error)
+    toast.add({ title: 'Erreur', description: 'Impossible de télécharger l\\'image.', color: 'red' })
+  } finally {
+    uploadingImage.value = false
   }
 }
 
