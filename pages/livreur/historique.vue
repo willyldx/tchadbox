@@ -87,7 +87,6 @@ definePageMeta({
 })
 
 const authStore = useAuthStore()
-const { client } = useSupabase()
 
 // State
 const loading = ref(true)
@@ -127,29 +126,13 @@ const fetchHistory = async () => {
   
   loading.value = true
   try {
-    // Fetch delivered orders
-    const { data, error } = await client
-      .from('orders')
-      .select('*')
-      .eq('assigned_to', authStore.user.id)
-      .eq('fulfillment_status', 'delivered')
-      .order('delivered_at', { ascending: false })
+    const { livreurOrders } = useBackendApi()
+    // Fetch delivered orders from Laravel
+    const response = await livreurOrders({ status: 'delivered' })
 
-    if (error) throw error
-
-    history.value = (data || []).map(mapOrder)
-    totalDeliveries.value = history.value.length
-
-    // Fetch agent stats
-    const { data: agent } = await client
-      .from('delivery_agents')
-      .select('total_deliveries, rating')
-      .eq('user_id', authStore.user.id)
-      .single()
-
-    if (agent) {
-      totalDeliveries.value = agent.total_deliveries || history.value.length
-      rating.value = Number(agent.rating).toFixed(1)
+    if (response && response.data) {
+      history.value = (response.data || []).map(mapOrder)
+      totalDeliveries.value = history.value.length
     }
   } catch (error) {
     console.error('Error fetching history:', error)

@@ -400,24 +400,9 @@ async function handleChangePassword() {
   
   isChangingPassword.value = true
   
-  const { client } = useSupabase()
-  
   try {
-    const { error: updateError } = await client.auth.updateUser({
-      password: passwordForm.new,
-    })
-    
-    if (updateError) {
-      error.value = updateError.message
-    } else {
-      passwordForm.current = ''
-      passwordForm.new = ''
-      passwordForm.confirm = ''
-      showSuccess.value = true
-      setTimeout(() => {
-        showSuccess.value = false
-      }, 3000)
-    }
+    // TODO: Handle password change via Clerk API if not using their pre-built UI
+    throw new Error('Veuillez utiliser le portail de gestion de compte pour changer votre mot de passe.')
   } catch (e: any) {
     error.value = e.message
   } finally {

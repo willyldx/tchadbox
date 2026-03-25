@@ -139,7 +139,6 @@ definePageMeta({
 })
 
 const authStore = useAuthStore()
-const { client } = useSupabase()
 const toast = useToast()
 
 // State
@@ -164,19 +163,12 @@ const fetchAgentStats = async () => {
   if (!authStore.user) return
 
   try {
-    const { data } = await client
-      .from('delivery_agents')
-      .select('*')
-      .eq('user_id', authStore.user.id)
-      .single()
-
-    if (data) {
-      agentStats.value = {
-        totalDeliveries: data.total_deliveries || 0,
-        rating: Number(data.rating).toFixed(1),
-        zone: data.zone || "N'Djamena",
-        phone: data.phone || ''
-      }
+    // TODO: Fetch agent stats from Laravel
+    agentStats.value = {
+      totalDeliveries: 0,
+      rating: '5.0',
+      zone: "N'Djamena",
+      phone: authStore.user.phone || ''
     }
   } catch (error) {
     console.error('Error fetching agent stats:', error)

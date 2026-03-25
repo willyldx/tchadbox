@@ -260,7 +260,7 @@ definePageMeta({
 })
 
 const route = useRoute()
-const { client, uploadImage } = useSupabase()
+const { adminOrderDetail, adminOrderUpdate, adminLivreurs, adminUploadFile } = useBackendApi()
 const toast = useToast()
 
 // State
@@ -281,26 +281,18 @@ const deliveryPhoto = ref<File | null>(null)
 const fetchOrder = async () => {
   loading.value = true
   try {
-    // Récupérer toutes les commandes et filtrer
-    const { data: allOrders, error } = await client.rpc('get_all_orders')
+    const response = await adminOrderDetail(route.params.id as string)
 
-    if (error) throw error
+    if (response && response.order) {
+      order.value = response.order
+      // Assumes Laravel returns items inside the order object
+      orderItems.value = response.order.items || []
 
-    order.value = allOrders?.find((o: any) => o.id === route.params.id) || null
-
-    if (order.value) {
-      // Fetch order items
-      const { data: items } = await client
-        .from('order_items')
-        .select('*')
-        .eq('order_id', route.params.id)
-
-      orderItems.value = items || []
-
-      // Fetch assigned livreur
+      // Fetch assigned livreur from the order object directly if eager loaded,
+      // or we just find it from the livreurs list later
       if (order.value.assigned_to) {
-        const { data: livreurData } = await client.rpc('get_profiles_by_role', { target_role: 'livreur' })
-        assignedLivreur.value = livreurData?.find((l: any) => l.id === order.value.assigned_to) || null
+        // Will be matched in fetchLivreurs
+        assignedLivreur.value = order.value.assigned_agent || null
       }
     }
   } catch (error) {
@@ -313,13 +305,21 @@ const fetchOrder = async () => {
 
 // Fetch livreurs
 const fetchLivreurs = async () => {
-  const { data, error } = await client.rpc('get_profiles_by_role', { target_role: 'livreur' })
-
-  if (!error && data) {
-    livreurs.value = data.map((l: any) => ({
-      label: `${l.first_name} ${l.last_name}`,
-      value: l.id
-    }))
+  try {
+    const response = await adminLivreurs()
+    if (response && response.data) {
+      livreurs.value = response.data.map((l: any) => ({
+        label: `${l.first_name} ${l.last_name}`,
+        value: l.id
+      }))
+      
+      // Update assigned livreur if it matches the current order
+      if (order.value && order.value.assigned_to && !assignedLivreur.value) {
+        assignedLivreur.value = response.data.find((l: any) => l.id === order.value?.assigned_to) || null
+      }
+    }
+  } catch (err) {
+    console.error('Error fetching livreurs', err)
   }
 }
 
@@ -329,15 +329,9 @@ const updateFulfillment = async (status: string) => {
   updating.value = true
 
   try {
-    const { error } = await client
-      .from('orders')
-      .update({ 
-        fulfillment_status: status,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', order.value.id)
-
-    if (error) throw error
+    await adminOrderUpdate(order.value.id, { 
+      fulfillment_status: status
+    })
 
     order.value.fulfillment_status = status
     toast.add({ title: 'Succès', description: 'Statut mis à jour', color: 'green' })
@@ -355,12 +349,9 @@ const assignLivreur = async () => {
   updating.value = true
 
   try {
-    const { error } = await client.rpc('assign_delivery_agent', {
-      order_id: order.value.id,
-      agent_id: selectedLivreur.value
+    await adminOrderUpdate(order.value.id, {
+      assigned_to: selectedLivreur.value
     })
-
-    if (error) throw error
 
     toast.add({ title: 'Succès', description: 'Livreur assigné', color: 'green' })
     showAssignModal.value = false
@@ -390,21 +381,16 @@ const confirmDelivery = async () => {
     let photoUrl = null
 
     if (deliveryPhoto.value) {
-      const path = `deliveries/${order.value.id}_${Date.now()}.jpg`
-      photoUrl = await uploadImage('delivery-photos', path, deliveryPhoto.value)
+      const uploadRes = await adminUploadFile(deliveryPhoto.value)
+      photoUrl = uploadRes.url
     }
 
-    const { error } = await client
-      .from('orders')
-      .update({
-        fulfillment_status: 'delivered',
-        delivered_at: new Date().toISOString(),
-        delivery_photo: photoUrl,
-        status: 'completed'
-      })
-      .eq('id', order.value.id)
-
-    if (error) throw error
+    await adminOrderUpdate(order.value.id, {
+      fulfillment_status: 'delivered',
+      delivered_at: new Date().toISOString(),
+      delivery_photo: photoUrl,
+      status: 'completed'
+    })
 
     toast.add({ title: 'Succès', description: 'Livraison confirmée', color: 'green' })
     showDeliveryModal.value = false

@@ -414,9 +414,6 @@ onMounted(async () => {
 })
 
 async function fetchOrder() {
-  const { client } = useSupabase()
-  const orderId = route.params.id as string
-  
   if (!authStore.user) {
     error.value = 'Vous devez être connecté'
     isLoading.value = false
@@ -424,19 +421,8 @@ async function fetchOrder() {
   }
 
   try {
-    const { data, error: fetchError } = await client
-      .from('orders')
-      .select('*')
-      .eq('id', orderId)
-      .eq('user_id', authStore.user.id)
-      .single()
-
-    if (fetchError) {
-      error.value = 'Commande introuvable'
-    } else if (data) {
-      const { normalizeOrder } = useOrderNormalizer()
-      order.value = normalizeOrder(data)
-    }
+    // TODO: Fetch single order from Laravel Backend
+    error.value = 'Commande introuvable'
   } catch (e) {
     error.value = 'Erreur lors du chargement'
   } finally {

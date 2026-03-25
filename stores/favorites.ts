@@ -127,77 +127,16 @@ export const useFavoritesStore = defineStore('favorites', {
 
     // Server sync methods
     async syncWithServer() {
-      const authStore = useAuthStore()
-      if (!authStore.user) return
-
-      this.isLoading = true
-      const { client } = useSupabase()
-
-      try {
-        // Get server favorites
-        const { data: serverFavorites, error } = await client
-          .from('favorites')
-          .select('product_id, created_at')
-          .eq('user_id', authStore.user.id)
-
-        if (error) {
-          console.error('Failed to fetch favorites:', error)
-          return
-        }
-
-        // Merge local and server favorites
-        const serverIds = new Set(serverFavorites?.map(f => f.product_id) || [])
-        const localIds = new Set(this.items.map(i => i.productId))
-
-        // Add local items to server that don't exist there
-        for (const item of this.items) {
-          if (!serverIds.has(item.productId)) {
-            await this.addToServerFavorites(authStore.user.id, item.productId)
-          }
-        }
-
-        // We don't remove local items that aren't on server
-        // (user might have added them offline)
-
-        this.synced = true
-      } catch (error) {
-        console.error('Failed to sync favorites:', error)
-      } finally {
-        this.isLoading = false
-      }
+      // TODO: Implement with Laravel Backend
+      this.synced = false
     },
 
     async addToServerFavorites(userId: string, productId: string) {
-      const { client } = useSupabase()
-
-      try {
-        await client
-          .from('favorites')
-          .upsert({
-            user_id: userId,
-            product_id: productId,
-          }, {
-            onConflict: 'user_id,product_id',
-          })
-      } catch (error) {
-        console.error('Failed to add favorite to server:', error)
-      }
+       // TODO: Implement with Laravel Backend
     },
 
     async removeFromServerFavorites(userId: string, productId: string) {
-      const { client } = useSupabase()
-
-      try {
-        await client
-          .from('favorites')
-          .delete()
-          .match({
-            user_id: userId,
-            product_id: productId,
-          })
-      } catch (error) {
-        console.error('Failed to remove favorite from server:', error)
-      }
+       // TODO: Implement with Laravel Backend
     },
 
     // Move item to cart

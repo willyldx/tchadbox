@@ -163,38 +163,10 @@ const trackOrder = async () => {
   notFound.value = false
   isSearching.value = true
   
-  const { client } = useSupabase()
-  
   try {
-    // Search by display_id in Supabase
-    const { data, error } = await client
-      .from('orders')
-      .select('*')
-      .or(`display_id.eq.${orderNumber.value},id.eq.${orderNumber.value}`)
-      .single()
-
-    if (error || !data) {
-      notFound.value = true
-    } else {
-      const status = data.fulfillment_status || 'not_fulfilled'
-      const isPaid = data.payment_status === 'captured'
-      const isShipped = ['fulfilled', 'shipped', 'delivered'].includes(status)
-      const isDelivered = status === 'delivered'
-      
-      const formatDate = (d: string) => new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-      
-      order.value = {
-        number: data.display_id || `TCB-${data.id.slice(0, 8).toUpperCase()}`,
-        delivered: isDelivered,
-        timeline: [
-          { title: 'Commande enregistrée', date: formatDate(data.created_at), detail: 'Votre commande a été validée et prise en charge', completed: true, icon: Package },
-          { title: 'Paiement confirmé', date: isPaid ? formatDate(data.paid_at || data.created_at) : 'En attente', detail: isPaid ? 'Règlement traité avec succès' : 'En attente de confirmation', completed: isPaid, icon: CreditCard },
-          { title: 'Préparation terminée', date: isShipped ? 'Prêt' : 'En attente', detail: isShipped ? 'Votre colis est prêt à être livré' : 'Votre colis est en cours de préparation', completed: isShipped, icon: Clock },
-          { title: 'En cours de livraison', date: isShipped && !isDelivered ? 'En route' : (isDelivered ? 'Livré' : 'En attente'), detail: isShipped ? 'Notre livreur est en route vers le destinataire' : 'Livraison en attente', completed: isShipped, icon: Truck },
-          { title: 'Livré avec succès', date: isDelivered ? formatDate(data.updated_at) : 'En attente', detail: isDelivered ? 'Preuve photo de remise envoyée' : 'Livraison en cours', completed: isDelivered, icon: Camera },
-        ]
-      }
-    }
+    // TODO: Implement order tracking with Laravel Backend
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    notFound.value = true
   } catch (e) {
     console.error('Tracking error:', e)
     notFound.value = true

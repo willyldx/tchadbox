@@ -295,29 +295,14 @@ onMounted(async () => {
 })
 
 async function fetchDashboardData() {
-  const { client } = useSupabase()
-  
   if (!authStore.user) return
 
   try {
-    // Fetch orders
-    const { data: orders, error } = await client
-      .from('orders')
-      .select('*')
-      .eq('user_id', authStore.user.id)
-      .order('created_at', { ascending: false })
-      .limit(5)
-
-    if (!error && orders) {
-      recentOrders.value = orders.map(transformOrder)
-      
-      // Calculate stats
-      stats.totalOrders = orders.length
-      stats.inProgress = orders.filter(o => 
-        ['not_fulfilled', 'partially_fulfilled', 'shipped'].includes(o.fulfillment_status)
-      ).length
-      stats.delivered = orders.filter(o => o.fulfillment_status === 'delivered').length
-    }
+    // TODO: Fetch user orders with Laravel Backend
+    recentOrders.value = []
+    stats.totalOrders = 0
+    stats.inProgress = 0
+    stats.delivered = 0
   } catch (error) {
     console.error('Failed to fetch dashboard data:', error)
   }

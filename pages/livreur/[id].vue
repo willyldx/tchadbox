@@ -209,7 +209,7 @@ definePageMeta({
 })
 
 const route = useRoute()
-const { client, uploadImage } = useSupabase()
+const { livreurOrderUpdate } = useBackendApi()
 const toast = useToast()
 
 // State
@@ -225,16 +225,11 @@ const fileInput = ref<HTMLInputElement | null>(null)
 const fetchDelivery = async () => {
   loading.value = true
   try {
-    const { data, error } = await client
-      .from('orders')
-      .select('*')
-      .eq('id', route.params.id)
-      .single()
-
-    if (error) throw error
+    const { fetchWithAuth } = useBackendApi()
+    const response = await fetchWithAuth<any>(`api/livreur/orders/${route.params.id}`)
 
     const { normalizeOrder } = useOrderNormalizer()
-    delivery.value = normalizeOrder(data)
+    delivery.value = normalizeOrder(response.order || response.data)
   } catch (error) {
     console.error('Error fetching delivery:', error)
     toast.add({ title: 'Erreur', description: 'Impossible de charger la livraison', color: 'red' })
@@ -249,15 +244,10 @@ const startDelivery = async () => {
   updating.value = true
 
   try {
-    const { error } = await client
-      .from('orders')
-      .update({
-        fulfillment_status: 'shipped',
-        picked_up_at: new Date().toISOString()
-      })
-      .eq('id', delivery.value.id)
-
-    if (error) throw error
+    await livreurOrderUpdate(delivery.value.id, {
+      fulfillment_status: 'shipped',
+      picked_up_at: new Date().toISOString()
+    })
 
     delivery.value.fulfillmentStatus = 'shipped'
     toast.add({ title: 'Succès', description: 'Livraison démarrée', color: 'green' })
@@ -298,27 +288,18 @@ const completeDelivery = async () => {
 
     // Upload photo if provided
     if (photoFile.value) {
-      const path = `deliveries/${delivery.value.id}_${Date.now()}.jpg`
-      photoUrl = await uploadImage('delivery-photos', path, photoFile.value)
+      // Use standard admin upload or new delivery endpoint (if backend supports formData)
+      const { adminUploadFile } = useBackendApi()
+      const uploadRes = await adminUploadFile(photoFile.value)
+      photoUrl = uploadRes.url
     }
 
-    const { error } = await client
-      .from('orders')
-      .update({
-        fulfillment_status: 'delivered',
-        delivered_at: new Date().toISOString(),
-        delivery_photo: photoUrl,
-        status: 'completed'
-      })
-      .eq('id', delivery.value.id)
-
-    if (error) throw error
-
-    // Update delivery_agents stats
-    const authStore = useAuthStore()
-    if (authStore.user) {
-      await client.rpc('increment_delivery_count', { agent_user_id: authStore.user.id })
-    }
+    await livreurOrderUpdate(delivery.value.id, {
+      fulfillment_status: 'delivered',
+      delivered_at: new Date().toISOString(),
+      delivery_photo: photoUrl,
+      status: 'completed'
+    })
 
     delivery.value.fulfillmentStatus = 'delivered'
     delivery.value.deliveredAt = new Date().toISOString()

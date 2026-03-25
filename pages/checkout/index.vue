@@ -447,7 +447,6 @@ useSeoMeta({
 const router = useRouter()
 const cartStore = useCartStore()
 const authStore = useAuthStore()
-const { client: supabase } = useSupabase()
 const { checkout: apiCheckout } = useBackendApi()
 const { initializePayment, verifyPayment, eurToXof } = usePaystack()
 
@@ -644,21 +643,11 @@ async function submitOrder() {
         try {
           const verification = await verifyPayment(response.reference)
           if (verification.success) {
-            await supabase
-              .from('orders')
-              .update({
-                payment_status: 'captured',
-                status: 'processing',
-              })
-              .eq('id', orderId)
+            // L'état de l'ordre est mis à jour en base de données par le webhook Laravel
             cartStore.clearCart()
             navigateTo(`/checkout/confirmation?order=${reference}`)
           } else {
             paymentError.value = verification.error || 'La vérification du paiement a échoué.'
-            await supabase
-              .from('orders')
-              .update({ payment_status: 'failed' })
-              .eq('id', orderId)
           }
         } catch (err) {
           console.error('Payment verification error:', err)

@@ -246,24 +246,14 @@ onMounted(async () => {
 })
 
 async function fetchOrders() {
-  const { client } = useSupabase()
-  
   if (!authStore.user) {
     isLoading.value = false
     return
   }
 
   try {
-    const { data, error } = await client
-      .from('orders')
-      .select('*')
-      .eq('user_id', authStore.user.id)
-      .order('created_at', { ascending: false })
-
-    if (!error && data) {
-      const { normalizeOrder } = useOrderNormalizer()
-      orders.value = data.map(normalizeOrder)
-    }
+    // TODO: Fetch user orders from Laravel Backend
+    orders.value = []
   } catch (error) {
     console.error('Failed to fetch orders:', error)
   } finally {
