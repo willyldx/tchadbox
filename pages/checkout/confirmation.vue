@@ -31,6 +31,25 @@
             <p class="text-2xl font-bold text-amber-700 font-mono">{{ orderId }}</p>
           </div>
 
+          <!-- Mobile Money Instructions (Specific Case) -->
+          <div v-if="isMobileMoney" class="bg-amber-50 border border-amber-200 rounded-xl p-5 space-y-3">
+            <div class="flex items-center gap-2 text-amber-800 font-semibold">
+              <Smartphone class="w-5 h-5" />
+              Paiement en attente
+            </div>
+            <div class="text-sm text-amber-900 space-y-2">
+              <p>Si vous n'avez pas encore effectué le transfert :</p>
+              <ul class="list-disc list-inside space-y-1 ml-1 font-medium">
+                <li>Montant : <strong>{{ amount }}</strong></li>
+                <li>Airtel Money : <strong>+235 85 96 25 92</strong></li>
+                <li>Moov Africa : <strong>(À venir)</strong></li>
+              </ul>
+              <p class="text-xs italic mt-3 pt-2 border-t border-amber-200">
+                Dès que notre serveur reçoit le SMS de confirmation, votre commande passera automatiquement en statut "Payé".
+              </p>
+            </div>
+          </div>
+
           <!-- What's Next -->
           <div class="space-y-4">
             <h3 class="font-semibold text-[var(--color-text)]">Prochaines étapes</h3>
@@ -40,8 +59,8 @@
                 <span class="text-green-600 font-bold text-sm">1</span>
               </div>
               <div>
-                <p class="font-medium text-[var(--color-text)]">Email de confirmation</p>
-                <p class="text-sm text-[var(--color-text-muted)]">Vous allez recevoir un email avec les détails de votre commande</p>
+                <p class="font-medium text-[var(--color-text)]">{{ isMobileMoney ? 'Validation du paiement' : 'Email de confirmation' }}</p>
+                <p class="text-sm text-[var(--color-text-muted)]">{{ isMobileMoney ? 'Nous attendons la réception de votre SMS de transfert.' : 'Vous allez recevoir un email avec les détails de votre commande' }}</p>
               </div>
             </div>
 
@@ -124,7 +143,7 @@
 </template>
 
 <script setup lang="ts">
-import { Check as CheckIcon, Package as PackageIcon } from 'lucide-vue-next'
+import { Check as CheckIcon, Package as PackageIcon, Smartphone } from 'lucide-vue-next'
 
 definePageMeta({
   layout: false,
@@ -135,6 +154,14 @@ const authStore = useAuthStore()
 
 const orderId = computed(() => {
   return route.query.order as string || 'TCB-XXXXXXX'
+})
+
+const isMobileMoney = computed(() => {
+  return route.query.method === 'tchad_mobile_money'
+})
+
+const amount = computed(() => {
+  return route.query.amount as string || '0 FCFA'
 })
 
 useSeoMeta({

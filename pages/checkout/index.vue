@@ -238,6 +238,33 @@
                   </div>
                 </label>
 
+                <!-- Mobile Money Tchad specific instructions -->
+                <div v-if="selectedPayment === 'tchad_mobile_money'" class="p-5 bg-amber-50 border border-amber-200 rounded-2xl space-y-4">
+                  <div class="flex items-center gap-2 text-amber-800 font-semibold">
+                    <Smartphone class="w-5 h-5" />
+                    Instructions de transfert
+                  </div>
+                  <div class="text-sm text-amber-900 space-y-2">
+                    <p>1. Envoyez exactement <strong>{{ cartStore.totalFCFA }}</strong> au numéro TchadBox :</p>
+                    <ul class="list-disc list-inside ml-2 font-medium">
+                      <li>Airtel Money : <span class="underline">+235 85 96 25 92</span></li>
+                      <li>Moov Africa : <span class="italic">(En attente de configuration)</span></li>
+                    </ul>
+                    <p>2. Entrez ci-dessous le numéro de téléphone que vous allez utiliser pour le transfert :</p>
+                  </div>
+                  <div>
+                    <input
+                      v-model="transferPhone"
+                      type="tel"
+                      placeholder="+235 XX XX XX XX"
+                      class="w-full px-4 py-3 bg-white border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none"
+                    />
+                  </div>
+                  <p class="text-xs text-amber-700 italic">
+                    Dès réception du SMS de confirmation par notre système, votre commande sera validée automatiquement.
+                  </p>
+                </div>
+
                 <!-- Paystack Security Info -->
                 <div class="bg-green-50 border border-green-100 rounded-xl p-4 flex items-start gap-3 mt-4">
                   <ShieldCheckIcon class="w-5 h-5 text-green-600 mt-0.5 shrink-0" />
@@ -541,7 +568,15 @@ const paymentMethods = [
     description: 'Transfert direct depuis votre banque',
     icon: Banknote,
   },
+  {
+    id: 'tchad_mobile_money',
+    label: 'Mobile Money Tchad',
+    description: 'Airtel Money ou Moov Africa (manuel)',
+    icon: Smartphone,
+  },
 ]
+
+const transferPhone = ref(authStore.user?.phone || '')
 
 // Map selected payment to Paystack channels
 const paystackChannels = computed(() => {
@@ -600,7 +635,7 @@ async function submitOrder() {
       email: form.email,
       customer_first_name: form.firstName,
       customer_last_name: form.lastName,
-      customer_phone: form.phone,
+      customer_phone: selectedPayment.value === 'tchad_mobile_money' ? transferPhone.value : form.phone,
       recipient_name: recipientName,
       recipient_phone: recipientPhone,
       shipping_address_1: form.address.address1,
@@ -622,7 +657,15 @@ async function submitOrder() {
       })),
     })
 
-    // 2. Ouvrir Paystack avec la référence renvoyée par l'API
+    // 2. Si Mobile Money Tchad, rediriger directement vers la confirmation avec instructions
+    if (selectedPayment.value === 'tchad_mobile_money') {
+      const totalFCFA = cartStore.totalFCFA
+      cartStore.clearCart()
+      navigateTo(`/checkout/confirmation?order=${reference}&method=tchad_mobile_money&amount=${totalFCFA}`)
+      return
+    }
+
+    // 3. Ouvrir Paystack avec la référence renvoyée par l'API (pour les autres méthodes)
     const amountInXof = eurToXof(cartStore.total)
     await initializePayment({
       email: form.email,

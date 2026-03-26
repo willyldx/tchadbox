@@ -67,6 +67,10 @@ export function useBackendApi() {
     /** GET /api/admin/stats */
     adminStats: () => fetchWithAuth<any>('api/admin/stats'),
 
+    /** GET /api/admin/mobile-money/logs */
+    adminMobileMoneyLogs: (params?: { page?: number }) =>
+      fetchWithAuth<any>('api/admin/mobile-money/logs', { query: params }),
+
     // ── Orders ──────────────────────────────────────────────
     /** GET /api/admin/orders */
     adminOrders: (params?: { limit?: number; offset?: number; status?: string; payment_status?: string; fulfillment_status?: string; search?: string }) =>
