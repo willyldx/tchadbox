@@ -477,6 +477,13 @@ const authStore = useAuthStore()
 const { checkout: apiCheckout } = useBackendApi()
 const { initializePayment, verifyPayment, eurToXof } = usePaystack()
 
+const currentStep = ref(0)
+const steps = [
+  { id: 'info', label: 'Informations' },
+  { id: 'payment', label: 'Paiement' },
+  { id: 'confirm', label: 'Confirmation' },
+]
+
 // Redirect if cart is empty (wait for hydration)
 watchEffect(() => {
   if (cartStore.isHydrated && cartStore.isEmpty) {
@@ -630,12 +637,16 @@ async function submitOrder() {
     const recipientPhone = sameAsCustomer.value ? form.phone : form.recipientPhone
 
     // 1. Créer la commande via l'API backend (gère invités + référence unique)
+    // Calculer le montant FCFA pour les commandes Mobile Money
+    const isMobileMoney = selectedPayment.value === 'tchad_mobile_money'
+    const paymentAmountFcfa = isMobileMoney ? cartStore.totalXAF : undefined
+
     const { orderId, reference } = await apiCheckout({
       user_id: authStore.user?.id,
       email: form.email,
       customer_first_name: form.firstName,
       customer_last_name: form.lastName,
-      customer_phone: selectedPayment.value === 'tchad_mobile_money' ? transferPhone.value : form.phone,
+      customer_phone: isMobileMoney ? transferPhone.value : form.phone,
       recipient_name: recipientName,
       recipient_phone: recipientPhone,
       shipping_address_1: form.address.address1,
@@ -647,6 +658,7 @@ async function submitOrder() {
       shipping_total: cartStore.shipping,
       total: cartStore.total,
       payment_method: selectedPayment.value,
+      payment_amount_fcfa: paymentAmountFcfa,
       items: cartStore.items.map((item) => ({
         product_id: item.productId,
         title: item.title,

@@ -158,6 +158,51 @@
             </div>
           </div>
 
+          <!-- Pays de résidence -->
+          <div>
+            <label for="country" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
+              Pays de résidence
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-[var(--color-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <select
+                id="country"
+                v-model="form.country"
+                required
+                class="input appearance-none cursor-pointer"
+                style="padding-left: 3rem; padding-right: 2.5rem;"
+                :disabled="authStore.isLoading"
+              >
+                <option value="" disabled>Sélectionnez votre pays</option>
+                <option value="TD">🇹🇩 Tchad</option>
+                <option value="FR">🇫🇷 France</option>
+                <option value="US">🇺🇸 États-Unis</option>
+                <option value="CA">🇨🇦 Canada</option>
+                <option value="BE">🇧🇪 Belgique</option>
+                <option value="DE">🇩🇪 Allemagne</option>
+                <option value="GB">🇬🇧 Royaume-Uni</option>
+                <option value="CH">🇨🇭 Suisse</option>
+                <option value="CM">🇨🇲 Cameroun</option>
+                <option value="SN">🇸🇳 Sénégal</option>
+                <option value="CI">🇨🇮 Côte d'Ivoire</option>
+                <option value="CG">🇨🇬 Congo</option>
+                <option value="GA">🇬🇦 Gabon</option>
+                <option value="IT">🇮🇹 Italie</option>
+                <option value="ES">🇪🇸 Espagne</option>
+                <option value="NL">🇳🇱 Pays-Bas</option>
+              </select>
+              <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                <svg class="w-4 h-4 text-[var(--color-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
           <!-- Password -->
           <div>
             <label for="password" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
@@ -334,6 +379,7 @@ const form = reactive({
   lastName: '',
   email: '',
   phone: '',
+  country: '',
   password: '',
   confirmPassword: '',
   acceptTerms: false,
@@ -369,6 +415,7 @@ const isFormValid = computed(() => {
     form.firstName &&
     form.lastName &&
     form.email &&
+    form.country &&
     form.password.length >= 6 &&
     passwordsMatch.value &&
     form.acceptTerms
@@ -403,8 +450,27 @@ async function handleSubmit() {
     firstName: form.firstName,
     lastName: form.lastName,
     phone: form.phone || undefined,
+    country: form.country || undefined,
   })
   
+  // Store country in Clerk unsafeMetadata
+  if (result.success && form.country) {
+    try {
+      if (window.Clerk?.user) {
+        await window.Clerk.user.update({
+          unsafeMetadata: {
+            ...window.Clerk.user.unsafeMetadata,
+            country: form.country,
+          },
+        })
+      }
+    } catch { /* non-blocking */ }
+
+    // Auto-switch currency based on selected country
+    const { setCurrencyFromCountry } = useCurrency()
+    setCurrencyFromCountry(form.country)
+  }
+
   if (result.success) {
     if (result.requiresConfirmation) {
       showSuccess.value = true

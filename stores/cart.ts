@@ -1,16 +1,15 @@
 import { defineStore } from 'pinia'
 import type { CartItem } from '~/types'
 
+type CurrencyCode = 'EUR' | 'USD' | 'XAF' | 'GBP' | 'CAD' | 'CHF'
+
 interface CartState {
   items: CartItem[]
   isOpen: boolean
   isLoading: boolean
   isHydrated: boolean
-  currency: 'EUR' | 'USD' | 'XAF'
-  rates: {
-    USD: number
-    XAF: number
-  }
+  currency: CurrencyCode
+  rates: Record<Exclude<CurrencyCode, 'EUR'>, number>
 }
 
 export const useCartStore = defineStore('cart', {
@@ -22,7 +21,10 @@ export const useCartStore = defineStore('cart', {
     currency: 'EUR',
     rates: {
       USD: 1.08,
-      XAF: 655.957,
+      XAF: 655.957,  // Taux fixe CFA (garanti par la Banque Centrale)
+      GBP: 0.86,
+      CAD: 1.48,
+      CHF: 0.94,
     },
   }),
 
@@ -92,16 +94,32 @@ export const useCartStore = defineStore('cart', {
         return new Intl.NumberFormat('fr-FR').format(xafAmount) + ' FCFA'
       }
       
-      const rate = currencyCode === 'USD' ? this.rates.USD : 1
+      if (currencyCode === 'EUR') {
+        return new Intl.NumberFormat('fr-FR', { 
+          style: 'currency', 
+          currency: 'EUR' 
+        }).format(amount)
+      }
+
+      // USD, GBP, CAD, CHF — convert from EUR
+      const rate = this.rates[currencyCode] ?? 1
       const finalAmount = amount * rate
 
-      return new Intl.NumberFormat('fr-FR', { 
+      // Locale-aware formatting
+      const locales: Record<string, string> = {
+        USD: 'en-US',
+        GBP: 'en-GB',
+        CAD: 'en-CA',
+        CHF: 'fr-CH',
+      }
+
+      return new Intl.NumberFormat(locales[currencyCode] || 'fr-FR', { 
         style: 'currency', 
         currency: currencyCode 
       }).format(finalAmount)
     },
 
-    setCurrency(currency: 'EUR' | 'USD' | 'XAF') {
+    setCurrency(currency: CurrencyCode) {
       this.currency = currency
     },
 
@@ -168,18 +186,16 @@ export const useCartStore = defineStore('cart', {
     },
 
     async fetchRates() {
-      // Fetch live EUR→USD and EUR→XAF rates
-      // Falls back to hardcoded defaults on failure
       try {
-        const data = await $fetch<any>('https://api.exchangerate-api.com/v4/latest/EUR', {
-          timeout: 5000,
-        })
+        const data = await $fetch<any>('/api/exchange-rates')
         if (data?.rates) {
           this.rates.USD = data.rates.USD ?? this.rates.USD
           this.rates.XAF = data.rates.XAF ?? this.rates.XAF
+          this.rates.GBP = data.rates.GBP ?? this.rates.GBP
+          this.rates.CAD = data.rates.CAD ?? this.rates.CAD
+          this.rates.CHF = data.rates.CHF ?? this.rates.CHF
         }
       } catch (e) {
-        // Keep hardcoded defaults
         console.warn('Exchange rate fetch failed, using defaults')
       }
     }

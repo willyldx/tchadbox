@@ -1,7 +1,6 @@
 /**
  * Création de commande (checkout).
- * Utilise le service role pour autoriser les commandes invité (user_id null).
- * Retourne orderId et reference pour lancer le paiement Paystack côté client.
+ * Proxy vers le backend Laravel: POST /api/checkout
  */
 export default defineEventHandler(async (event) => {
   const body = await readBody<{
@@ -21,6 +20,7 @@ export default defineEventHandler(async (event) => {
     shipping_total: number
     total: number
     payment_method?: string
+    payment_amount_fcfa?: number
     items: Array<{
       product_id?: string
       variant_id?: string
@@ -47,70 +47,50 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const reference = generateOrderReference()
+  const config = useRuntimeConfig()
+  const apiUrl = (config.public.apiUrl as string || 'https://api.spencerai.tech/api').replace(/\/+$/, '')
 
-  const supabase = getSupabaseService()
+  try {
+    // Forward to Laravel backend
+    const result = await $fetch<{ orderId: string; reference: string }>(`${apiUrl}/checkout`, {
+      method: 'POST',
+      body: {
+        user_id: body.user_id || null,
+        email: body.email,
+        customer_first_name: body.customer_first_name,
+        customer_last_name: body.customer_last_name,
+        customer_phone: body.customer_phone ?? null,
+        recipient_name: body.recipient_name,
+        recipient_phone: body.recipient_phone ?? null,
+        shipping_address_1: body.shipping_address_1 ?? null,
+        shipping_address_2: body.shipping_address_2 ?? null,
+        shipping_city: body.shipping_city ?? "N'Djamena",
+        shipping_country: body.shipping_country ?? 'Tchad',
+        delivery_instructions: body.delivery_instructions ?? null,
+        subtotal: Number(body.subtotal),
+        shipping_total: Number(body.shipping_total),
+        total: Number(body.total),
+        currency: 'EUR',
+        payment_method: body.payment_method ?? 'card',
+        payment_amount_fcfa: body.payment_amount_fcfa ?? null,
+        items: body.items.map((item) => ({
+          product_id: item.product_id,
+          variant_id: item.variant_id,
+          title: item.title,
+          quantity: item.quantity,
+          unit_price: item.unit_price,
+          total: item.total,
+          thumbnail: item.thumbnail,
+        })),
+      },
+    })
 
-  const orderRow = {
-    user_id: body.user_id || null,
-    display_id: reference,
-    status: 'pending',
-    payment_status: 'awaiting',
-    fulfillment_status: 'not_fulfilled',
-    email: body.email,
-    customer_first_name: body.customer_first_name,
-    customer_last_name: body.customer_last_name,
-    customer_phone: body.customer_phone ?? null,
-    recipient_name: body.recipient_name,
-    recipient_phone: body.recipient_phone ?? null,
-    shipping_address: {
-      address_1: body.shipping_address_1 ?? null,
-      address_2: body.shipping_address_2 ?? null,
-      city: body.shipping_city ?? "N'Djamena",
-      country: body.shipping_country ?? 'Tchad',
-    },
-    delivery_instructions: body.delivery_instructions ?? null,
-    subtotal: Number(body.subtotal),
-    shipping_total: Number(body.shipping_total),
-    total: Number(body.total),
-    currency: 'EUR',
-    payment_reference: reference,
-    payment_method: body.payment_method ?? 'card',
-    metadata: {
-      items: body.items.map((item) => ({
-        product_id: item.product_id,
-        variant_id: item.variant_id,
-        title: item.title,
-        quantity: item.quantity,
-        unit_price: item.unit_price,
-        total: item.total,
-        thumbnail: item.thumbnail,
-      })),
-    },
-  }
-
-  const { data: order, error } = await supabase
-    .from('orders')
-    .insert(orderRow)
-    .select('id')
-    .single()
-
-  if (error) {
-    console.error('[checkout] Order insert error:', error)
+    return result
+  } catch (error: any) {
+    console.error('[checkout] Laravel API error:', error)
     throw createError({
-      statusCode: 500,
-      statusMessage: 'Erreur lors de la création de la commande',
+      statusCode: error.statusCode || 500,
+      statusMessage: error.data?.message || 'Erreur lors de la création de la commande',
     })
   }
-
-  return {
-    orderId: order.id,
-    reference,
-  }
 })
-
-function generateOrderReference(): string {
-  const timestamp = Date.now().toString(36)
-  const random = Math.random().toString(36).substring(2, 8)
-  return `TCB-${timestamp}-${random}`.toUpperCase()
-}

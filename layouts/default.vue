@@ -161,6 +161,9 @@
               </Transition>
             </div>
 
+            <!-- Currency Selector -->
+            <CurrencySelector />
+
             <!-- Cart -->
             <button 
               @click="cartStore.toggleCart"
@@ -377,26 +380,8 @@ const authStore = useAuthStore()
 const favoritesStore = useFavoritesStore()
 const route = useRoute()
 
-// Currency management
-const currencies = [
-  { id: 'EUR', label: 'EUR - €' },
-  { id: 'USD', label: 'USD - $' },
-  { id: 'XAF', label: 'XAF - FCFA' },
-]
-
-const selectedCurrency = computed({
-  get: () => cartStore.currency,
-  set: (val: any) => cartStore.setCurrency(val)
-})
-
-const getCurrencyIcon = (id: string) => {
-  switch(id) {
-    case 'EUR': return '€'
-    case 'USD': return '$'
-    case 'XAF': return 'FC'
-    default: return '€'
-  }
-}
+// Currency auto-detection
+const { autoDetect } = useCurrency()
 
 const isMobileMenuOpen = ref(false)
 const isSearchOpen = ref(false)
@@ -437,6 +422,12 @@ onMounted(() => {
   window.addEventListener('scroll', () => {
     isScrolled.value = window.scrollY > 20
   })
+
+  // Auto-detect currency from IP / user profile
+  autoDetect()
+
+  // Fetch live exchange rates
+  cartStore.fetchRates()
 })
 
 watch(() => route.path, () => {

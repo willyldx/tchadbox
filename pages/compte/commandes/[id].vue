@@ -408,6 +408,9 @@ useSeoMeta({
   title: () => order.value ? `Commande ${order.value.displayId} - TchadBox` : 'Commande - TchadBox',
 })
 
+const { userOrderDetail } = useBackendApi()
+const { normalizeOrder } = useOrderNormalizer()
+
 // Fetch order
 onMounted(async () => {
   await fetchOrder()
@@ -420,11 +423,29 @@ async function fetchOrder() {
     return
   }
 
+  const orderId = route.params.id as string
+  if (!orderId) {
+    error.value = 'Identifiant de commande manquant'
+    isLoading.value = false
+    return
+  }
+
   try {
-    // TODO: Fetch single order from Laravel Backend
-    error.value = 'Commande introuvable'
-  } catch (e) {
-    error.value = 'Erreur lors du chargement'
+    const result = await userOrderDetail(orderId)
+    if (result.order) {
+      order.value = normalizeOrder(result.order)
+    } else {
+      error.value = 'Commande introuvable'
+    }
+  } catch (e: any) {
+    console.error('Order fetch error:', e)
+    if (e.statusCode === 403) {
+      error.value = 'Vous n\'avez pas accès à cette commande'
+    } else if (e.statusCode === 404) {
+      error.value = 'Commande introuvable'
+    } else {
+      error.value = 'Erreur lors du chargement de la commande'
+    }
   } finally {
     isLoading.value = false
   }

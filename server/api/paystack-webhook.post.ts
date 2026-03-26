@@ -1,5 +1,8 @@
-// Paystack Webhook Handler
-// Configure this URL in Paystack Dashboard → Settings → Webhooks
+/**
+ * Paystack Webhook Handler
+ * Forward to Laravel backend for centralized processing.
+ * Configure this URL in Paystack Dashboard → Settings → Webhooks
+ */
 import { createHmac } from 'crypto'
 
 export default defineEventHandler(async (event) => {
@@ -32,78 +35,21 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const body = JSON.parse(rawBody)
-    const eventType = body.event
-
-    const supabase = getSupabaseService()
-
-    console.log(`[Paystack Webhook] Event: ${eventType}`, body.data?.reference)
-
-    switch (eventType) {
-        case 'charge.success': {
-            const data = body.data
-            console.log(`[Paystack Webhook] Payment successful:`, {
-                reference: data.reference,
-                amount: data.amount,
-                currency: data.currency,
-                customer: data.customer?.email,
-            })
-
-            // Update order payment status in Supabase (table n'a pas paid_at → on le met dans metadata)
-            const paidAt = data.paid_at || new Date().toISOString()
-            const { data: existing } = await supabase
-                .from('orders')
-                .select('metadata')
-                .eq('payment_reference', data.reference)
-                .single()
-            const { error: updateError } = await supabase
-                .from('orders')
-                .update({
-                    payment_status: 'captured',
-                    payment_reference: data.reference,
-                    updated_at: new Date().toISOString(),
-                    metadata: { ...(existing?.metadata || {}), paid_at: paidAt },
-                })
-                .eq('payment_reference', data.reference)
-
-            if (updateError) {
-                console.error('[Paystack Webhook] Failed to update order:', updateError)
-            } else {
-                console.log(`[Paystack Webhook] Order updated: payment_status = captured`)
-            }
-
-            break
-        }
-
-        case 'charge.failed': {
-            const data = body.data
-            console.log(`[Paystack Webhook] Payment failed:`, data.reference)
-
-            // Update order status to reflect failed payment
-            const { error: updateError } = await supabase
-                .from('orders')
-                .update({
-                    payment_status: 'awaiting',
-                    updated_at: new Date().toISOString(),
-                })
-                .eq('payment_reference', data.reference)
-
-            if (updateError) {
-                console.error('[Paystack Webhook] Failed to update failed order:', updateError)
-            }
-
-            break
-        }
-
-        case 'transfer.success':
-        case 'transfer.failed':
-        case 'transfer.reversed': {
-            console.log(`[Paystack Webhook] Transfer event:`, eventType, body.data?.reference)
-            break
-        }
-
-        default:
-            console.log(`[Paystack Webhook] Unhandled event: ${eventType}`)
+    // Forward the verified webhook to Laravel backend
+    const apiUrl = (config.public.apiUrl as string || 'https://api.spencerai.tech/api').replace(/\/+$/, '')
+    
+    try {
+        await $fetch(`${apiUrl}/webhooks/paystack`, {
+            method: 'POST',
+            body: rawBody,
+            headers: {
+                'Content-Type': 'application/json',
+                'x-paystack-signature': signature,
+            },
+        })
+    } catch (error: any) {
+        console.error('[Paystack Webhook] Failed to forward to Laravel:', error)
+        // Don't throw — still acknowledge to Paystack
     }
 
     // Always return 200 to acknowledge receipt

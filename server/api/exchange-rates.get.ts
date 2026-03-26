@@ -14,6 +14,9 @@ export default defineEventHandler(async (event) => {
         USD: response.rates.USD,
         XAF: 655.957, // Le XAF est à taux fixe par rapport à l'EUR (parité CFA)
         XOF: 655.957,
+        GBP: response.rates.GBP,
+        CAD: response.rates.CAD,
+        CHF: response.rates.CHF,
       },
       updated_at: response.time_last_update_utc
     }
@@ -26,7 +29,10 @@ export default defineEventHandler(async (event) => {
       rates: {
         USD: 1.08,
         XAF: 655.957,
-        XOF: 655.957
+        XOF: 655.957,
+        GBP: 0.86,
+        CAD: 1.48,
+        CHF: 0.94,
       }
     }
   }

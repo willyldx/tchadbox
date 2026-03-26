@@ -58,8 +58,8 @@ export function useBackendApi() {
 
   return {
     fetchWithAuth,
-    /** POST /api/checkout — peut être appelé sans token (invité). */
-    checkout: (body: Parameters<typeof $fetch<unknown>>[1]) =>
+    /** POST /api/checkout — proxied to Laravel. Supports guests (no auth needed). */
+    checkout: (body: any) =>
       $fetch<{ orderId: string; reference: string }>('/api/checkout', {
         method: 'POST',
         body,
@@ -70,6 +70,20 @@ export function useBackendApi() {
     /** GET /api/admin/mobile-money/logs */
     adminMobileMoneyLogs: (params?: { page?: number }) =>
       fetchWithAuth<any>('api/admin/mobile-money/logs', { query: params }),
+
+    /** GET /api/order-status/:reference — public, no auth */
+    orderStatus: (reference: string) =>
+      $fetch<{ reference: string; payment_status: string; status: string; payment_method: string }>(
+        `/api/order-status/${encodeURIComponent(reference)}`
+      ),
+
+    /** GET /api/orders/mine — requires auth */
+    userOrders: () =>
+      fetchWithAuth<{ data: any[] }>('api/orders/mine'),
+
+    /** GET /api/orders/:reference — requires auth */
+    userOrderDetail: (reference: string) =>
+      fetchWithAuth<{ order: any }>(`api/orders/${encodeURIComponent(reference)}`),
 
     // ── Orders ──────────────────────────────────────────────
     /** GET /api/admin/orders */
