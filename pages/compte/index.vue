@@ -298,11 +298,17 @@ async function fetchDashboardData() {
   if (!authStore.user) return
 
   try {
-    // TODO: Fetch user orders with Laravel Backend
-    recentOrders.value = []
-    stats.totalOrders = 0
-    stats.inProgress = 0
-    stats.delivered = 0
+    const response = await useBackendApi().userOrders()
+    const orders = response?.data || []
+    
+    // Transform orders for the UI
+    const mappedOrders = orders.map(transformOrder)
+    
+    recentOrders.value = mappedOrders.slice(0, 5) // Garder les 5 plus récentes
+    
+    stats.totalOrders = mappedOrders.length
+    stats.inProgress = mappedOrders.filter(o => ['shipped', 'partially_fulfilled', 'fulfilled'].includes(o.fulfillmentStatus)).length
+    stats.delivered = mappedOrders.filter(o => o.fulfillmentStatus === 'delivered').length
   } catch (error) {
     console.error('Failed to fetch dashboard data:', error)
   }

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import type { UserRole } from '~/types'
+import type { UserRole, Address } from '~/types'
 
 interface AuthUser {
   id: string | number
@@ -9,6 +9,7 @@ interface AuthUser {
   lastName: string
   phone: string
   role: UserRole
+  addresses: Address[]
   createdAt: string
 }
 
@@ -103,6 +104,7 @@ export const useAuthStore = defineStore('auth', {
         lastName: apiUser.last_name || nameParts.slice(1).join(' ') || '',
         phone: apiUser.phone || '',
         role: apiUser.role || 'client',
+        addresses: apiUser.addresses || [],
         createdAt: apiUser.created_at || new Date().toISOString(),
       }
     },
@@ -280,12 +282,99 @@ export const useAuthStore = defineStore('auth', {
     async updateProfile(updates: Partial<{ firstName: string; lastName: string; phone: string }>) {
       if (!this.user || !this.token) return { success: false, error: 'Non connecté' }
 
-      // Update locally for now (backend profile update endpoint can be added later)
-      if (updates.firstName) this.user.firstName = updates.firstName
-      if (updates.lastName) this.user.lastName = updates.lastName
-      if (updates.phone) this.user.phone = updates.phone
+      try {
+        const payload = {
+          first_name: updates.firstName ?? this.user.firstName,
+          last_name: updates.lastName ?? this.user.lastName,
+          phone: updates.phone ?? this.user.phone,
+        }
 
-      return { success: true }
+        const response: any = await $fetch(`${this._getApiUrl()}/user`, {
+          method: 'PATCH',
+          headers: this._getHeaders(),
+          body: payload,
+        })
+
+        if (response.user) {
+          this.user = this._parseUser(response.user)
+          return { success: true }
+        }
+
+        return { success: false, error: 'Réponse inattendue' }
+      } catch (error: any) {
+        return { success: false, error: error.data?.message || 'Erreur lors de la mise à jour' }
+      }
+    },
+
+    // =============================================
+    // ADDRESSES
+    // =============================================
+    async addAddress(address: Partial<Address>) {
+      if (!this.user || !this.token) return { success: false }
+      
+      const newAddress = {
+        ...address,
+        id: Math.random().toString(36).substring(2, 9),
+      }
+      
+      let newAddresses = [...(this.user.addresses || [])]
+      
+      if (address.isDefault || newAddresses.length === 0) {
+        newAddresses = newAddresses.map(a => ({ ...a, isDefault: false }))
+        newAddress.isDefault = true
+      }
+      
+      newAddresses.push(newAddress as Address)
+      return this._saveAddresses(newAddresses)
+    },
+
+    async updateAddress(addressId: string, updates: Partial<Address>) {
+      if (!this.user || !this.token) return { success: false }
+      
+      let newAddresses = [...(this.user.addresses || [])]
+      
+      if (updates.isDefault) {
+        newAddresses = newAddresses.map(a => ({ ...a, isDefault: false }))
+      }
+      
+      const index = newAddresses.findIndex(a => a.id === addressId)
+      if (index !== -1) {
+        newAddresses[index] = { ...newAddresses[index], ...updates }
+        return this._saveAddresses(newAddresses)
+      }
+      
+      return { success: false }
+    },
+
+    async deleteAddress(addressId: string) {
+      if (!this.user || !this.token) return { success: false }
+      
+      const newAddresses = (this.user.addresses || []).filter(a => a.id !== addressId)
+      
+      // If we deleted the default, set the first remaining as default
+      if (newAddresses.length > 0 && !newAddresses.some(a => a.isDefault)) {
+        newAddresses[0].isDefault = true
+      }
+      
+      return this._saveAddresses(newAddresses)
+    },
+
+    async _saveAddresses(addresses: Address[]) {
+      try {
+        const response: any = await $fetch(`${this._getApiUrl()}/user`, {
+          method: 'PATCH',
+          headers: this._getHeaders(),
+          body: { addresses },
+        })
+
+        if (response.user) {
+          this.user = this._parseUser(response.user)
+          return { success: true }
+        }
+        return { success: false }
+      } catch (error) {
+        return { success: false }
+      }
     },
 
     // =============================================

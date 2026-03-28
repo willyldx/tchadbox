@@ -245,6 +245,8 @@ onMounted(async () => {
   await fetchOrders()
 })
 
+const { normalizeOrder: transformOrder } = useOrderNormalizer()
+
 async function fetchOrders() {
   if (!authStore.user) {
     isLoading.value = false
@@ -252,8 +254,9 @@ async function fetchOrders() {
   }
 
   try {
-    // TODO: Fetch user orders from Laravel Backend
-    orders.value = []
+    const response = await useBackendApi().userOrders()
+    const rawOrders = response?.data || []
+    orders.value = rawOrders.map(transformOrder)
   } catch (error) {
     console.error('Failed to fetch orders:', error)
   } finally {
