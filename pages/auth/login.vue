@@ -29,7 +29,8 @@
                   required
                   autofocus
                   placeholder="vous@exemple.com"
-                  class="input pl-12"
+                  style="padding-left: 3rem;"
+                  class="w-full px-4 py-3 bg-white border border-[var(--color-border)] rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all"
                 />
               </div>
             </div>
@@ -43,7 +44,7 @@
             <button
               type="submit"
               :disabled="!email || authStore.isLoading"
-              class="btn-gold w-full disabled:opacity-50"
+              class="w-full py-3 px-4 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl transition-colors disabled:opacity-50 flex items-center justify-center"
             >
               <span class="flex items-center justify-center gap-2">
                 <Loader2 v-if="authStore.isLoading" class="w-5 h-5 animate-spin" />
