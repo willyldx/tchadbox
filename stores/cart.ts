@@ -12,6 +12,37 @@ interface CartState {
   rates: Record<Exclude<CurrencyCode, 'EUR'>, number>
 }
 
+function getFormattedPrice(amount: number, currencyCode: CurrencyCode, rates: Record<string, number>): string {
+  if (currencyCode === 'XAF') {
+    const xafAmount = Math.round(amount * (rates.XAF || 655.957))
+    return new Intl.NumberFormat('fr-FR').format(xafAmount) + ' FCFA'
+  }
+  
+  if (currencyCode === 'EUR') {
+    return new Intl.NumberFormat('fr-FR', { 
+      style: 'currency', 
+      currency: 'EUR' 
+    }).format(amount)
+  }
+
+  // USD, GBP, CAD, CHF — convert from EUR
+  const rate = rates[currencyCode] ?? 1
+  const finalAmount = amount * rate
+
+  // Locale-aware formatting
+  const locales: Record<string, string> = {
+    USD: 'en-US',
+    GBP: 'en-GB',
+    CAD: 'en-CA',
+    CHF: 'fr-CH',
+  }
+
+  return new Intl.NumberFormat(locales[currencyCode] || 'fr-FR', { 
+    style: 'currency', 
+    currency: currencyCode 
+  }).format(finalAmount)
+}
+
 export const useCartStore = defineStore('cart', {
   state: (): CartState => ({
     items: [],
@@ -21,7 +52,7 @@ export const useCartStore = defineStore('cart', {
     currency: 'EUR',
     rates: {
       USD: 1.08,
-      XAF: 655.957,  // Taux fixe CFA (garanti par la Banque Centrale)
+      XAF: 655.957,
       GBP: 0.86,
       CAD: 1.48,
       CHF: 0.94,
@@ -29,57 +60,30 @@ export const useCartStore = defineStore('cart', {
   }),
 
   getters: {
-    isEmpty(): boolean {
-      return this.items.length === 0
-    },
-
-    itemCount(): number {
-      return this.items.reduce((total, item) => total + item.quantity, 0)
-    },
-
-    subtotal(): number {
-      return this.items.reduce((total, item) => total + item.price * item.quantity, 0)
-    },
-
+    isEmpty(): boolean { return this.items.length === 0 },
+    itemCount(): number { return this.items.reduce((total, item) => total + item.quantity, 0) },
+    subtotal(): number { return this.items.reduce((total, item) => total + item.price * item.quantity, 0) },
     shipping(): number {
       if (this.isEmpty) return 0
-      // Gratuit à partir de 150€
       return this.subtotal >= 150 ? 0 : 15
     },
+    total(): number { return this.subtotal + this.shipping },
+    freeShippingThreshold(): number { return 150 },
+    freeShippingProgress(): number { return Math.min(100, (this.subtotal / this.freeShippingThreshold) * 100) },
+    amountToFreeShipping(): number { return Math.max(0, this.freeShippingThreshold - this.subtotal) },
+    totalXAF(): number { return Math.round(this.total * this.rates.XAF) },
 
-    total(): number {
-      return this.subtotal + this.shipping
-    },
-
-    // Progress to free shipping (0 to 100)
-    freeShippingThreshold(): number {
-      return 150
-    },
-
-    freeShippingProgress(): number {
-      return Math.min(100, (this.subtotal / this.freeShippingThreshold) * 100)
-    },
-
-    amountToFreeShipping(): number {
-      return Math.max(0, this.freeShippingThreshold - this.subtotal)
-    },
-
-    // Multi-currency conversions
-    totalXAF(): number {
-      return Math.round(this.total * this.rates.XAF)
-    },
-
-    // Formatted strings for UI (Consolidated)
-    subtotalFormatted(): string { return (this as any).formatPrice(this.subtotal) },
+    // Formatted strings for UI
+    subtotalFormatted(): string { return getFormattedPrice(this.subtotal, this.currency, this.rates) },
     shippingFormatted(): string { 
-      return this.shipping === 0 ? 'Gratuit' : (this as any).formatPrice(this.shipping) 
+      return this.shipping === 0 ? 'Gratuit' : getFormattedPrice(this.shipping, this.currency, this.rates) 
     },
-    totalFormatted(): string { return (this as any).formatPrice(this.total) },
+    totalFormatted(): string { return getFormattedPrice(this.total, this.currency, this.rates) },
     totalFCFA(): string { 
       return new Intl.NumberFormat('fr-FR').format(this.totalXAF) + ' FCFA'
     },
 
-    // Aliases for compatibility with older components
+    // Aliases
     formattedSubtotal(): string { return this.subtotalFormatted },
     formattedShipping(): string { return this.shippingFormatted },
     formattedTotal(): string { return this.totalFormatted }
@@ -87,36 +91,7 @@ export const useCartStore = defineStore('cart', {
 
   actions: {
     formatPrice(amount: number): string {
-      const currencyCode = this.currency
-      
-      if (currencyCode === 'XAF') {
-        const xafAmount = Math.round(amount * this.rates.XAF)
-        return new Intl.NumberFormat('fr-FR').format(xafAmount) + ' FCFA'
-      }
-      
-      if (currencyCode === 'EUR') {
-        return new Intl.NumberFormat('fr-FR', { 
-          style: 'currency', 
-          currency: 'EUR' 
-        }).format(amount)
-      }
-
-      // USD, GBP, CAD, CHF — convert from EUR
-      const rate = this.rates[currencyCode] ?? 1
-      const finalAmount = amount * rate
-
-      // Locale-aware formatting
-      const locales: Record<string, string> = {
-        USD: 'en-US',
-        GBP: 'en-GB',
-        CAD: 'en-CA',
-        CHF: 'fr-CH',
-      }
-
-      return new Intl.NumberFormat(locales[currencyCode] || 'fr-FR', { 
-        style: 'currency', 
-        currency: currencyCode 
-      }).format(finalAmount)
+      return getFormattedPrice(amount, this.currency, this.rates)
     },
 
     setCurrency(currency: CurrencyCode) {
