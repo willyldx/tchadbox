@@ -91,12 +91,11 @@ export function useCurrency() {
       return
     }
 
-    // 2. Utilisateur connecté avec un pays ? (Clerk metadata)
+    // 2. Utilisateur connecté avec un pays sauvegardé ?
     try {
-      const clerkUser = window.Clerk?.user
-      const country = clerkUser?.unsafeMetadata?.country as string
-      if (country) {
-        setCurrencyFromCountry(country)
+      const savedCountry = localStorage.getItem(COUNTRY_STORAGE_KEY)
+      if (savedCountry) {
+        setCurrencyFromCountry(savedCountry)
         return
       }
     } catch { /* ignore */ }
