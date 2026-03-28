@@ -10,7 +10,6 @@
 </template>
 
 <script setup lang="ts">
-import { useAuth, useUser } from '@clerk/vue'
 import { useCartStore } from '~/stores/cart'
 import { useAuthStore } from '~/stores/auth'
 import { useFavoritesStore } from '~/stores/favorites'
@@ -18,25 +17,6 @@ import { useFavoritesStore } from '~/stores/favorites'
 const authStore = useAuthStore()
 const cartStore = useCartStore()
 const favoritesStore = useFavoritesStore()
-
-if (import.meta.client) {
-  // Clerk reactive refs
-  const { isLoaded: isAuthLoaded, isSignedIn } = useAuth()
-  const { isLoaded: isUserLoaded, user: clerkUser } = useUser()
-
-  // Watch Clerk auth state and sync to Pinia
-  watch(
-    [isAuthLoaded, isUserLoaded, isSignedIn, clerkUser],
-    ([authLoaded, userLoaded, signedIn, user]) => {
-      if (authLoaded && (!signedIn || userLoaded)) {
-        authStore.syncWithClerk(signedIn, user)
-        authStore.sessionChecked = true
-        authStore.isLoading = false
-      }
-    },
-    { immediate: true }
-  )
-}
 
 
 onMounted(async () => {
