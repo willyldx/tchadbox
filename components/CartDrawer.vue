@@ -90,19 +90,20 @@
               </div>
               <div class="flex-grow min-w-0">
                 <h4 class="font-medium text-[var(--color-text)] text-sm truncate">{{ item.title }}</h4>
-                <p class="text-xs text-[var(--color-text-muted)]">{{ item.category }}</p>
-                <p class="font-semibold text-[var(--color-primary)] text-sm mt-1">{{ formatPrice(item.price) }}</p>
+                <p v-if="item.variantTitle" class="text-xs text-amber-600 font-medium">{{ item.variantTitle }}</p>
+                <p v-else class="text-xs text-[var(--color-text-muted)]">{{ item.category }}</p>
+                <p class="font-semibold text-[var(--color-primary)] text-sm mt-1">{{ cartStore.formatPrice(item.price) }}</p>
               </div>
               <div class="flex flex-col items-end justify-between">
-                <button @click="cartStore.removeItem(item.productId)" class="p-1 text-gray-400 hover:text-red-500 transition-colors">
+                <button @click="cartStore.removeItem(item.id)" class="p-1 text-gray-400 hover:text-red-500 transition-colors">
                   <Trash2 class="w-4 h-4" />
                 </button>
                 <div class="flex items-center gap-1 bg-white rounded-lg border border-gray-200 p-0.5">
-                  <button @click="cartStore.decrementQuantity(item.productId)" class="w-7 h-7 rounded flex items-center justify-center hover:bg-gray-100">
+                  <button @click="cartStore.decrementQuantity(item.id)" class="w-7 h-7 rounded flex items-center justify-center hover:bg-gray-100">
                     <Minus class="w-3 h-3" />
                   </button>
                   <span class="w-6 text-center text-sm font-medium">{{ item.quantity }}</span>
-                  <button @click="cartStore.incrementQuantity(item.productId)" class="w-7 h-7 rounded flex items-center justify-center hover:bg-gray-100">
+                  <button @click="cartStore.incrementQuantity(item.id)" class="w-7 h-7 rounded flex items-center justify-center hover:bg-gray-100">
                     <Plus class="w-3 h-3" />
                   </button>
                 </div>

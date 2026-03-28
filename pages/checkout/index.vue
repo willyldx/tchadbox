@@ -402,6 +402,7 @@
                 </div>
                 <div class="flex-1 min-w-0">
                   <p class="text-sm font-medium text-[var(--color-text)] truncate">{{ item.title }}</p>
+                  <p v-if="item.variantTitle" class="text-xs text-amber-600 font-medium mb-1">{{ item.variantTitle }}</p>
                   <p class="text-xs text-[var(--color-text-muted)]">{{ formatPrice(item.price) }} × {{ item.quantity }}</p>
                 </div>
                 <p class="font-semibold text-[var(--color-text)]">{{ formatPrice(item.price * item.quantity) }}</p>
@@ -661,7 +662,8 @@ async function submitOrder() {
       payment_amount_fcfa: paymentAmountFcfa,
       items: cartStore.items.map((item) => ({
         product_id: item.productId,
-        title: item.title,
+        variant_id: item.variantId,
+        title: item.variantTitle ? `${item.title} (${item.variantTitle})` : item.title,
         quantity: item.quantity,
         unit_price: item.price,
         total: item.price * item.quantity,

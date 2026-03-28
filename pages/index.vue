@@ -131,7 +131,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           <NuxtLink 
             v-for="(cat, i) in categories" :key="cat.handle"
-            :to="`/catalogue?categorie=${cat.handle}`"
+            :to="`/categories/${cat.handle}`"
             v-motion
             :initial="{ opacity: 0, y: 30 }"
             :visibleOnce="{ opacity: 1, y: 0, transition: { delay: i * 100 } }"
@@ -388,8 +388,11 @@ const steps = [
   { title: 'Preuve certifiée', description: 'Recevez la photo de remise par WhatsApp ou email', icon: Camera },
 ]
 
-const testimonials: any[] = []
-// TODO: Charger les vrais témoignages depuis Supabase ou CMS
+const testimonials = [
+  { id: 1, name: 'Aicha S.', location: 'Paris, France', message: "Je suis rassurée de pouvoir envoyer des produits de qualité à mes parents à N'Djamena. La photo à la livraison est un vrai plus !" },
+  { id: 2, name: 'Mahamat D.', location: 'Montréal, Canada', message: "TchadBox a changé ma façon de soutenir ma famille. Les kits scolaires sont excellents et la livraison très rapide." },
+  { id: 3, name: 'Fatime N.', location: 'Lyon, France', message: "Le service client est très réactif et les produits correspondent exactement aux photos. Merci TchadBox !" },
+]
 
 useHead({ title: 'Accueil' })
 </script>

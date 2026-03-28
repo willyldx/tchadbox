@@ -70,11 +70,11 @@ export const useCartStore = defineStore('cart', {
     },
 
     // Formatted strings for UI (Consolidated)
-    subtotalFormatted(): string { return this.formatPrice(this.subtotal) },
+    subtotalFormatted(): string { return (this as any).formatPrice(this.subtotal) },
     shippingFormatted(): string { 
-      return this.shipping === 0 ? 'Gratuit' : this.formatPrice(this.shipping) 
+      return this.shipping === 0 ? 'Gratuit' : (this as any).formatPrice(this.shipping) 
     },
-    totalFormatted(): string { return this.formatPrice(this.total) },
+    totalFormatted(): string { return (this as any).formatPrice(this.total) },
     totalFCFA(): string { 
       return new Intl.NumberFormat('fr-FR').format(this.totalXAF) + ' FCFA'
     },
@@ -131,37 +131,38 @@ export const useCartStore = defineStore('cart', {
       this.isOpen = false
     },
 
-    addItem(product: Omit<CartItem, 'quantity'>, quantity: number = 1) {
-      const existingItem = this.items.find(item => item.productId === product.productId)
+    addItem(product: Omit<CartItem, 'quantity' | 'id'>, quantity: number = 1) {
+      const itemId = product.variantId ? `${product.productId}-${product.variantId}` : product.productId
+      const existingItem = this.items.find(item => item.id === itemId)
       if (existingItem) {
         existingItem.quantity += quantity
       } else {
-        this.items.push({ ...product, quantity })
+        this.items.push({ ...product, id: itemId, quantity })
       }
       this.saveToStorage()
       this.isOpen = true
     },
 
-    removeItem(productId: string) {
-      this.items = this.items.filter(item => item.productId !== productId)
+    removeItem(itemId: string) {
+      this.items = this.items.filter(item => item.id !== itemId)
       this.saveToStorage()
     },
 
-    incrementQuantity(productId: string) {
-      const item = this.items.find(item => item.productId === productId)
+    incrementQuantity(itemId: string) {
+      const item = this.items.find(item => item.id === itemId)
       if (item) {
         item.quantity++
         this.saveToStorage()
       }
     },
 
-    decrementQuantity(productId: string) {
-      const item = this.items.find(item => item.productId === productId)
+    decrementQuantity(itemId: string) {
+      const item = this.items.find(item => item.id === itemId)
       if (item && item.quantity > 1) {
         item.quantity--
         this.saveToStorage()
       } else {
-        this.removeItem(productId)
+        this.removeItem(itemId)
       }
     },
 
@@ -198,6 +199,11 @@ export const useCartStore = defineStore('cart', {
       } catch (e) {
         console.warn('Exchange rate fetch failed, using defaults')
       }
-    }
+    },
+
+    clearCart() {
+      this.items = []
+      this.saveToStorage()
+    },
   }
 })

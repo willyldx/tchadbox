@@ -401,8 +401,8 @@ async function handleChangePassword() {
   isChangingPassword.value = true
   
   try {
-    // TODO: Handle password change via Clerk API if not using their pre-built UI
-    throw new Error('Veuillez utiliser le portail de gestion de compte pour changer votre mot de passe.')
+    // TODO: Implement password change via Laravel API endpoint
+    throw new Error('La modification de mot de passe sera disponible dans une prochaine mise à jour.')
   } catch (e: any) {
     error.value = e.message
   } finally {

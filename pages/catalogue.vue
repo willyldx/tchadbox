@@ -36,9 +36,9 @@
                 <button @click="selectedCategory = ''" class="filter-btn w-full" :class="{ active: !selectedCategory }">
                   <Package class="w-5 h-5" />Toutes<span class="ml-auto text-sm opacity-50">{{ products.length }}</span>
                 </button>
-                <button v-for="cat in categories" :key="cat.handle" @click="selectedCategory = cat.handle" class="filter-btn w-full" :class="{ active: selectedCategory === cat.handle }">
+                <NuxtLink v-for="cat in categories" :key="cat.handle" :to="`/categories/${cat.handle}`" class="filter-btn w-full" :class="{ active: selectedCategory === cat.handle }">
                   <component :is="cat.icon" class="w-5 h-5" />{{ cat.name }}<span class="ml-auto text-sm opacity-50">{{ getCount(cat.handle) }}</span>
-                </button>
+                </NuxtLink>
               </div>
             </div>
             <div class="mb-8">

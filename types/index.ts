@@ -53,6 +53,8 @@ export interface Category {
 export interface CartItem {
   id: string
   productId: string
+  variantId?: string
+  variantTitle?: string
   title: string
   price: number
   quantity: number

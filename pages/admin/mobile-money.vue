@@ -133,7 +133,7 @@ import { RefreshCw as RefreshCwIcon, Smartphone } from 'lucide-vue-next'
 
 definePageMeta({
   layout: 'admin',
-  middleware: ['clerk'], // S'assure que l'utilisateur est admin
+  middleware: ['auth'],
 })
 
 useSeoMeta({

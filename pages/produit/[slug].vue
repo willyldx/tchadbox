@@ -106,12 +106,32 @@
 
           <!-- Price -->
           <div class="flex items-baseline gap-4">
-            <span class="text-4xl font-bold text-[var(--color-text)]">{{ formatPrice(product.price) }}</span>
-            <span v-if="product.compareAtPrice" class="text-xl text-[var(--color-text-muted)] line-through">
+            <span class="text-4xl font-bold text-[var(--color-text)]">{{ formatPrice(currentPrice) }}</span>
+            <span v-if="product.compareAtPrice && !selectedVariant" class="text-xl text-[var(--color-text-muted)] line-through">
               {{ formatPrice(product.compareAtPrice) }}
             </span>
           </div>
-          <p class="text-sm text-[var(--color-text-muted)]">≈ {{ formatFCFA(product.price) }}</p>
+          <p class="text-sm text-[var(--color-text-muted)]">≈ {{ formatFCFA(currentPrice) }}</p>
+
+          <!-- Variants Selector -->
+          <div v-if="product.variants && product.variants.length > 0" class="pt-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-medium text-[var(--color-text)]">Options disponibles</span>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button
+                v-for="variant in product.variants"
+                :key="variant.id"
+                @click="selectedVariant = variant"
+                class="px-4 py-2 rounded-xl border-2 text-sm font-medium transition-all"
+                :class="selectedVariant?.id === variant.id 
+                  ? 'border-amber-500 text-amber-600 bg-amber-50' 
+                  : 'border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-gray-300'"
+              >
+                {{ variant.title }}
+              </button>
+            </div>
+          </div>
 
           <!-- Description -->
           <div class="prose prose-stone max-w-none">
@@ -329,7 +349,7 @@ import {
   Star as StarIcon,
   X as XIcon,
 } from 'lucide-vue-next'
-import type { Product } from '~/types'
+import type { Product, ProductVariant } from '~/types'
 
 const route = useRoute()
 const cartStore = useCartStore()
@@ -337,6 +357,7 @@ const favoritesStore = useFavoritesStore()
 
 // State
 const product = ref<Product | null>(null)
+const selectedVariant = ref<ProductVariant | null>(null)
 const relatedProducts = ref<Product[]>([])
 const isLoading = ref(true)
 const isAddingToCart = ref(false)
@@ -355,6 +376,11 @@ const tabs = [
 // Computed
 const isFavorite = computed(() => {
   return product.value ? favoritesStore.isFavorite(product.value.id) : false
+})
+
+const currentPrice = computed(() => {
+  if (selectedVariant.value) return selectedVariant.value.price
+  return product.value?.price || 0
 })
 
 const discountPercent = computed(() => {
@@ -401,8 +427,18 @@ async function fetchProduct() {
       categoryHandle: p.category_handle || '',
       inStock: p.in_stock ?? true,
       stockQuantity: p.stock_quantity,
+      variants: p.variants ? p.variants.map((v: any) => ({
+        id: v.id.toString(),
+        title: v.title || v.name,
+        price: v.price || p.price,
+        inventory_quantity: v.inventory_quantity || 0
+      })) : [],
       createdAt: p.created_at,
       updatedAt: p.updated_at,
+    }
+
+    if (product.value.variants && product.value.variants.length > 0) {
+      selectedVariant.value = product.value.variants[0]
     }
     
     // Fetch related products from same category
@@ -460,10 +496,11 @@ async function addToCart() {
   isAddingToCart.value = true
   
   cartStore.addItem({
-    id: product.value.id,
     productId: product.value.id,
+    variantId: selectedVariant.value?.id,
+    variantTitle: selectedVariant.value?.title,
     title: product.value.title,
-    price: product.value.price,
+    price: currentPrice.value,
     thumbnail: product.value.thumbnail,
     category: product.value.category,
   }, quantity.value)

@@ -1,346 +1,299 @@
 <template>
-  <div class="min-h-screen relative flex items-center justify-center p-4 overflow-hidden">
-    <!-- Dynamic Background Image -->
-    <Transition name="fade">
-      <div 
-        v-if="currentBg" 
-        class="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-transform duration-[40000ms] ease-out scale-105"
-        :style="{ backgroundImage: `url(${currentBg})` }"
-      ></div>
-    </Transition>
-    <!-- Background Overlay for readability -->
-    <div class="absolute inset-0 z-0 bg-black/60 backdrop-blur-[4px]"></div>
-
-    <!-- Background decoration -->
-    <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-40 mix-blend-screen">
-      <div class="orb orb-amber w-80 h-80 -top-40 -right-40"></div>
-      <div class="orb orb-warm w-80 h-80 -bottom-40 -left-40"></div>
-    </div>
-
-    <div class="w-full max-w-md relative z-10">
+  <div class="min-h-screen flex items-center justify-center bg-[var(--color-bg)] p-4">
+    <div class="max-w-md w-full">
       <!-- Logo -->
-      <NuxtLink to="/" class="flex flex-col items-center justify-center gap-4 mb-8 group">
-        <div class="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center rounded-3xl backdrop-blur-md border border-white/20 shadow-2xl transition-all duration-500 transform group-hover:-translate-y-1">
-          <div class="absolute inset-0 bg-white/10 rounded-3xl"></div>
-          <img src="/logo.png" alt="TchadBox Logo" class="w-16 h-16 sm:w-20 sm:h-20 object-contain relative z-10" />
-        </div>
-        <div class="text-center">
-          <span class="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-amber-200 tracking-tight drop-shadow-sm">TchadBox</span>
-          <div class="h-1 w-8 bg-amber-400 rounded-full mx-auto mt-1.5 opacity-40 group-hover:w-12 transition-all duration-300"></div>
-        </div>
-      </NuxtLink>
-
-      <!-- Login Card -->
-      <div class="card-glass rounded-[2rem] shadow-2xl p-8 sm:p-10">
-        <div class="text-center mb-8">
-          <h1 class="text-2xl font-bold text-[var(--color-text)] mb-2">Bon retour !</h1>
-          <p class="text-[var(--color-text-muted)]">Connectez-vous à votre compte TchadBox</p>
-        </div>
-
-        <!-- Error Alert -->
-        <Transition
-          enter-active-class="transition-all duration-300"
-          enter-from-class="opacity-0 -translate-y-2"
-          enter-to-class="opacity-100 translate-y-0"
-          leave-active-class="transition-all duration-200"
-          leave-from-class="opacity-100"
-          leave-to-class="opacity-0"
-        >
-          <div v-if="authStore.error" class="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3">
-            <svg class="w-5 h-5 text-red-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <p class="text-sm text-red-600">{{ authStore.error }}</p>
+      <div class="text-center mb-8">
+        <NuxtLink to="/" class="inline-flex items-center gap-3 mb-6">
+          <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg">
+            <Package class="w-6 h-6 text-white" />
           </div>
-        </Transition>
-
-        <!-- Login Form -->
-        <form v-if="!showVerification" @submit.prevent="handleSubmit" class="space-y-5">
-          <!-- Email -->
-          <div>
-            <label for="email" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
-              Adresse email
-            </label>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <svg class="w-5 h-5 text-[var(--color-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <input
-                id="email"
-                v-model="form.email"
-                type="email"
-                required
-                autocomplete="email"
-                placeholder="votre@email.com"
-                class="input"
-                style="padding-left: 3rem;"
-                :disabled="authStore.isLoading"
-              />
-            </div>
-          </div>
-
-          <!-- Password -->
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <label for="password" class="block text-sm font-medium text-[var(--color-text-secondary)]">
-                Mot de passe
-              </label>
-              <NuxtLink 
-                to="/auth/mot-de-passe-oublie" 
-                class="text-sm text-[var(--color-accent-dark)] hover:text-[var(--color-accent)] font-medium transition-colors"
-              >
-                Oublié ?
-              </NuxtLink>
-            </div>
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <svg class="w-5 h-5 text-[var(--color-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-              </div>
-              <input
-                id="password"
-                v-model="form.password"
-                :type="showPassword ? 'text' : 'password'"
-                required
-                autocomplete="current-password"
-                placeholder="••••••••"
-                class="input"
-                style="padding-left: 3rem; padding-right: 3rem;"
-                :disabled="authStore.isLoading"
-              />
-              <button
-                type="button"
-                @click="showPassword = !showPassword"
-                class="absolute inset-y-0 right-0 pr-4 flex items-center"
-              >
-                <svg v-if="!showPassword" class="w-5 h-5 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                <svg v-else class="w-5 h-5 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <!-- Remember me -->
-          <div class="flex items-center">
-            <input
-              id="remember"
-              v-model="form.remember"
-              type="checkbox"
-              class="w-4 h-4 text-amber-500 border-gray-300 rounded focus:ring-amber-500/20 cursor-pointer"
-            />
-            <label for="remember" class="ml-2 text-sm text-[var(--color-text-secondary)] cursor-pointer">
-              Se souvenir de moi
-            </label>
-          </div>
-
-          <!-- Submit Button -->
-          <button
-            type="submit"
-            :disabled="authStore.isLoading"
-            class="w-full py-3.5 btn-gold !rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-          >
-            <svg v-if="authStore.isLoading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <span>{{ authStore.isLoading ? 'Connexion...' : 'Se connecter' }}</span>
-          </button>
-        </form>
-
-        <!-- Verification Form -->
-        <form v-else @submit.prevent="handleVerification" class="space-y-5">
-          <div>
-            <label for="code" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
-              Code de vérification (6 chiffres)
-            </label>
-            <input
-              id="code"
-              v-model="verificationCode"
-              type="text"
-              required
-              placeholder="123456"
-              maxlength="6"
-              class="input text-center text-2xl tracking-widest font-mono"
-              :disabled="authStore.isLoading"
-            />
-          </div>
-          <button
-            type="submit"
-            :disabled="authStore.isLoading || verificationCode.length < 6"
-            class="w-full py-3.5 btn-gold !rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-          >
-            <svg v-if="authStore.isLoading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <span>{{ authStore.isLoading ? 'Vérification...' : 'Valider la connexion' }}</span>
-          </button>
-        </form>
-
-        <!-- Divider -->
-        <div v-if="!showVerification" class="relative my-8">
-          <div class="absolute inset-0 flex items-center">
-            <div class="w-full border-t border-[var(--color-border)]"></div>
-          </div>
-          <div class="relative flex justify-center text-sm">
-            <span class="px-4 text-[var(--color-text-muted)] bg-transparent">ou continuer avec</span>
-          </div>
-        </div>
-
-        <!-- Social Login -->
-        <div v-if="!showVerification" class="grid grid-cols-2 gap-4">
-          <button
-            type="button"
-            @click="handleGoogleLogin"
-            class="flex items-center justify-center gap-2 py-3.5 px-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all duration-300 group/social"
-          >
-            <!-- Google Icon SVG remains same but cleaner container -->
-            <svg class="w-5 h-5" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-            </svg>
-            <span class="text-sm font-medium text-[var(--color-text-secondary)]">Google</span>
-          </button>
-          <button
-            type="button"
-            @click="handleAppleLogin"
-            class="flex items-center justify-center gap-2 py-3 px-4 border border-[var(--color-border)] rounded-xl hover:bg-gray-50 transition-colors"
-          >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-            </svg>
-            <span class="text-sm font-medium text-[var(--color-text-secondary)]">Apple</span>
-          </button>
-        </div>
-
-        <!-- Register Link -->
-        <p v-if="!showVerification" class="text-center text-[var(--color-text-secondary)] mt-8">
-          Pas encore de compte ?
-          <NuxtLink to="/auth/register" class="text-[var(--color-accent-dark)] hover:text-[var(--color-accent)] font-semibold transition-colors">
-            Créer un compte
-          </NuxtLink>
-        </p>
+          <span class="text-2xl font-bold text-[var(--color-text)]">TchadBox</span>
+        </NuxtLink>
       </div>
 
-      <!-- Security Note -->
-      <p class="text-center text-xs text-white/70 mt-6 font-medium tracking-wide">
-        <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-        </svg>
-        Connexion sécurisée via SSL
-      </p>
+      <!-- Card -->
+      <div class="bg-white rounded-2xl border border-[var(--color-border)] shadow-xl overflow-hidden">
+        <!-- Step 1: Email -->
+        <div v-if="step === 'email'" class="p-8">
+          <h1 class="text-2xl font-bold text-[var(--color-text)] mb-2">Connexion</h1>
+          <p class="text-[var(--color-text-muted)] mb-8">Entrez votre email pour recevoir un code de connexion sécurisé.</p>
+
+          <form @submit.prevent="handleSendOtp" class="space-y-5">
+            <div>
+              <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">Adresse email</label>
+              <div class="relative">
+                <Mail class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  v-model="email"
+                  type="email"
+                  required
+                  autofocus
+                  placeholder="vous@exemple.com"
+                  class="input pl-12"
+                />
+              </div>
+            </div>
+
+            <!-- Error -->
+            <div v-if="authStore.error" class="p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700 flex items-start gap-2">
+              <AlertCircle class="w-4 h-4 mt-0.5 shrink-0" />
+              {{ authStore.error }}
+            </div>
+
+            <button
+              type="submit"
+              :disabled="!email || authStore.isLoading"
+              class="btn-gold w-full disabled:opacity-50"
+            >
+              <span class="flex items-center justify-center gap-2">
+                <Loader2 v-if="authStore.isLoading" class="w-5 h-5 animate-spin" />
+                <ArrowRight v-else class="w-5 h-5" />
+                {{ authStore.isLoading ? 'Envoi en cours...' : 'Recevoir le code' }}
+              </span>
+            </button>
+          </form>
+
+          <div class="mt-6 pt-6 border-t border-[var(--color-border)] text-center">
+            <p class="text-sm text-[var(--color-text-muted)]">
+              Pas encore de compte ? <span class="text-amber-600 font-medium">Il sera créé automatiquement.</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 2: Name (for new users only) -->
+        <div v-else-if="step === 'name'" class="p-8">
+          <button @click="step = 'email'" class="flex items-center gap-1 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] mb-6 transition-colors">
+            <ArrowLeft class="w-4 h-4" />Retour
+          </button>
+
+          <h1 class="text-2xl font-bold text-[var(--color-text)] mb-2">Bienvenue !</h1>
+          <p class="text-[var(--color-text-muted)] mb-8">Dites-nous comment vous appeler.</p>
+
+          <form @submit.prevent="handleNameSubmit" class="space-y-5">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">Prénom</label>
+                <input v-model="firstName" type="text" required placeholder="Prénom" class="input" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">Nom</label>
+                <input v-model="lastName" type="text" required placeholder="Nom" class="input" />
+              </div>
+            </div>
+
+            <button type="submit" :disabled="!firstName || !lastName" class="btn-gold w-full disabled:opacity-50">
+              <span class="flex items-center justify-center gap-2">
+                <ArrowRight class="w-5 h-5" />Continuer
+              </span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Step 3: OTP Code -->
+        <div v-else-if="step === 'otp'" class="p-8">
+          <button @click="step = isNewUser ? 'name' : 'email'" class="flex items-center gap-1 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] mb-6 transition-colors">
+            <ArrowLeft class="w-4 h-4" />Retour
+          </button>
+
+          <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-amber-50 flex items-center justify-center">
+            <ShieldCheck class="w-8 h-8 text-amber-600" />
+          </div>
+
+          <h1 class="text-2xl font-bold text-[var(--color-text)] mb-2 text-center">Vérification</h1>
+          <p class="text-[var(--color-text-muted)] mb-8 text-center">
+            Un code à 6 chiffres a été envoyé à<br>
+            <strong class="text-[var(--color-text)]">{{ email }}</strong>
+          </p>
+
+          <form @submit.prevent="handleVerifyOtp" class="space-y-5">
+            <!-- OTP Input boxes -->
+            <div class="flex justify-center gap-3">
+              <input
+                v-for="(_, i) in 6"
+                :key="i"
+                :ref="el => otpRefs[i] = el as HTMLInputElement"
+                type="text"
+                inputmode="numeric"
+                maxlength="1"
+                class="w-12 h-14 text-center text-2xl font-bold rounded-xl border-2 border-gray-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
+                @input="onOtpInput(i, $event)"
+                @keydown="onOtpKeydown(i, $event)"
+                @paste="onOtpPaste($event)"
+              />
+            </div>
+
+            <!-- Error -->
+            <div v-if="authStore.error" class="p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700 flex items-start gap-2">
+              <AlertCircle class="w-4 h-4 mt-0.5 shrink-0" />
+              {{ authStore.error }}
+            </div>
+
+            <button
+              type="submit"
+              :disabled="otpCode.length < 6 || authStore.isLoading"
+              class="btn-gold w-full disabled:opacity-50"
+            >
+              <span class="flex items-center justify-center gap-2">
+                <Loader2 v-if="authStore.isLoading" class="w-5 h-5 animate-spin" />
+                <LogIn v-else class="w-5 h-5" />
+                {{ authStore.isLoading ? 'Vérification...' : 'Se connecter' }}
+              </span>
+            </button>
+
+            <!-- Resend -->
+            <div class="text-center">
+              <button
+                v-if="resendCooldown <= 0"
+                @click="handleSendOtp"
+                type="button"
+                class="text-sm text-amber-600 hover:text-amber-700 font-medium transition-colors"
+              >
+                Renvoyer le code
+              </button>
+              <p v-else class="text-sm text-[var(--color-text-muted)]">
+                Renvoyer dans {{ resendCooldown }}s
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="text-center mt-6">
+        <p class="text-xs text-[var(--color-text-muted)]">
+          En vous connectant, vous acceptez nos
+          <NuxtLink to="/conditions" class="text-amber-600 hover:underline">CGV</NuxtLink> et notre
+          <NuxtLink to="/confidentialite" class="text-amber-600 hover:underline">politique de confidentialité</NuxtLink>.
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 1.5s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-.card-glass {
-  background: rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(32px) saturate(200%);
-  -webkit-backdrop-filter: blur(32px) saturate(200%);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
-}
-</style>
-
 <script setup lang="ts">
-definePageMeta({
-  layout: false,
-  middleware: ['auth'],
-})
+import {
+  Package, Mail, ArrowRight, ArrowLeft, Loader2, AlertCircle,
+  ShieldCheck, LogIn
+} from 'lucide-vue-next'
+
+definePageMeta({ layout: false })
 
 useSeoMeta({
   title: 'Connexion - TchadBox',
-  description: 'Connectez-vous à votre compte TchadBox pour suivre vos commandes et gérer vos colis.',
+  description: 'Connectez-vous à votre espace TchadBox pour envoyer des colis à vos proches au Tchad.',
 })
 
 const authStore = useAuthStore()
+const router = useRouter()
 const route = useRoute()
 
-const form = reactive({
-  email: '',
-  password: '',
-  remember: false,
+// State
+const step = ref<'email' | 'name' | 'otp'>('email')
+const email = ref('')
+const firstName = ref('')
+const lastName = ref('')
+const isNewUser = ref(false)
+const otpDigits = ref<string[]>(['', '', '', '', '', ''])
+const otpRefs = ref<HTMLInputElement[]>([])
+const resendCooldown = ref(0)
+let cooldownInterval: ReturnType<typeof setInterval> | null = null
+
+const otpCode = computed(() => otpDigits.value.join(''))
+
+// Redirect if already logged in
+onMounted(async () => {
+  await authStore.checkSession()
+  if (authStore.isAuthenticated) {
+    const redirect = (route.query.redirect as string) || authStore.getRedirectPath()
+    navigateTo(redirect)
+  }
 })
 
-const showPassword = ref(false)
-const showVerification = ref(false)
-const verificationCode = ref('')
+// OTP input logic
+function onOtpInput(index: number, event: Event) {
+  const input = event.target as HTMLInputElement
+  const value = input.value.replace(/\D/g, '')
+  otpDigits.value[index] = value ? value[0] : ''
+  input.value = otpDigits.value[index]
 
-const currentBg = ref('/auth-bg.png')
+  if (value && index < 5) {
+    otpRefs.value[index + 1]?.focus()
+  }
+}
 
-// Automatically redirect if Clerk loads and finds an active session
-watch(() => authStore.isAuthenticated, (isAuth) => {
-   if (isAuth) {
-      const redirect = route.query.redirect as string || authStore.getRedirectPath()
-      navigateTo(redirect)
-   }
-}, { immediate: true })
+function onOtpKeydown(index: number, event: KeyboardEvent) {
+  if (event.key === 'Backspace' && !otpDigits.value[index] && index > 0) {
+    otpRefs.value[index - 1]?.focus()
+  }
+}
 
-// Clear errors when component mounts
-onMounted(() => {
+function onOtpPaste(event: ClipboardEvent) {
+  event.preventDefault()
+  const pasted = event.clipboardData?.getData('text')?.replace(/\D/g, '') || ''
+  for (let i = 0; i < 6; i++) {
+    otpDigits.value[i] = pasted[i] || ''
+    if (otpRefs.value[i]) otpRefs.value[i].value = otpDigits.value[i]
+  }
+  const focusIdx = Math.min(pasted.length, 5)
+  otpRefs.value[focusIdx]?.focus()
+}
+
+function startResendCooldown() {
+  resendCooldown.value = 60
+  if (cooldownInterval) clearInterval(cooldownInterval)
+  cooldownInterval = setInterval(() => {
+    resendCooldown.value--
+    if (resendCooldown.value <= 0 && cooldownInterval) clearInterval(cooldownInterval)
+  }, 1000)
+}
+
+// Handlers
+async function handleSendOtp() {
   authStore.clearError()
-  // Add a slight delay to trigger the slow zoom animation
-  setTimeout(() => {
-    const bgElement = document.querySelector('.bg-cover') as HTMLElement
-    if (bgElement) bgElement.style.transform = 'scale(1.15)'
-  }, 100)
+  const result = await authStore.sendOtp(email.value, firstName.value || undefined, lastName.value || undefined)
+
+  if (result.success) {
+    isNewUser.value = !!result.isNewUser
+    if (result.isNewUser && !firstName.value) {
+      step.value = 'name'
+    } else {
+      step.value = 'otp'
+      startResendCooldown()
+      nextTick(() => otpRefs.value[0]?.focus())
+    }
+  }
+}
+
+function handleNameSubmit() {
+  handleSendOtpAfterName()
+}
+
+async function handleSendOtpAfterName() {
+  authStore.clearError()
+  const result = await authStore.sendOtp(email.value, firstName.value, lastName.value)
+  if (result.success) {
+    step.value = 'otp'
+    startResendCooldown()
+    nextTick(() => otpRefs.value[0]?.focus())
+  }
+}
+
+async function handleVerifyOtp() {
+  authStore.clearError()
+  const result = await authStore.verifyOtp(email.value, otpCode.value, firstName.value, lastName.value)
+
+  if (result.success) {
+    const redirect = (route.query.redirect as string) || authStore.getRedirectPath()
+    navigateTo(redirect)
+  } else {
+    // Clear OTP fields on error
+    otpDigits.value = ['', '', '', '', '', '']
+    otpRefs.value.forEach(ref => { if (ref) ref.value = '' })
+    nextTick(() => otpRefs.value[0]?.focus())
+  }
+}
+
+onUnmounted(() => {
+  if (cooldownInterval) clearInterval(cooldownInterval)
 })
-
-async function handleSubmit() {
-  const result = await authStore.login(form.email, form.password)
-  
-  if (result.success) {
-    // Redirect to intended page or account
-    const redirect = route.query.redirect as string || '/compte'
-    navigateTo(redirect)
-  } else if (result.requiresAction) {
-    showVerification.value = true
-  }
-}
-
-async function handleVerification() {
-  const result = await authStore.verifySignIn(verificationCode.value)
-  if (result.success) {
-    const redirect = route.query.redirect as string || '/compte'
-    navigateTo(redirect)
-  }
-}
-
-async function handleGoogleLogin() {
-  if (!window.Clerk) return
-  
-  await window.Clerk.client.signIn.authenticateWithRedirect({
-    strategy: 'oauth_google',
-    redirectUrl: `${window.location.origin}/auth/callback`,
-    redirectUrlComplete: '/compte',
-  })
-}
-
-async function handleAppleLogin() {
-  if (!window.Clerk) return
-  
-  await window.Clerk.client.signIn.authenticateWithRedirect({
-    strategy: 'oauth_apple',
-    redirectUrl: `${window.location.origin}/auth/callback`,
-    redirectUrlComplete: '/compte',
-  })
-}
 </script>

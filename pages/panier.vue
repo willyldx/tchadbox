@@ -68,12 +68,15 @@
                   <div class="flex justify-between items-start gap-3">
                     <div class="min-w-0">
                       <h3 class="text-lg font-semibold text-[var(--color-text)] truncate">{{ item.title }}</h3>
-                      <span v-if="item.category" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 mt-1">
+                      <span v-if="item.variantTitle" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 mt-1">
+                        {{ item.variantTitle }}
+                      </span>
+                      <span v-else-if="item.category" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 mt-1">
                         {{ item.category }}
                       </span>
                     </div>
                     <button 
-                      @click="removeItem(item.productId)" 
+                      @click="removeItem(item.id)" 
                       class="p-2 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all flex-shrink-0"
                     >
                       <Trash2 class="w-5 h-5" />
@@ -84,7 +87,7 @@
                     <!-- Quantity controls -->
                     <div class="flex items-center gap-1 bg-gray-50 rounded-xl p-1">
                       <button 
-                        @click="cartStore.decrementQuantity(item.productId)" 
+                        @click="cartStore.decrementQuantity(item.id)" 
                         class="w-9 h-9 rounded-lg hover:bg-white flex items-center justify-center transition-all active:scale-95"
                         :class="item.quantity <= 1 ? 'text-gray-300' : 'text-[var(--color-text)]'"
                       >
@@ -92,7 +95,7 @@
                       </button>
                       <span class="w-10 text-center font-semibold text-[var(--color-text)]">{{ item.quantity }}</span>
                       <button 
-                        @click="cartStore.incrementQuantity(item.productId)" 
+                        @click="cartStore.incrementQuantity(item.id)" 
                         class="w-9 h-9 rounded-lg hover:bg-white flex items-center justify-center transition-all active:scale-95 text-[var(--color-text)]"
                       >
                         <Plus class="w-4 h-4" />
@@ -190,8 +193,8 @@ onMounted(() => cartStore.loadFromStorage())
 
 const formatPrice = (price: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price)
 
-const removeItem = (productId: string) => {
-  cartStore.removeItem(productId)
+const removeItem = (itemId: string) => {
+  cartStore.removeItem(itemId)
   toast.add({ title: 'Produit retiré', icon: 'i-heroicons-check-circle', color: 'amber', timeout: 2000 })
 }
 

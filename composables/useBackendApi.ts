@@ -1,5 +1,5 @@
 /**
- * Appels vers l'API backend (Nitro) avec le token Clerk.
+ * Appels vers l'API backend Laravel avec le token Sanctum.
  * Utiliser pour: /api/admin/*, /api/livreur/*, /api/checkout.
  */
 
@@ -18,26 +18,10 @@ export function useBackendApi() {
     path: string,
     options: { method?: any; body?: any; query?: Record<string, any> } = {}
   ): Promise<T> => {
-    // Wait briefly for Clerk to be ready if not yet loaded
+    // Get Sanctum token from localStorage
     let token = ''
-    try {
-      if (import.meta.client) {
-        // If Clerk isn't loaded yet, wait up to 3 seconds for it
-        if (!window.Clerk?.session) {
-          const maxWait = 3000
-          const interval = 100
-          let waited = 0
-          while (!window.Clerk?.loaded && waited < maxWait) {
-            await new Promise(resolve => setTimeout(resolve, interval))
-            waited += interval
-          }
-        }
-        if (window.Clerk?.session) {
-          token = await window.Clerk.session.getToken() || ''
-        }
-      }
-    } catch (e) {
-      console.error('Clerk token fetch failed in useBackendApi', e)
+    if (import.meta.client) {
+      token = localStorage.getItem('tchadbox_auth_token') || ''
     }
 
     const baseUrl = getBaseUrl()
