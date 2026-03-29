@@ -70,34 +70,40 @@
               class="hidden md:flex relative p-2.5 rounded-xl hover:bg-gray-100 transition-colors group"
             >
               <Heart class="w-5 h-5 text-gray-600 group-hover:text-red-500 transition-colors" />
-              <span 
-                v-if="favoritesStore.count > 0"
-                class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center"
-              >
-                {{ favoritesStore.count }}
-              </span>
+              <ClientOnly>
+                <span 
+                  v-if="favoritesStore.count > 0"
+                  class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center"
+                >
+                  {{ favoritesStore.count }}
+                </span>
+              </ClientOnly>
             </NuxtLink>
 
             <!-- User Menu -->
             <div class="hidden md:block relative" ref="userMenuRef">
-              <button
-                v-if="authStore.isAuthenticated"
-                @click="isUserMenuOpen = !isUserMenuOpen"
-                class="flex items-center gap-2 p-2 rounded-xl hover:bg-gray-100 transition-colors"
-              >
-                <div class="w-8 h-8 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center text-white text-sm font-bold">
-                  {{ authStore.initials }}
-                </div>
-                <ChevronDown class="w-4 h-4 text-gray-500" :class="{ 'rotate-180': isUserMenuOpen }" />
-              </button>
-              <NuxtLink
-                v-else
-                to="/auth/login"
-                class="flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-gray-100 transition-colors text-gray-700"
-              >
-                <User class="w-5 h-5" />
-                <span class="text-sm font-medium">Connexion</span>
-              </NuxtLink>
+              <ClientOnly>
+                <template v-if="authStore.isAuthenticated">
+                  <button
+                    @click="isUserMenuOpen = !isUserMenuOpen"
+                    class="flex items-center gap-2 p-2 rounded-xl hover:bg-gray-100 transition-colors"
+                  >
+                    <div class="w-8 h-8 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center text-white text-sm font-bold">
+                      {{ authStore.initials }}
+                    </div>
+                    <ChevronDown class="w-4 h-4 text-gray-500" :class="{ 'rotate-180': isUserMenuOpen }" />
+                  </button>
+                </template>
+                <template v-else>
+                  <NuxtLink
+                    to="/auth/login"
+                    class="flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-gray-100 transition-colors text-gray-700"
+                  >
+                    <User class="w-5 h-5" />
+                    <span class="text-sm font-medium">Connexion</span>
+                  </NuxtLink>
+                </template>
+              </ClientOnly>
 
               <!-- User Dropdown -->
               <Transition
@@ -162,7 +168,9 @@
             </div>
 
             <!-- Currency Selector -->
-            <CurrencySelector />
+            <ClientOnly>
+              <CurrencySelector />
+            </ClientOnly>
 
             <!-- Cart -->
             <button 
@@ -170,12 +178,14 @@
               class="relative p-2.5 rounded-xl hover:bg-amber-50 transition-colors group"
             >
               <ShoppingBag class="w-5 h-5 text-gray-600 group-hover:text-[var(--color-accent-dark)] transition-colors" />
-              <span 
-                v-if="cartStore.itemCount > 0"
-                class="absolute -top-1 -right-1 w-5 h-5 bg-[var(--color-accent)] text-white text-xs font-bold rounded-full flex items-center justify-center animate-scale-in"
-              >
-                {{ cartStore.itemCount }}
-              </span>
+              <ClientOnly>
+                <span 
+                  v-if="cartStore.itemCount > 0"
+                  class="absolute -top-1 -right-1 w-5 h-5 bg-[var(--color-accent)] text-white text-xs font-bold rounded-full flex items-center justify-center animate-scale-in"
+                >
+                  {{ cartStore.itemCount }}
+                </span>
+              </ClientOnly>
             </button>
 
             <!-- Mobile Menu -->

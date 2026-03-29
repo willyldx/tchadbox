@@ -59,7 +59,7 @@ export function useCurrency() {
   /** Changer de devise */
   function setCurrency(code: CurrencyCode) {
     cartStore.setCurrency(code)
-    if (import.meta.client) {
+    if (process.client) {
       localStorage.setItem(STORAGE_KEY, code)
     }
   }
@@ -69,20 +69,20 @@ export function useCurrency() {
     const upper = countryCode.toUpperCase()
     const currency = COUNTRY_TO_CURRENCY[upper] || 'EUR'
     setCurrency(currency)
-    if (import.meta.client) {
+    if (process.client) {
       localStorage.setItem(COUNTRY_STORAGE_KEY, upper)
     }
   }
 
   /** Récupérer le pays de l'utilisateur */
   function getUserCountry(): string | null {
-    if (!import.meta.client) return null
+    if (!process.client) return null
     return localStorage.getItem(COUNTRY_STORAGE_KEY)
   }
 
   /** Auto-détection par IP (appelé 1 seule fois, pour les invités) */
   async function autoDetect() {
-    if (!import.meta.client) return
+    if (!process.client) return
 
     // 1. Déjà une devise sauvegardée ? On la reprend
     const saved = localStorage.getItem(STORAGE_KEY)
