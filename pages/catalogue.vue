@@ -1,25 +1,32 @@
 <template>
   <div>
     <!-- Hero -->
-    <section class="relative text-white py-20 overflow-hidden">
+    <section class="relative text-white py-24 sm:py-32 overflow-hidden flex items-end">
       <NuxtImg 
         src="/hero-catalogue.png" 
         alt="Catalogue TchadBox" 
-        class="absolute inset-0 w-full h-full object-cover" 
+        class="absolute inset-0 w-full h-full object-cover transform scale-[1.02]" 
         loading="eager"
         quality="80"
         format="webp"
         sizes="100vw"
       />
-      <div class="absolute inset-0 bg-[var(--color-primary)]/80" />
-      <div class="container-main relative z-10">
-        <div class="flex items-center gap-2 text-white/60 text-sm mb-4">
-          <NuxtLink to="/" class="hover:text-white transition-colors">Accueil</NuxtLink>
-          <ChevronRight class="w-4 h-4" />
-          <span class="text-white">Catalogue</span>
+      <!-- Cinematic Gradient Overlay -->
+      <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-primary)] via-[var(--color-primary)]/70 to-black/20" />
+      
+      <div class="container-main relative z-10 w-full">
+        <div class="max-w-3xl">
+          <div class="flex items-center gap-2 text-white/70 text-sm mb-6 uppercase tracking-widest font-bold">
+            <NuxtLink to="/" class="hover:text-[var(--color-accent)] transition-colors">Accueil</NuxtLink>
+            <ChevronRight class="w-4 h-4" />
+            <span class="text-[var(--color-accent-light)]">Catalogue Complet</span>
+          </div>
+          <h1 class="heading-hero text-white mb-4">Notre Catalogue</h1>
+          <p class="text-white/80 text-lg sm:text-xl font-medium leading-relaxed">
+            Parcourez notre sélection exclusive de biens essentiels.
+            <strong class="text-white">Qualité garantie</strong> et <strong class="text-[var(--color-accent)]">Livraison express</strong> à N'Djamena.
+          </p>
         </div>
-        <h1 class="heading-section text-white">Notre Catalogue</h1>
-        <p class="text-white/60 mt-2">{{ filteredProducts.length }} produit{{ filteredProducts.length > 1 ? 's' : '' }} {{ hasFilters ? 'trouvé' + (filteredProducts.length > 1 ? 's' : '') : 'disponible' + (filteredProducts.length > 1 ? 's' : '') }}</p>
       </div>
     </section>
 
@@ -27,44 +34,57 @@
       <div class="flex flex-col lg:flex-row gap-8">
         <!-- Filters -->
         <aside class="lg:w-72 flex-shrink-0">
-          <div class="card p-6 sticky top-28">
+          <div class="bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 ring-1 ring-slate-900/5 sticky top-28">
             <div class="mb-8">
-              <h3 class="font-semibold text-[var(--color-text)] mb-4 flex items-center gap-2">
-                <LayoutGrid class="w-5 h-5 text-[var(--color-accent-dark)]" />Catégories
+              <h3 class="font-bold text-lg text-[var(--color-primary)] mb-5 flex items-center gap-2">
+                <LayoutGrid class="w-5 h-5 text-[var(--color-accent)]" /> Catégories
               </h3>
-              <div class="space-y-2">
+              <div class="space-y-1.5 border-b border-gray-100 pb-8">
                 <button @click="selectedCategory = ''" class="filter-btn w-full" :class="{ active: !selectedCategory }">
-                  <Package class="w-5 h-5" />Toutes<span class="ml-auto text-sm opacity-50">{{ products.length }}</span>
+                  <Package class="w-5 h-5" />Toutes
+                  <span class="ml-auto text-xs font-bold py-1 px-2 rounded-full" :class="!selectedCategory ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-500'">{{ products.length }}</span>
                 </button>
                 <NuxtLink v-for="cat in categories" :key="cat.handle" :to="`/categories/${cat.handle}`" class="filter-btn w-full" :class="{ active: selectedCategory === cat.handle }">
-                  <component :is="cat.icon" class="w-5 h-5" />{{ cat.name }}<span class="ml-auto text-sm opacity-50">{{ getCount(cat.handle) }}</span>
+                  <component :is="cat.icon" class="w-5 h-5" />{{ cat.name }}
+                  <span class="ml-auto text-xs font-bold py-1 px-2 rounded-full" :class="selectedCategory === cat.handle ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-500'">{{ getCount(cat.handle) }}</span>
                 </NuxtLink>
               </div>
             </div>
+            
             <div class="mb-8">
-              <h3 class="font-semibold text-[var(--color-text)] mb-4 flex items-center gap-2">
-                <Euro class="w-5 h-5 text-[var(--color-accent-dark)]" />Prix
+              <h3 class="font-bold text-lg text-[var(--color-primary)] mb-5 flex items-center gap-2">
+                <Euro class="w-5 h-5 text-[var(--color-accent)]" /> Budget
               </h3>
-              <div class="space-y-2">
-                <label v-for="r in priceRanges" :key="r.value" class="flex items-center gap-3 py-2 cursor-pointer text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors">
+              <div class="space-y-2.5">
+                <label v-for="r in priceRanges" :key="r.value" class="flex items-center gap-3 py-1 cursor-pointer group">
                   <input type="radio" v-model="selectedPrice" :value="r.value" class="sr-only" />
-                  <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center" :class="selectedPrice === r.value ? 'border-[var(--color-accent)] bg-[var(--color-accent)]' : 'border-gray-300'">
-                    <span v-if="selectedPrice === r.value" class="w-1.5 h-1.5 rounded-full bg-white" />
+                  <span class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors" :class="selectedPrice === r.value ? 'border-[var(--color-accent)] bg-[var(--color-accent)]' : 'border-gray-300 group-hover:border-[var(--color-accent)]/50'">
+                    <span v-if="selectedPrice === r.value" class="w-2 h-2 rounded-full bg-white shadow-sm" />
                   </span>
-                  {{ r.label }}
+                  <span class="text-sm font-medium transition-colors" :class="selectedPrice === r.value ? 'text-[var(--color-primary)]' : 'text-gray-500 group-hover:text-gray-800'">
+                    {{ r.label }}
+                  </span>
                 </label>
               </div>
             </div>
-            <button v-if="hasFilters" @click="resetFilters" class="btn-ghost w-full"><RotateCcw class="w-4 h-4" />Réinitialiser</button>
+            
+            <button v-if="hasFilters" @click="resetFilters" class="w-full py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-sm font-bold text-gray-500 bg-gray-50 hover:bg-gray-100 hover:text-gray-700 transition-all border border-gray-200">
+              <RotateCcw class="w-4 h-4" /> Réinitialiser les filtres
+            </button>
           </div>
         </aside>
 
         <!-- Products -->
         <div class="flex-grow">
-          <div class="card p-4 mb-6 flex gap-4 items-center">
-            <div class="relative flex-grow">
-              <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
-              <input v-model="searchQuery" type="text" placeholder="Rechercher un produit..." class="input w-full" style="padding-left: 3rem;" />
+          <!-- Main Search Bar -->
+          <div class="bg-white rounded-2xl p-2 sm:p-3 mb-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 flex gap-4 items-center ring-1 ring-slate-900/5 transition-all focus-within:ring-2 focus-within:ring-[var(--color-accent)] focus-within:shadow-md group">
+            <div class="relative flex-grow flex items-center">
+              <Search class="absolute left-4 w-5 h-5 text-gray-400 pointer-events-none group-focus-within:text-[var(--color-accent)] transition-colors" />
+              <input v-model="searchQuery" type="text" placeholder="Rechercher un produit (ex: Riz, Sucre)..." class="w-full bg-transparent border-none py-3 pl-12 pr-4 text-gray-900 font-medium placeholder-gray-400 focus:outline-none focus:ring-0 text-base sm:text-lg" />
+            </div>
+            <!-- Quick badge -->
+            <div class="hidden sm:flex px-4 py-2 bg-gray-50 rounded-xl text-sm text-[var(--color-primary)] font-bold border border-gray-100">
+              {{ filteredProducts.length }} RÉSULTATS
             </div>
           </div>
 
@@ -309,7 +329,7 @@ useHead({ title: 'Catalogue' })
 </script>
 
 <style scoped>
-.filter-btn { @apply flex items-center gap-3 px-4 py-3 rounded-xl text-[var(--color-text-secondary)] transition-all duration-200; }
-.filter-btn:hover { @apply bg-amber-50; }
-.filter-btn.active { @apply bg-amber-500/10 text-amber-700 font-medium; }
+.filter-btn { @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 font-medium transition-all duration-200 border border-transparent; }
+.filter-btn:hover { @apply bg-gray-50 border-gray-100 text-gray-900; }
+.filter-btn.active { @apply bg-amber-50 border-amber-200 text-amber-800 font-bold shadow-sm; }
 </style>

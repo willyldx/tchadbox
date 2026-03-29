@@ -3,89 +3,78 @@
     v-motion
     :initial="{ opacity: 0, y: 30 }"
     :visibleOnce="{ opacity: 1, y: 0, transition: { delay: delay, duration: 500 } }"
-    class="card-product group relative flex flex-col h-full bg-white border border-gray-200 rounded-lg transition-all hover:shadow-xl hover:border-[var(--color-accent)]/30 overflow-hidden"
+    class="card-product group relative flex flex-col h-full bg-white rounded-2xl transition-all duration-300 hover:shadow-[0_20px_40px_-15px_rgba(245,158,11,0.15)] hover:-translate-y-1 overflow-hidden ring-1 ring-slate-900/5"
   >
     <!-- Image Section -->
-    <NuxtLink :to="`/produit/${product.handle || product.id}`" class="block relative aspect-square overflow-hidden bg-gray-50">
+    <NuxtLink :to="`/produit/${product.handle || product.id}`" class="block relative aspect-[4/3] sm:aspect-square overflow-hidden bg-gray-50/50">
       <img 
         v-if="product.thumbnail || product.images?.[0]"
         :src="product.thumbnail || product.images[0]"
         :alt="product.title"
-        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 mix-blend-multiply"
       />
       <div v-else class="w-full h-full flex items-center justify-center">
         <component :is="getCategoryIcon" class="w-16 h-16 text-gray-200" />
       </div>
 
       <!-- Quick Status Badges -->
-      <div class="absolute top-2 left-2 flex flex-col gap-1.5">
+      <div class="absolute top-3 left-3 flex flex-col gap-1.5">
         <span 
           v-if="product.category"
-          class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-white/90 backdrop-blur shadow-sm border border-gray-100"
+          class="px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest rounded-lg bg-white/90 backdrop-blur-md shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-white/20"
           :class="getCategoryTextClass"
         >
           {{ categoryName }}
         </span>
-        <span v-if="product.isNew" class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-[var(--color-accent)] text-white shadow-sm">
-          Nouveau
-        </span>
       </div>
 
       <!-- Quick Action: Wishlist -->
-      <button class="absolute top-2 right-2 p-2 rounded-full bg-white/80 backdrop-blur text-gray-400 hover:text-red-500 transition-colors shadow-sm opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+      <button class="absolute top-3 right-3 p-2 rounded-full bg-white/90 backdrop-blur-md text-gray-400 hover:text-red-500 hover:scale-110 shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-white/20 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
         <Heart class="w-4 h-4" />
       </button>
     </NuxtLink>
 
     <!-- Content Section -->
-    <div class="p-4 flex flex-col flex-grow">
+    <div class="p-5 flex flex-col flex-grow bg-white">
       <!-- Title & Subtitle -->
-      <div class="mb-2">
+      <div class="mb-3">
         <NuxtLink :to="`/produit/${product.handle || product.id}`">
-          <h3 class="font-medium text-gray-900 text-sm sm:text-base line-clamp-2 leading-tight group-hover:text-[var(--color-accent-dark)] transition-colors min-h-[2.5rem]">
+          <h3 class="font-bold text-gray-900 text-sm sm:text-base line-clamp-2 leading-snug group-hover:text-[var(--color-accent)] transition-colors min-h-[2.5rem]">
             {{ product.title }}
           </h3>
         </NuxtLink>
-        <p v-if="product.subtitle" class="text-xs text-gray-500 mt-1 line-clamp-1">
+        <p v-if="product.subtitle" class="text-xs text-gray-400 mt-1 line-clamp-1 font-medium">
           {{ product.subtitle }}
         </p>
       </div>
 
       <!-- Rating (Static for trust) -->
-      <div class="flex items-center gap-1 mb-3">
+      <div class="flex items-center gap-1 mb-4 opacity-80">
         <div class="flex">
           <Star v-for="i in 5" :key="i" class="w-3 h-3 fill-amber-400 text-amber-400" />
         </div>
-        <span class="text-[10px] text-gray-400">(4.8)</span>
+        <span class="text-[10px] text-gray-400 font-bold ml-1">4.9/5</span>
       </div>
 
       <!-- Price & Stock -->
-      <div class="mt-auto pt-3 border-t border-gray-50">
-        <div class="flex items-end justify-between gap-2">
-          <div class="flex flex-col">
-            <span class="text-lg sm:text-xl font-bold text-gray-900 leading-none">
-              {{ formatPrice(product.price) }}
-            </span>
-            <span class="text-[10px] text-gray-500 font-medium mt-1">
-              ≈ {{ priceFCFA }} FCFA
-            </span>
-          </div>
-
-          <!-- Add to Cart: Minimalist Retail style -->
-          <button 
-            @click="addToCart"
-            class="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-light)] transition-all active:scale-95 shadow-sm"
-            title="Ajouter au panier"
-          >
-            <ShoppingBag class="w-4 h-4 sm:w-5 h-5" />
-          </button>
+      <div class="mt-auto flex items-end justify-between gap-2">
+        <div class="flex flex-col">
+          <span class="text-xl sm:text-2xl font-extrabold text-[var(--color-primary)] tracking-tight leading-none group-hover:text-amber-600 transition-colors">
+            {{ formatPrice(product.price) }}
+          </span>
+          <span class="text-[11px] text-gray-400 font-bold mt-1.5 uppercase tracking-wide">
+            ≈ {{ priceFCFA }} FCFA
+          </span>
         </div>
 
-        <!-- Stock Indicator -->
-        <div class="mt-3 flex items-center gap-1.5">
-          <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span class="text-[10px] font-medium text-emerald-600">En stock — Livraison 72h</span>
-        </div>
+        <!-- Add to Cart: Minimalist Retail style -->
+        <button 
+          @click="addToCart"
+          class="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gray-50 text-[var(--color-primary)] hover:bg-[var(--color-accent)] hover:text-white transition-all duration-300 active:scale-95 group/btn"
+          title="Ajouter au panier"
+        >
+          <ShoppingBag class="w-5 h-5 group-hover/btn:scale-110 transition-transform" />
+        </button>
       </div>
     </div>
   </article>
