@@ -9,18 +9,18 @@
 
 :root {
   /* Backgrounds — clean & professional retail */
-  --color-bg: #F2F4F8;
+  --color-bg: #FAFAFA;
   --color-bg-warm: #FFFFFF;
   --color-bg-card: #FFFFFF;
   --color-bg-elevated: #FFFFFF;
-  --color-bg-dark: #232F3E;
+  --color-bg-dark: #0B1120;
 
-  /* Primary — Amazon Navy */
-  --color-primary: #232F3E;
-  --color-primary-light: #37475A;
-  --color-primary-dark: #131A22;
+  /* Primary — Deep Midnight Navy (Trust) */
+  --color-primary: #0F172A;
+  --color-primary-light: #1E293B;
+  --color-primary-dark: #020617;
 
-  /* Accent — Elegant Amber Gold (Softer, less 'neon') */
+  /* Accent — Warm African Gold Saffron */
   --color-accent: #F59E0B;
   --color-accent-light: #FBBF24;
   --color-accent-dark: #D97706;

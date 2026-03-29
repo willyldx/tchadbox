@@ -14,15 +14,15 @@
           leave-from-class="opacity-100"
           leave-to-class="opacity-0"
         >
-          <div v-show="currentSlide === i" class="absolute inset-0 w-full h-full">
+          <div v-show="currentSlide === i" class="absolute inset-0 w-full h-full bg-white">
             <img 
               :src="slide.image" 
               :alt="slide.title"
-              class="w-full h-full object-cover transform scale-105"
+              class="w-full h-full object-cover transform scale-105 opacity-[0.85]"
               :class="{ 'animate-slow-zoom': currentSlide === i }"
             />
-            <!-- Gradient Overlay for pure lux contrast -->
-            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[var(--color-bg)]"></div>
+            <!-- Ultra-luminous bright gradient overlay -->
+            <div class="absolute inset-0 bg-gradient-to-b from-white/70 via-white/50 to-[var(--color-bg)]"></div>
           </div>
         </Transition>
       </div>
@@ -36,9 +36,9 @@
           class="max-w-4xl mx-auto flex flex-col items-center"
         >
           <!-- Premium Pill -->
-          <div class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 mb-8 shadow-2xl">
-            <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            <span class="text-sm font-medium tracking-wide text-white/90 uppercase letter-spacing-1">L'Excellence au Tchad</span>
+          <div class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/40 backdrop-blur-xl border border-white/40 mb-8 shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+            <span class="text-sm font-bold tracking-wide text-[var(--color-primary)] uppercase letter-spacing-1">L'Excellence au Tchad</span>
           </div>
 
           <!-- Title -->
@@ -52,21 +52,21 @@
               leave-to-class="opacity-0 -translate-y-8 blur-sm"
             >
               <div v-for="(slide, i) in heroSlides" :key="'text-'+i" v-show="currentSlide === i" class="absolute w-full text-center">
-                <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-tight tracking-tight drop-shadow-2xl" v-html="slide.title"></h1>
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-[var(--color-primary)] leading-tight tracking-tight drop-shadow-sm" v-html="slide.title"></h1>
               </div>
             </TransitionGroup>
           </div>
 
           <!-- Subtitle -->
-          <p class="text-lg md:text-2xl text-white/80 max-w-2xl mt-6 mb-12 font-light hidden md:block" style="text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+          <p class="text-lg md:text-2xl text-[var(--color-text-secondary)] max-w-2xl mt-6 mb-12 font-medium hidden md:block">
             Envoyez des produits de qualité à votre famille, partout au Tchad. Livraison premium certifiée par photo.
           </p>
 
           <!-- Glowing CTA -->
           <div class="flex flex-col sm:flex-row gap-5">
-            <NuxtLink to="/catalogue" class="relative group overflow-hidden rounded-full p-px">
-              <span class="absolute inset-0 bg-gradient-to-r from-[var(--color-accent)] via-yellow-300 to-[var(--color-accent)] opacity-70 group-hover:opacity-100 animate-gradient-xy transition-opacity duration-300"></span>
-              <div class="relative flex items-center justify-center gap-2 px-8 py-4 bg-black/40 backdrop-blur-xl rounded-full text-white font-semibold text-lg transition-transform duration-300 group-hover:scale-[0.98]">
+            <NuxtLink to="/catalogue" class="relative group overflow-hidden rounded-full p-px shadow-[0_10px_40px_rgba(245,158,11,0.3)]">
+              <span class="absolute inset-0 bg-gradient-to-r from-[var(--color-accent)] via-yellow-400 to-[var(--color-accent)] animate-gradient-xy"></span>
+              <div class="relative flex items-center justify-center gap-2 px-8 py-4 bg-white/90 backdrop-blur-xl rounded-full text-[var(--color-primary)] font-bold text-lg transition-transform duration-300 group-hover:scale-[0.98]">
                 Explorer le Catalogue <ArrowRight class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </div>
             </NuxtLink>
@@ -78,12 +78,12 @@
           <button 
             v-for="(slide, i) in heroSlides" :key="'dot-'+i"
             @click="goToSlide(i)"
-            class="relative h-1.5 rounded-full overflow-hidden transition-all duration-500"
-            :class="currentSlide === i ? 'w-16 bg-white/40' : 'w-6 bg-white/10 hover:bg-white/30'"
+            class="relative h-1.5 rounded-full overflow-hidden transition-all duration-500 shadow-sm"
+            :class="currentSlide === i ? 'w-16 bg-[var(--color-primary)]/40' : 'w-6 bg-[var(--color-primary)]/10 hover:bg-[var(--color-primary)]/30'"
           >
             <div 
               v-if="currentSlide === i"
-              class="absolute inset-0 bg-white rounded-full"
+              class="absolute inset-0 bg-[var(--color-primary)] rounded-full"
               style="animation: progressFill 6s linear forwards; transform-origin: left;"
             />
           </button>
