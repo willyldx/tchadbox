@@ -1,13 +1,10 @@
 <template>
   <div class="min-h-screen flex items-center justify-center relative overflow-hidden bg-[var(--color-primary)]">
     <!-- Cinematic Full-screen Photo Background -->
-    <div 
-      class="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-transform duration-[10s] hover:scale-105"
-      style="background-image: url('/hero-bg.png');"
-    ></div>
+    <div class="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-transform duration-[10s] hover:scale-105" style="background-image: url('/auth-bg.png');"></div>
     
-    <!-- Dark Luxury Overlay to ensure extremely legible texts on the glass card -->
-    <div class="absolute inset-0 bg-gradient-to-b from-[var(--color-primary)]/80 via-[var(--color-primary)]/60 to-[var(--color-primary)]/90 backdrop-blur-[2px]"></div>
+    <!-- Luxury Overlay (Very subtle) to keep the image extremely visible -->
+    <div class="absolute inset-0 bg-black/30 backdrop-blur-[1px]"></div>
 
     <!-- Centered Glassmorphism Card -->
     <div class="w-full max-w-md relative z-10 px-4 sm:px-0">
@@ -17,7 +14,7 @@
         <ArrowLeft class="w-4 h-4" /> Retour à l'accueil
       </NuxtLink>
 
-      <div class="bg-white/95 backdrop-blur-2xl rounded-[2rem] border border-white/50 shadow-[0_20px_80px_-15px_rgba(0,0,0,0.5)] overflow-hidden">
+      <div class="bg-white/60 backdrop-blur-[40px] rounded-[2rem] border border-white/60 shadow-[0_20px_80px_-15px_rgba(0,0,0,0.5)] overflow-hidden">
         
         <!-- Logo -->
         <div class="pt-10 pb-2 flex justify-center">
