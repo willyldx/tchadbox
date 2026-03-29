@@ -1,159 +1,133 @@
 <template>
-  <div>
-    <!-- Hero Section — Reduced Height for better Retail visibility -->
-    <section class="hero-image relative min-h-[65vh] flex items-center overflow-hidden">
-      <!-- ... (previous slides logic unchanged) ... -->
-      <!-- Sliding Background Images -->
-      <div v-for="(slide, i) in heroSlides" :key="i">
+  <div class="bg-[var(--color-bg)]">
+    <!-- ==============================================
+         1. CINEMATIC HERO (EDGE-TO-EDGE)
+         ============================================== -->
+    <section class="relative h-[90vh] min-h-[600px] w-full flex items-center justify-center overflow-hidden">
+      <!-- Background slider -->
+      <div v-for="(slide, i) in heroSlides" :key="'bg-'+i" class="absolute inset-0 w-full h-full">
         <Transition
-          enter-active-class="transition-all duration-[1200ms] ease-out"
-          enter-from-class="opacity-0 scale-110"
-          enter-to-class="opacity-100 scale-100"
-          leave-active-class="transition-all duration-[1200ms] ease-in"
-          leave-from-class="opacity-100 scale-100"
-          leave-to-class="opacity-0 scale-105"
+          enter-active-class="transition-opacity duration-[2000ms] ease-out"
+          enter-from-class="opacity-0"
+          enter-to-class="opacity-100"
+          leave-active-class="transition-opacity duration-[2000ms] ease-in"
+          leave-from-class="opacity-100"
+          leave-to-class="opacity-0"
         >
-          <img 
-            v-show="currentSlide === i"
-            :src="slide.image" 
-            :alt="slide.title"
-            class="absolute inset-0 w-full h-full object-cover"
-            :class="{ 'hero-zoom': currentSlide === i }"
-            loading="eager"
-          />
+          <div v-show="currentSlide === i" class="absolute inset-0 w-full h-full">
+            <img 
+              :src="slide.image" 
+              :alt="slide.title"
+              class="w-full h-full object-cover transform scale-105"
+              :class="{ 'animate-slow-zoom': currentSlide === i }"
+            />
+            <!-- Gradient Overlay for pure lux contrast -->
+            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[var(--color-bg)]"></div>
+          </div>
         </Transition>
       </div>
-      
-      <!-- Decorative orbs -->
-      <div class="orb orb-amber w-96 h-96 -top-20 right-0 animate-float" style="z-index: 2;" />
-      
-      <div class="container-main relative z-10 py-20">
-        <div class="max-w-2xl">
-          <div class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-8">
+
+      <!-- Center Content (Glassmorphism) -->
+      <div class="relative z-10 container-main flex flex-col items-center text-center mt-10">
+        <div 
+          v-motion
+          :initial="{ opacity: 0, scale: 0.9, y: 30 }"
+          :enter="{ opacity: 1, scale: 1, y: 0, transition: { duration: 1000, ease: 'easeOut' } }"
+          class="max-w-4xl mx-auto flex flex-col items-center"
+        >
+          <!-- Premium Pill -->
+          <div class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 mb-8 shadow-2xl">
             <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            <span class="text-sm font-medium text-white/90">🇹🇩 Service de livraison premium à N'Djamena — Preuve photo garantie</span>
+            <span class="text-sm font-medium tracking-wide text-white/90 uppercase letter-spacing-1">L'Excellence au Tchad</span>
           </div>
-          
-          <!-- Sliding text content -->
-          <div class="relative min-h-[180px] md:min-h-[160px]">
+
+          <!-- Title -->
+          <div class="relative min-h-[140px] md:min-h-[180px] w-full flex justify-center items-center">
             <TransitionGroup
-              enter-active-class="transition-all duration-700 ease-out"
-              enter-from-class="opacity-0 translate-y-6"
-              enter-to-class="opacity-100 translate-y-0"
-              leave-active-class="transition-all duration-500 ease-in absolute inset-0"
-              leave-from-class="opacity-100 translate-y-0"
-              leave-to-class="opacity-0 -translate-y-4"
+              enter-active-class="transition-all duration-1000 ease-out"
+              enter-from-class="opacity-0 translate-y-8 blur-sm"
+              enter-to-class="opacity-100 translate-y-0 blur-none"
+              leave-active-class="transition-all duration-700 ease-in absolute"
+              leave-from-class="opacity-100 translate-y-0 blur-none"
+              leave-to-class="opacity-0 -translate-y-8 blur-sm"
             >
-              <div :key="currentSlide">
-                <h1 class="heading-hero text-white mb-6" v-html="heroSlides[currentSlide].title" />
-                <p class="text-xl text-white/80 mb-10 max-w-lg leading-relaxed">
-                  {{ heroSlides[currentSlide].subtitle }}
-                </p>
+              <div v-for="(slide, i) in heroSlides" :key="'text-'+i" v-show="currentSlide === i" class="absolute w-full text-center">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-tight tracking-tight drop-shadow-2xl" v-html="slide.title"></h1>
               </div>
             </TransitionGroup>
           </div>
-          
-          <div class="flex flex-col sm:flex-row gap-4">
-            <NuxtLink to="/catalogue" class="btn-gold text-lg">
-              <span><ShoppingBag class="w-5 h-5" />Voir le catalogue</span>
-            </NuxtLink>
-            <NuxtLink to="/comment-ca-marche" class="btn-outline !border-white/30 !text-white hover:!bg-white hover:!text-[var(--color-primary)]">
-              <span><Play class="w-5 h-5" />Comment ça marche</span>
-            </NuxtLink>
-          </div>
 
-          <!-- Trust badges -->
-          <div class="flex flex-wrap items-center gap-6 mt-14 pt-8 border-t border-white/10">
-            <div v-for="badge in trustBadges" :key="badge.label" class="flex items-center gap-2.5">
-              <div class="w-8 h-8 rounded-lg bg-[var(--color-accent)]/20 flex items-center justify-center">
-                <component :is="badge.icon" class="w-4 h-4 text-[var(--color-accent)]" />
-              </div>
-              <span class="text-sm text-white/80 font-medium">{{ badge.label }}</span>
-            </div>
-          </div>
-
-          <!-- Slide indicators -->
-          <div class="flex items-center gap-3 mt-8">
-            <button 
-              v-for="(slide, i) in heroSlides" :key="'dot-'+i"
-              @click="goToSlide(i)"
-              class="relative h-1.5 rounded-full overflow-hidden transition-all duration-500"
-              :class="currentSlide === i ? 'w-12 bg-white/30' : 'w-6 bg-white/20 hover:bg-white/30'"
-            >
-              <div 
-                v-if="currentSlide === i"
-                class="absolute inset-0 bg-[var(--color-accent)] rounded-full hero-progress"
-                :style="{ animationDuration: slideDuration + 'ms' }"
-              />
-            </button>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Bottom fade -->
-      <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[var(--color-bg)] to-transparent z-10" />
-    </section>
-
-    <!-- Stats -->
-    <section class="py-16 bg-[var(--color-bg)]">
-      <div class="container-main">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <div 
-            v-for="(stat, i) in stats" :key="stat.label"
-            v-motion
-            :initial="{ opacity: 0, y: 20 }"
-            :visibleOnce="{ opacity: 1, y: 0, transition: { delay: i * 100 } }"
-            class="card-stat text-center group"
-          >
-            <div class="w-12 h-12 mx-auto mb-4 rounded-xl flex items-center justify-center transition-colors group-hover:scale-110 duration-300"
-              :style="{ background: stat.bgColor }"
-            >
-              <component :is="stat.icon" class="w-6 h-6" :style="{ color: stat.iconColor }" />
-            </div>
-            <div class="text-3xl font-bold text-[var(--color-text)] mb-1" style="font-family: var(--font-display);">{{ stat.value }}</div>
-            <div class="text-sm text-[var(--color-text-muted)]">{{ stat.label }}</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Categories — Bento Style -->
-    <section class="py-20 bg-[var(--color-bg-warm)]">
-      <div class="container-main">
-        <div class="text-center mb-14">
-          <span class="label mb-3 block">Nos gammes</span>
-          <h2 class="heading-section">Explorez nos <span class="text-gradient">catégories</span></h2>
-          <p class="text-[var(--color-text-muted)] mt-3 max-w-lg mx-auto">
-            Des produits rigoureusement sélectionnés, sourcés localement pour garantir fraîcheur et qualité
+          <!-- Subtitle -->
+          <p class="text-lg md:text-2xl text-white/80 max-w-2xl mt-6 mb-12 font-light hidden md:block" style="text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+            Envoyez des produits de qualité à votre famille, partout au Tchad. Livraison premium certifiée par photo.
           </p>
+
+          <!-- Glowing CTA -->
+          <div class="flex flex-col sm:flex-row gap-5">
+            <NuxtLink to="/catalogue" class="relative group overflow-hidden rounded-full p-px">
+              <span class="absolute inset-0 bg-gradient-to-r from-[var(--color-accent)] via-yellow-300 to-[var(--color-accent)] opacity-70 group-hover:opacity-100 animate-gradient-xy transition-opacity duration-300"></span>
+              <div class="relative flex items-center justify-center gap-2 px-8 py-4 bg-black/40 backdrop-blur-xl rounded-full text-white font-semibold text-lg transition-transform duration-300 group-hover:scale-[0.98]">
+                Explorer le Catalogue <ArrowRight class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </NuxtLink>
+          </div>
+        </div>
+
+        <!-- Pagination Dots -->
+        <div class="flex items-center gap-4 mt-16 md:mt-24">
+          <button 
+            v-for="(slide, i) in heroSlides" :key="'dot-'+i"
+            @click="goToSlide(i)"
+            class="relative h-1.5 rounded-full overflow-hidden transition-all duration-500"
+            :class="currentSlide === i ? 'w-16 bg-white/40' : 'w-6 bg-white/10 hover:bg-white/30'"
+          >
+            <div 
+              v-if="currentSlide === i"
+              class="absolute inset-0 bg-white rounded-full"
+              style="animation: progressFill 6s linear forwards; transform-origin: left;"
+            />
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         2. BENTO GRID CATEGORIES (MODERN IOS STYLE)
+         ============================================== -->
+    <section class="py-24 relative z-20 -mt-10 bg-[var(--color-bg)] rounded-t-[3rem] shadow-[0_-20px_40px_rgba(0,0,0,0.05)]">
+      <div class="container-main">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+          <div class="max-w-2xl">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-[var(--color-text)] tracking-tight">L'Univers <span class="text-gradient">TchadBox</span></h2>
+            <p class="text-[var(--color-text-muted)] text-lg mt-4 font-light">Des catégories pensées pour répondre à tous les besoins vitaux de vos proches, emballées avec soin.</p>
+          </div>
         </div>
         
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <NuxtLink 
             v-for="(cat, i) in categories" :key="cat.handle"
             :to="`/categories/${cat.handle}`"
             v-motion
-            :initial="{ opacity: 0, y: 30 }"
-            :visibleOnce="{ opacity: 1, y: 0, transition: { delay: i * 100 } }"
-            class="group"
+            :initial="{ opacity: 0, y: 40 }"
+            :visibleOnce="{ opacity: 1, y: 0, transition: { delay: i * 150, type: 'spring', stiffness: 50 } }"
+            class="group relative h-[320px] rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 bg-white"
+            :style="{ borderTop: `4px solid ${cat.color}` }"
           >
-            <div class="card p-8 text-center h-full hover:!border-transparent relative overflow-hidden"
-              :style="{ '--hover-bg': `${cat.color}08` }"
-            >
-              <!-- Color accent on hover -->
-              <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                :style="{ background: `linear-gradient(135deg, ${cat.color}08 0%, transparent 100%)` }"
-              />
+            <!-- Background Glow -->
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700" :style="{ background: `radial-gradient(circle at bottom right, ${cat.color}15, transparent 60%)` }"></div>
+            
+            <div class="p-8 flex flex-col h-full relative z-10">
+              <div 
+                class="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-sm transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"
+                :style="{ background: `${cat.color}15`, color: cat.color }"
+              >
+                <component :is="cat.icon" class="w-8 h-8" />
+              </div>
+              <h3 class="text-2xl font-bold text-[var(--color-text)] mb-3">{{ cat.name }}</h3>
+              <p class="text-[var(--color-text-muted)] font-light leading-relaxed flex-grow">{{ cat.description }}</p>
               
-              <div class="relative z-10">
-                <div 
-                  class="w-16 h-16 mx-auto mb-5 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rounded-xl group-hover:shadow-lg"
-                  :style="{ background: `${cat.color}12`, boxShadow: `0 0 0 0 ${cat.color}00` }"
-                >
-                  <component :is="cat.icon" class="w-8 h-8 transition-transform duration-500" :style="{ color: cat.color }" />
-                </div>
-                <h3 class="text-lg font-semibold text-[var(--color-text)] mb-2 group-hover:text-[var(--color-text)] transition-colors">{{ cat.name }}</h3>
-                <p class="text-sm text-[var(--color-text-muted)]">{{ cat.description }}</p>
+              <div class="flex items-center gap-2 text-sm font-semibold opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300" :style="{ color: cat.color }">
+                Découvrir <ArrowRight class="w-4 h-4" />
               </div>
             </div>
           </NuxtLink>
@@ -161,131 +135,91 @@
       </div>
     </section>
 
-    <!-- Featured Products -->
-    <section v-if="featuredProducts.length > 0" class="py-20 bg-[var(--color-bg)]">
+    <!-- ==============================================
+         3. FEATURED PRODUCTS (CLEAN CAROUSEL / GRID)
+         ============================================== -->
+    <section v-if="featuredProducts.length > 0" class="py-24 bg-[var(--color-bg-warm)]">
       <div class="container-main">
-        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-14">
-          <div>
-            <span class="label mb-3 block">Les plus demandés</span>
-            <h2 class="heading-section">Nos <span class="text-gradient">best-sellers</span></h2>
-          </div>
-          <NuxtLink to="/catalogue" class="btn-outline self-start group">
-            <span>Voir tout <ArrowRight class="w-4 h-4 transition-transform group-hover:translate-x-1" /></span>
+        <div class="flex justify-between items-center mb-16">
+          <h2 class="text-4xl font-extrabold text-[var(--color-text)] tracking-tight">Tendance Actuelle</h2>
+          <NuxtLink to="/catalogue" class="hidden md:flex items-center gap-2 font-semibold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-colors">
+            Voir notre catalogue <ArrowRight class="w-5 h-5" />
           </NuxtLink>
         </div>
         
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <ProductCard v-for="(product, i) in featuredProducts" :key="product.id" :product="product" :delay="i * 100" />
+        </div>
+        
+        <div class="mt-12 text-center md:hidden">
+            <NuxtLink to="/catalogue" class="btn-outline inline-flex">Voir notre catalogue</NuxtLink>
         </div>
       </div>
     </section>
 
-    <!-- How it Works — Modern Timeline -->
-    <section class="py-24 bg-[var(--color-bg-warm)] relative overflow-hidden">
-      <div class="orb orb-amber w-80 h-80 -top-20 -right-20 opacity-10" />
-      
-      <div class="container-main relative">
-        <div class="text-center mb-16">
-          <span class="label mb-3 block">Simple et rapide</span>
-          <h2 class="heading-section">Comment ça <span class="text-gradient">marche</span></h2>
-          <p class="text-[var(--color-text-muted)] mt-3 max-w-lg mx-auto">
-            Un processus en 4 étapes pensé pour votre tranquillité d'esprit
-          </p>
+    <!-- ==============================================
+         4. HOW IT WORKS (SEAMLESS TIMELINE)
+         ============================================== -->
+    <section class="py-32 bg-white relative overflow-hidden">
+      <!-- Decorative giant blur -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[var(--color-primary)] opacity-[0.03] blur-[100px] rounded-full pointer-events-none"></div>
+
+      <div class="container-main relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-20">
+          <h2 class="text-4xl md:text-5xl font-extrabold text-[var(--color-text)] tracking-tight mb-6">La promesse <span class="text-gradient">TchadBox</span></h2>
+          <p class="text-xl text-[var(--color-text-muted)] font-light">Un processus pensé pour une transparence totale, de votre panier jusqu'au sourire de vos bénéficiaires.</p>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
-          <!-- Connection line -->
-          <div class="hidden md:block absolute top-14 left-[12.5%] right-[12.5%] h-px">
-            <div class="w-full h-full bg-gradient-to-r from-[var(--color-accent)]/20 via-[var(--color-accent)]/40 to-[var(--color-accent)]/20" />
-          </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-4 relative">
+          <!-- Desktop minimal connecting line -->
+          <div class="hidden md:block absolute top-12 left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100 z-0"></div>
           
           <div 
             v-for="(step, i) in steps" :key="i"
             v-motion
             :initial="{ opacity: 0, y: 30 }"
-            :visibleOnce="{ opacity: 1, y: 0, transition: { delay: i * 150 } }"
-            class="text-center relative group"
+            :visibleOnce="{ opacity: 1, y: 0, transition: { delay: i * 200 } }"
+            class="relative z-10 flex flex-col items-center text-center group"
           >
-            <div class="relative mx-auto mb-6">
-              <div class="w-16 h-16 mx-auto rounded-2xl bg-[var(--color-primary)] text-white flex items-center justify-center relative z-10 shadow-lg transition-all duration-500 group-hover:rounded-xl group-hover:scale-110 group-hover:shadow-xl">
-                <component :is="step.icon" class="w-7 h-7" />
-              </div>
-              <span class="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[var(--color-accent)] text-white text-sm font-bold flex items-center justify-center shadow-md z-20">
-                {{ i + 1 }}
-              </span>
+            <!-- Sleek Icon Box -->
+            <div class="w-24 h-24 mb-8 rounded-[2rem] bg-white border border-gray-100 shadow-[0_10px_30px_rgba(0,0,0,0.04)] flex items-center justify-center transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] group-hover:border-[var(--color-accent)]/30">
+              <component :is="step.icon" class="w-10 h-10 text-[var(--color-primary)] group-hover:text-[var(--color-accent)] transition-colors duration-500" />
             </div>
-            <h3 class="font-semibold text-[var(--color-text)] mb-2 text-lg">{{ step.title }}</h3>
-            <p class="text-sm text-[var(--color-text-muted)] max-w-[200px] mx-auto">{{ step.description }}</p>
+            
+            <h3 class="text-xl font-bold text-[var(--color-text)] mb-3">{{ step.title }}</h3>
+            <p class="text-[var(--color-text-muted)] font-light max-w-[220px]">{{ step.description }}</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Testimonials -->
-    <section v-if="testimonials.length > 0" class="py-24 bg-[var(--color-bg)]">
-      <div class="container-main">
-        <div class="text-center mb-14">
-          <span class="label mb-3 block">Ils nous font confiance</span>
-          <h2 class="heading-section">La parole à notre <span class="text-gradient">communauté</span></h2>
-        </div>
+    <!-- ==============================================
+         5. ULTIMATE CTA (NIGHT MODE CONTRAST)
+         ============================================== -->
+    <section class="py-24 px-4 bg-[var(--color-bg)]">
+      <div 
+        v-motion
+        :initial="{ opacity: 0, scale: 0.95 }"
+        :visibleOnce="{ opacity: 1, scale: 1, transition: { duration: 800 } }"
+        class="max-w-6xl mx-auto rounded-[3rem] bg-[var(--color-primary)] overflow-hidden relative shadow-2xl"
+      >
+        <div class="absolute inset-0 opacity-20 mix-blend-overlay" style="background-image: url('/hero-bg.png'); background-size: cover; background-position: center; filter: grayscale(100%);" />
+        <div class="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)] via-[var(--color-primary)]/90 to-black/80"></div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div 
-            v-for="(t, i) in testimonials" :key="t.id"
-            v-motion
-            :initial="{ opacity: 0, scale: 0.95 }"
-            :visibleOnce="{ opacity: 1, scale: 1, transition: { delay: i * 100 } }"
-            class="card p-8 group hover:!border-[var(--color-accent)]/20"
-          >
-            <div class="flex gap-1 mb-5">
-              <Star v-for="n in 5" :key="n" class="w-5 h-5 fill-[var(--color-accent)] text-[var(--color-accent)]" />
-            </div>
-            <p class="text-[var(--color-text-secondary)] mb-6 leading-relaxed">"{{ t.message }}"</p>
-            <div class="flex items-center gap-4 pt-5 border-t border-[var(--color-border)]">
-              <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-dark)] text-white flex items-center justify-center font-bold text-sm">
-                {{ t.name.charAt(0) }}
-              </div>
-              <div>
-                <div class="font-semibold text-[var(--color-text)] text-sm">{{ t.name }}</div>
-                <div class="text-xs text-[var(--color-text-muted)] flex items-center gap-1"><MapPin class="w-3 h-3" />{{ t.location }}</div>
-              </div>
-            </div>
+        <div class="relative z-10 py-20 px-8 md:px-20 text-center flex flex-col items-center">
+          <div class="w-20 h-20 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-8 border border-white/20">
+            <Heart class="w-10 h-10 text-[var(--color-accent)]" />
           </div>
+          <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-6">Prêt à faire un heureux ?</h2>
+          <p class="text-xl text-white/70 font-light mb-10 max-w-2xl">Rejoignez des centaines de familles qui se font confiance pour leurs transferts de produits vers le Tchad.</p>
+          
+          <NuxtLink to="/catalogue" class="btn-gold px-10 py-5 text-xl shadow-[0_0_40px_rgba(217,119,6,0.4)]">
+            Créer ma première commande
+          </NuxtLink>
         </div>
       </div>
     </section>
 
-    <!-- CTA — Image + Overlay -->
-    <section class="relative py-28 overflow-hidden">
-      <!-- Background -->
-      <div class="absolute inset-0 bg-[var(--color-primary)]">
-        <div class="absolute inset-0 opacity-10" style="background-image: url('/hero-bg.png'); background-size: cover; background-position: center;" />
-      </div>
-      <div class="orb orb-amber w-96 h-96 top-0 left-1/4 opacity-15" />
-      <div class="orb orb-warm w-80 h-80 bottom-0 right-1/4 opacity-10" />
-      
-      <div class="container-main relative z-10 text-center">
-        <h2 
-          v-motion
-          :initial="{ opacity: 0, y: 30 }"
-          :visibleOnce="{ opacity: 1, y: 0 }"
-          class="heading-section text-white mb-6"
-        >
-          Faites la différence <span class="text-gradient-gold">aujourd'hui</span>
-        </h2>
-        <p class="text-xl text-white/70 mb-12 max-w-2xl mx-auto">
-          Des milliers de familles reçoivent déjà leurs colis grâce à TchadBox. Rejoignez-les et offrez le sourire à vos proches.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <NuxtLink to="/catalogue" class="btn-gold text-lg">
-            <span><ShoppingBag class="w-5 h-5" />Commander maintenant</span>
-          </NuxtLink>
-          <NuxtLink to="/contact" class="btn-outline !border-white/25 !text-white hover:!bg-white hover:!text-[var(--color-primary)]">
-            <span><MessageCircle class="w-5 h-5" />Nous contacter</span>
-          </NuxtLink>
-        </div>
-      </div>
-    </section>
   </div>
 </template>
 
@@ -297,22 +231,19 @@ import {
 } from 'lucide-vue-next'
 import ProductCard from '~/components/product/ProductCard.vue'
 
-// Hero Carousel
+// 1. Hero Carousel (Cinematic Titles)
 const heroSlides = [
   {
     image: '/hero-bg.png',
-    title: 'Offrez le meilleur<br />à vos <span class="text-gradient-gold">proches</span> au Tchad',
-    subtitle: 'Où que vous soyez dans le monde, envoyez des produits de qualité à votre famille. Livraison sécurisée et confirmée par photo.'
+    title: 'Le meilleur pour<br/><span class="text-gradient-gold drop-shadow-lg">votre famille.</span>'
   },
   {
     image: '/hero-slide2.png',
-    title: 'La joie de <span class="text-gradient-gold">recevoir</span>,<br />le bonheur d\'offrir',
-    subtitle: 'Chaque colis TchadBox crée un moment de bonheur. Découvrez nos packs alimentaires, scolaires et bien plus encore.'
+    title: 'La joie de<span class="text-gradient-gold drop-shadow-lg"><br/>recevoir.</span>'
   },
   {
     image: '/hero-slide3.png',
-    title: 'Un service <span class="text-gradient-gold">fiable</span><br />qui vous ressemble',
-    subtitle: 'Plus de 500 familles nous font confiance. Rejoignez la communauté TchadBox et restez connecté avec vos proches.'
+    title: 'Un service<br/><span class="text-gradient-gold drop-shadow-lg">d\'excellence.</span>'
   },
 ]
 
@@ -338,26 +269,15 @@ onMounted(() => {
 })
 onUnmounted(() => { if (slideInterval) clearInterval(slideInterval) })
 
-const trustBadges = [
-  { icon: Shield, label: 'Paiement 100% sécurisé' },
-  { icon: Truck, label: 'Livré en 3 à 5 jours' },
-  { icon: Camera, label: 'Photo de livraison certifiée' },
-]
-
-const stats = [
-  { value: '500+', label: 'Familles accompagnées', icon: Users, bgColor: 'rgba(245, 158, 11, 0.1)', iconColor: '#D97706' },
-  { value: '100%', label: 'Satisfaction garantie', icon: CheckCircle, bgColor: 'rgba(5, 150, 105, 0.1)', iconColor: '#059669' },
-  { value: '3-5j', label: 'Délai de livraison', icon: Clock, bgColor: 'rgba(59, 130, 246, 0.1)', iconColor: '#2563EB' },
-  { value: '24/7', label: 'Service client dédié', icon: MessageCircle, bgColor: 'rgba(168, 85, 247, 0.1)', iconColor: '#7C3AED' },
-]
-
+// 2. Bento Grid Categories
 const categories = [
-  { name: 'Alimentaire', handle: 'alimentaire', description: 'Riz, huile, sucre, farine et produits de première nécessité', icon: Wheat, color: '#059669' },
-  { name: 'Scolarité', handle: 'scolarite', description: 'Kits scolaires complets pour la réussite de vos enfants', icon: BookOpen, color: '#2563EB' },
-  { name: 'Santé & Bébé', handle: 'sante', description: 'Médicaments, couches et soins essentiels', icon: Heart, color: '#EC4899' },
-  { name: 'Fêtes', handle: 'fetes', description: 'Packs spéciaux Ramadan, Tabaski et occasions', icon: Gift, color: '#D97706' },
+  { name: 'Alimentaire', handle: 'alimentaire', description: 'Riz, huile, sucre et produits de première nécessité sourcés localement.', icon: Wheat, color: '#10B981' }, // Emerald
+  { name: 'Scolarité', handle: 'scolarite', description: 'Kits scolaires complets pour garantir la réussite de vos enfants.', icon: BookOpen, color: '#3B82F6' }, // Blue
+  { name: 'Santé & Bébé', handle: 'sante', description: 'Gamme de soins essentiels, pharmacie de base et produits infantiles.', icon: Heart, color: '#EC4899' }, // Pink
+  { name: 'Événements', handle: 'fetes', description: 'Packs spéciaux créés sur-mesure pour Ramadan, Tabaski et célébrations.', icon: Gift, color: '#F59E0B' }, // Amber
 ]
 
+// 3. Featured Products
 const featuredProducts = ref<any[]>([])
 
 const fetchFeaturedProducts = async () => {
@@ -376,40 +296,39 @@ const fetchFeaturedProducts = async () => {
       inStock: p.in_stock,
     }))
   } catch (e) {
-    // Si erreur ou pas de backend, on ne montre rien
     featuredProducts.value = []
   }
 }
 
+// 4. Timeline
 const steps = [
-  { title: 'Sélectionnez', description: 'Choisissez parmi nos produits de qualité vérifiée', icon: Package },
-  { title: 'Réglez en toute sérénité', description: 'Paiement sécurisé par carte bancaire ou Mobile Money', icon: CreditCard },
-  { title: 'Nous livrons', description: 'Notre équipe locale livre directement à domicile en 3-5 jours', icon: Truck },
-  { title: 'Preuve certifiée', description: 'Recevez la photo de remise par WhatsApp ou email', icon: Camera },
+  { title: 'Découverte', description: 'Parcourez notre catalogue exclusif.', icon: Package },
+  { title: 'Paiement Sécurisé', description: 'Réglez par Carte ou Mobile Money.', icon: CreditCard },
+  { title: 'Logistique Locale', description: 'Livraison express en 3 à 5 jours.', icon: Truck },
+  { title: 'Preuve', description: 'Photo de confirmation certifiée envoyée.', icon: Camera },
 ]
 
-const testimonials = [
-  { id: 1, name: 'Aicha S.', location: 'Paris, France', message: "Je suis rassurée de pouvoir envoyer des produits de qualité à mes parents à N'Djamena. La photo à la livraison est un vrai plus !" },
-  { id: 2, name: 'Mahamat D.', location: 'Montréal, Canada', message: "TchadBox a changé ma façon de soutenir ma famille. Les kits scolaires sont excellents et la livraison très rapide." },
-  { id: 3, name: 'Fatime N.', location: 'Lyon, France', message: "Le service client est très réactif et les produits correspondent exactement aux photos. Merci TchadBox !" },
-]
-
-useHead({ title: 'Accueil' })
+useHead({ title: 'TchadBox — L\'excellence de la livraison au Tchad' })
 </script>
 
 <style scoped>
-.hero-zoom {
-  animation: heroZoom 8s ease-out forwards;
+/* Cinematic Animations */
+.animate-slow-zoom {
+  animation: slowZoom 8s cubic-bezier(0.1, 0.5, 0.4, 1) forwards;
+}
+@keyframes slowZoom {
+  from { transform: scale(1.0); }
+  to { transform: scale(1.1); }
 }
 
-@keyframes heroZoom {
-  from { transform: scale(1.08); }
-  to { transform: scale(1); }
+.animate-gradient-xy {
+  background-size: 200% 200%;
+  animation: gradientXY 3s ease infinite;
 }
-
-.hero-progress {
-  animation: progressFill linear forwards;
-  transform-origin: left;
+@keyframes gradientXY {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 @keyframes progressFill {
