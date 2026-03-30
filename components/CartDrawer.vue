@@ -8,18 +8,18 @@
       leave-from-class="opacity-100"
       leave-to-class="opacity-0"
     >
-      <div v-if="cartStore.isOpen" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50" @click="cartStore.closeCart" />
+      <div v-if="cartStore.isOpen" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] transition-opacity" @click="cartStore.closeCart" />
     </Transition>
 
     <!-- Drawer -->
     <Transition
-      enter-active-class="transition-transform duration-400 ease-out"
+      enter-active-class="transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]"
       enter-from-class="translate-x-full"
-      leave-active-class="transition-transform duration-300 ease-in"
+      leave-active-class="transition-transform duration-300 ease-in-out"
       leave-from-class="translate-x-0"
       leave-to-class="translate-x-full"
     >
-      <div v-if="cartStore.isOpen" class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 flex flex-col">
+      <div v-if="cartStore.isOpen" class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-[-20px_0_40px_rgba(0,0,0,0.1)] z-[110] flex flex-col">
         <!-- Header -->
         <div class="flex items-center justify-between p-6 border-b border-gray-100">
           <div class="flex items-center gap-3">
@@ -70,14 +70,14 @@
         <!-- Content -->
         <div class="flex-grow overflow-y-auto">
           <!-- Empty -->
-          <div v-if="cartStore.isEmpty" class="flex flex-col items-center justify-center h-full p-8 text-center">
-            <div class="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-              <ShoppingBag class="w-8 h-8 text-gray-400" />
+          <div v-if="cartStore.isEmpty" class="flex flex-col items-center justify-center h-full p-8 text-center bg-gray-50/30">
+            <div class="w-24 h-24 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center mb-6">
+              <ShoppingBag class="w-10 h-10 text-gray-300" />
             </div>
-            <h3 class="font-semibold text-[var(--color-text)] mb-2">Panier vide</h3>
-            <p class="text-[var(--color-text-muted)] text-sm mb-6">Découvrez nos produits</p>
-            <NuxtLink to="/catalogue" class="btn-primary" @click="cartStore.closeCart">
-              <span>Voir le catalogue</span>
+            <h3 class="text-xl font-bold text-[var(--color-primary)] mb-2">Votre panier est vide</h3>
+            <p class="text-gray-500 text-sm font-medium mb-8">Découvrez notre catalogue et ajoutez vos produits favoris.</p>
+            <NuxtLink to="/catalogue" class="btn-gold px-8 py-4 text-sm w-full font-bold shadow-lg shadow-[var(--color-primary)]/10" @click="cartStore.closeCart">
+              <ShoppingBag class="w-4 h-4" /> Commencer mes achats
             </NuxtLink>
           </div>
 
@@ -113,38 +113,38 @@
         </div>
 
         <!-- Footer -->
-        <div v-if="!cartStore.isEmpty" class="border-t border-gray-100 p-6 bg-gray-50">
-        <div class="space-y-3 mb-6">
-          <div class="flex justify-between text-[var(--color-text-secondary)]">
-            <span>Sous-total</span>
-            <span>{{ cartStore.formattedSubtotal }}</span>
-          </div>
-          <div class="flex justify-between text-[var(--color-text-secondary)]">
-            <span class="flex items-center gap-2"><Truck class="w-4 h-4" />Livraison</span>
-            <span>{{ cartStore.formattedShipping }}</span>
-          </div>
-          <div class="border-t border-gray-200 pt-3 flex justify-between">
-            <span class="font-semibold text-[var(--color-text)]">Total</span>
-            <div class="text-right">
-              <span class="text-xl font-bold text-[var(--color-primary)]">{{ cartStore.formattedTotal }}</span>
-              <p v-if="cartStore.currency !== 'XAF'" class="text-xs text-[var(--color-text-muted)]">≈ {{ cartStore.totalXAF }} FCFA</p>
+        <div v-if="!cartStore.isEmpty" class="border-t border-gray-100 p-6 bg-white shrink-0 shadow-[0_-10px_40px_rgba(0,0,0,0.03)] z-10">
+          <div class="space-y-3 mb-6">
+            <div class="flex justify-between text-[var(--color-text-secondary)] text-sm">
+              <span>Sous-total</span>
+              <span class="font-medium text-[var(--color-text)]">{{ cartStore.formattedSubtotal }}</span>
+            </div>
+            <div class="flex justify-between text-[var(--color-text-secondary)] text-sm">
+              <span class="flex items-center gap-2"><Truck class="w-4 h-4 text-amber-500" />Livraison estimée</span>
+              <span class="font-medium text-[var(--color-text)]">{{ cartStore.formattedShipping }}</span>
+            </div>
+            <div class="border-t border-gray-100 pt-4 flex justify-between items-end">
+              <span class="font-semibold text-[var(--color-text)]">Total</span>
+              <div class="text-right">
+                <span class="text-2xl font-black text-[var(--color-text)]">{{ cartStore.formattedTotal }}</span>
+                <p v-if="cartStore.currency !== 'XAF'" class="text-xs text-[var(--color-text-muted)] font-medium mt-0.5">≈ {{ cartStore.totalXAF }} FCFA</p>
+              </div>
             </div>
           </div>
+          
+          <NuxtLink to="/checkout" class="btn-gold w-full text-center py-4 mb-3 rounded-xl shadow-[0_10px_30px_rgba(245,158,11,0.25)] flex items-center justify-center gap-2" @click="cartStore.closeCart">
+            <Lock class="w-4 h-4" /> Passer la commande sécurisée
+          </NuxtLink>
         </div>
-        <NuxtLink to="/panier" class="btn-primary w-full text-center mb-3" @click="cartStore.closeCart">
-          <span>Finaliser la commande</span>
-        </NuxtLink>
-        <button @click="cartStore.closeCart" class="btn-ghost w-full">Continuer mes achats</button>
-        </div>
-        </div>
-        </Transition>
-        </Teleport>
-        </template>
+      </div>
+    </Transition>
+  </Teleport>
+</template>
 
-        <script setup lang="ts">
-        import { ShoppingBag, X, Package, Trash2, Minus, Plus, Truck, Check } from 'lucide-vue-next'
-        import { useCartStore } from '~/stores/cart'
+<script setup lang="ts">
+import { ShoppingBag, X, Package, Trash2, Minus, Plus, Truck, Check, Lock } from 'lucide-vue-next'
+import { useCartStore } from '~/stores/cart'
 
-        const cartStore = useCartStore()
-        </script>
+const cartStore = useCartStore()
+</script>
 
