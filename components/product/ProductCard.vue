@@ -6,15 +6,18 @@
     class="card-product group relative flex flex-col h-full bg-white rounded-2xl transition-all duration-300 hover:shadow-[0_20px_40px_-15px_rgba(245,158,11,0.15)] hover:-translate-y-1 overflow-hidden ring-1 ring-slate-900/5"
   >
     <!-- Image Section -->
-    <NuxtLink :to="`/produit/${product.handle || product.id}`" class="block relative aspect-[4/3] sm:aspect-square overflow-hidden bg-gray-50/50">
-      <img 
+    <NuxtLink :to="`/produit/${product.handle || product.id}`" class="block relative aspect-[4/3] sm:aspect-[4/3] overflow-hidden bg-gray-50/80 p-4">
+      <NuxtImg 
         v-if="product.thumbnail || product.images?.[0]"
         :src="product.thumbnail || product.images[0]"
         :alt="product.title"
-        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 mix-blend-multiply"
+        class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+        loading="lazy"
+        format="webp"
+        quality="90"
       />
       <div v-else class="w-full h-full flex items-center justify-center">
-        <component :is="getCategoryIcon" class="w-16 h-16 text-gray-200" />
+        <component :is="getCategoryIcon" class="w-16 h-16 text-gray-300" />
       </div>
 
       <!-- Quick Status Badges -->
@@ -60,9 +63,9 @@
       <div class="mt-auto flex items-end justify-between gap-2">
         <div class="flex flex-col">
           <span class="text-xl sm:text-2xl font-extrabold text-[var(--color-primary)] tracking-tight leading-none group-hover:text-amber-600 transition-colors">
-            {{ formatPrice(product.price) }}
+            {{ cartStore.formatPrice(product.price) }}
           </span>
-          <span class="text-[11px] text-gray-400 font-bold mt-1.5 uppercase tracking-wide">
+          <span v-if="cartStore.currency !== 'XAF'" class="text-[11px] text-gray-400 font-bold mt-1.5 uppercase tracking-wide">
             ≈ {{ priceFCFA }} FCFA
           </span>
         </div>
@@ -106,9 +109,10 @@ const props = withDefaults(defineProps<{
 const cartStore = useCartStore()
 const toast = useToast()
 
-const formatPrice = (price: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price)
-
-const priceFCFA = computed(() => new Intl.NumberFormat('fr-FR').format(Math.round(props.product.price * 656)))
+const priceFCFA = computed(() => {
+  const rate = cartStore.rates?.XAF || 655.957
+  return new Intl.NumberFormat('fr-FR').format(Math.round(props.product.price * rate))
+})
 
 const categoryName = computed(() => {
   if (!props.product.category) return ''
