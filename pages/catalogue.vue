@@ -11,7 +11,7 @@
               <ChevronRight class="w-3 h-3" />
               <span class="text-white">Catalogue</span>
             </div>
-            <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight">Notre Sélection</h1>
+            <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white">Notre Sélection</h1>
             <p class="text-white/70 text-sm md:text-base mt-2 max-w-xl">
               Produits essentiels de haute qualité, livraison express à N'Djamena.
             </p>
