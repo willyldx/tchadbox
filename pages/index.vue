@@ -15,11 +15,13 @@
           leave-to-class="opacity-0"
         >
           <div v-show="currentSlide === i" class="absolute inset-0 w-full h-full bg-white">
-            <img 
+            <NuxtImg 
               :src="slide.image" 
               :alt="slide.title"
               class="w-full h-full object-cover transform scale-105 opacity-[0.85]"
               :class="{ 'animate-slow-zoom': currentSlide === i }"
+              format="webp"
+              loading="eager"
             />
             <!-- Ultra-luminous bright gradient overlay -->
             <div class="absolute inset-0 bg-gradient-to-b from-white/70 via-white/50 to-[var(--color-bg)]"></div>
@@ -58,7 +60,7 @@
           </div>
 
           <!-- Subtitle -->
-          <p class="text-lg md:text-2xl text-[var(--color-text-secondary)] max-w-2xl mt-6 mb-12 font-medium hidden md:block">
+          <p class="text-sm sm:text-lg md:text-2xl text-[var(--color-text-secondary)] max-w-2xl mt-4 md:mt-6 mb-8 md:mb-12 font-medium px-4 md:px-0">
             Envoyez des produits de qualité à votre famille, partout au Tchad. Livraison premium certifiée par photo.
           </p>
 
@@ -319,7 +321,15 @@ const steps = [
   { title: 'Preuve', description: 'Photo de confirmation certifiée envoyée.', icon: Camera },
 ]
 
-useHead({ title: 'TchadBox — L\'excellence de la livraison au Tchad' })
+useHead({ 
+  title: 'TchadBox — L\'excellence de la livraison au Tchad',
+  meta: [
+    { name: 'description', content: 'Le service de référence pour la diaspora tchadienne. Envoyez des biens de qualité (alimentaire, santé, scolarité, fêtes) à vos proches au Tchad avec preuve de livraison certifiée.' },
+    { property: 'og:title', content: 'TchadBox — L\'excellence de la livraison au Tchad' },
+    { property: 'og:description', content: 'Envoyez l\'essentiel à votre famille au Tchad. Livraison rapide, paiement sécurisé et preuve de livraison.' },
+    { property: 'og:type', content: 'website' }
+  ]
+})
 </script>
 
 <style scoped>
