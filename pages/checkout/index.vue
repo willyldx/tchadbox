@@ -128,12 +128,9 @@
                 <input v-model="selectedPayment" type="radio" :value="method.id" class="w-5 h-5 text-amber-500 border-gray-300 focus:ring-amber-500/20" />
                 <div class="flex-1 flex justify-between items-center">
                   <span class="font-medium text-[var(--color-text)]">{{ method.label }}</span>
-                  <div class="flex items-center gap-2" v-if="method.id === 'card'">
-                    <img src="/icons/visa.svg" class="h-6" alt="Visa" onerror="this.style.display='none'" />
-                    <img src="/icons/mastercard.svg" class="h-6" alt="Mastercard" onerror="this.style.display='none'" />
-                  </div>
-                  <SmartphoneIcon v-else-if="method.id === 'mobile_money' || method.id === 'tchad_mobile_money'" class="w-6 h-6 text-gray-400" />
-                  <BanknoteIcon v-else class="w-6 h-6 text-gray-400" />
+                  <component v-if="method.id === 'card'" :is="CreditCard" class="w-6 h-6 text-gray-400" />
+                  <component v-else-if="method.id === 'mobile_money' || method.id === 'tchad_mobile_money'" :is="Smartphone" class="w-6 h-6 text-gray-400" />
+                  <component v-else :is="Banknote" class="w-6 h-6 text-gray-400" />
                 </div>
               </div>
               
@@ -301,6 +298,10 @@ import {
   Lock as LockIcon,
   ShieldCheck as ShieldCheckIcon,
   Loader as LoaderIcon,
+  ChevronRight as ChevronRightIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronDown as ChevronDownIcon,
+  Truck as TruckIcon,
 } from 'lucide-vue-next'
 
 definePageMeta({
