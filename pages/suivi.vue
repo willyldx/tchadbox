@@ -33,7 +33,7 @@
           <label class="block text-sm font-medium text-[var(--color-text)] mb-3">Numéro de commande</label>
           <div class="flex gap-4">
             <div class="relative flex-grow">
-              <Hash class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--color-text-muted)]" />
+              <Package class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input 
                 v-model="orderNumber" 
                 type="text" 
@@ -50,8 +50,8 @@
               </span>
             </button>
           </div>
-          <p class="text-sm text-[var(--color-text-muted)] mt-3 flex items-center gap-2">
-            <Lightbulb class="w-4 h-4 text-[var(--color-accent)]" />
+          <p class="text-sm text-[var(--color-text-muted)] mt-3 flex items-center gap-2 font-medium">
+            <Info class="w-4 h-4 text-[var(--color-accent)]" />
             Entrez le numéro reçu par email après votre commande
           </p>
         </form>
@@ -145,7 +145,7 @@
 </template>
 
 <script setup lang="ts">
-import { MapPin, Search, Check, SearchX, Hash, Lightbulb, MessageCircle, Loader, Package, CreditCard, Truck, Camera, Clock } from 'lucide-vue-next'
+import { MapPin, Search, Check, SearchX, Package, Info, MessageCircle, Loader, CreditCard, Truck, Camera, Clock } from 'lucide-vue-next'
 
 const orderNumber = ref('')
 const order = ref<any>(null)
