@@ -1,5 +1,6 @@
 <template>
   <div class="min-h-screen bg-[var(--color-bg)]">
+    <NuxtLoadingIndicator color="#f59e0b" :height="3" />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>

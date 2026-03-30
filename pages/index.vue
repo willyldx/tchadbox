@@ -31,8 +31,8 @@
       <div class="relative z-10 container-main flex flex-col items-center text-center mt-10">
         <div 
           v-motion
-          :initial="{ opacity: 0, scale: 0.9, y: 30 }"
-          :enter="{ opacity: 1, scale: 1, y: 0, transition: { duration: 1000, ease: 'easeOut' } }"
+          :initial="{ opacity: 0, y: 20 }"
+          :enter="{ opacity: 1, y: 0, transition: { duration: 800, ease: 'easeOut' } }"
           class="max-w-4xl mx-auto flex flex-col items-center"
         >
           <!-- Premium Pill -->
@@ -108,8 +108,8 @@
             v-for="(cat, i) in categories" :key="cat.handle"
             :to="`/categories/${cat.handle}`"
             v-motion
-            :initial="{ opacity: 0, y: 40 }"
-            :visibleOnce="{ opacity: 1, y: 0, transition: { delay: i * 150, type: 'spring', stiffness: 50 } }"
+            :initial="{ opacity: 0, y: 20 }"
+            :visibleOnce="{ opacity: 1, y: 0, transition: { delay: i * 100, duration: 500, ease: 'easeOut' } }"
             class="group relative h-[320px] rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 bg-white"
             :style="{ borderTop: `4px solid ${cat.color}` }"
           >
@@ -136,9 +136,9 @@
     </section>
 
     <!-- ==============================================
-         3. FEATURED PRODUCTS (CLEAN CAROUSEL / GRID)
+         3. FEATURED PRODUCTS (SKELETON ASSISTED)
          ============================================== -->
-    <section v-if="featuredProducts.length > 0" class="py-24 bg-[var(--color-bg-warm)]">
+    <section v-if="loading || featuredProducts.length > 0" class="py-24 bg-[var(--color-bg-warm)] mt-12 mb-12">
       <div class="container-main">
         <div class="flex justify-between items-center mb-16">
           <h2 class="text-4xl font-extrabold text-[var(--color-text)] tracking-tight">Tendance Actuelle</h2>
@@ -147,7 +147,13 @@
           </NuxtLink>
         </div>
         
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Skeleton Grid visible during fetch -->
+        <div v-if="loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <ProductSkeleton v-for="i in 4" :key="'skel-'+i" />
+        </div>
+        
+        <!-- Actual Products -->
+        <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <ProductCard v-for="(product, i) in featuredProducts" :key="product.id" :product="product" :delay="i * 100" />
         </div>
         
@@ -177,8 +183,8 @@
           <div 
             v-for="(step, i) in steps" :key="i"
             v-motion
-            :initial="{ opacity: 0, y: 30 }"
-            :visibleOnce="{ opacity: 1, y: 0, transition: { delay: i * 200 } }"
+            :initial="{ opacity: 0, y: 20 }"
+            :visibleOnce="{ opacity: 1, y: 0, transition: { delay: i * 150, duration: 600 } }"
             class="relative z-10 flex flex-col items-center text-center group"
           >
             <!-- Sleek Icon Box -->
@@ -230,6 +236,7 @@ import {
   Wheat, Heart, Users, Clock, CheckCircle
 } from 'lucide-vue-next'
 import ProductCard from '~/components/product/ProductCard.vue'
+import ProductSkeleton from '~/components/product/ProductSkeleton.vue'
 
 // 1. Hero Carousel (Cinematic Titles)
 const heroSlides = [
@@ -279,8 +286,10 @@ const categories = [
 
 // 3. Featured Products
 const featuredProducts = ref<any[]>([])
+const loading = ref(true)
 
 const fetchFeaturedProducts = async () => {
+  loading.value = true
   try {
     const { getProducts } = useProducts()
     const response = await getProducts({ limit: 4 })
@@ -297,6 +306,8 @@ const fetchFeaturedProducts = async () => {
     }))
   } catch (e) {
     featuredProducts.value = []
+  } finally {
+    loading.value = false
   }
 }
 

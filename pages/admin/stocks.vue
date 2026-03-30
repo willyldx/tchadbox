@@ -1,121 +1,153 @@
 <template>
   <div>
     <!-- Header -->
-    <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900">Gestion des stocks</h1>
-        <p class="text-gray-500 mt-1">Suivez et mettez à jour les niveaux de stock</p>
+        <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Stocks</h1>
+        <p class="text-sm text-gray-500 mt-1 font-medium">Gérez votre inventaire et ajoutez de nouveaux produits au catalogue.</p>
       </div>
-      <div class="flex gap-2">
-        <UButton @click="showCreateModal = true" color="primary" icon="i-lucide-plus">
-          Ajouter un produit
-        </UButton>
-        <UButton @click="fetchProducts" color="gray" variant="outline" icon="i-lucide-refresh-cw" :loading="loading">
-          Actualiser
+      <div class="flex items-center gap-3">
+        <UButton @click="fetchProducts" color="gray" variant="ghost" icon="i-lucide-refresh-cw" :loading="loading" class="text-gray-500 hover:bg-gray-100" />
+        <UButton @click="showCreateModal = true" color="black" icon="i-lucide-plus" class="shadow-sm font-semibold px-4">
+          Nouveau produit
         </UButton>
       </div>
     </div>
 
     <!-- Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-        <p class="text-sm text-gray-500">Total produits</p>
-        <p class="text-2xl font-bold text-gray-900">{{ products.length }}</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white rounded-2xl border border-gray-200/60 p-5 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center shrink-0">
+             <Icon name="lucide:package" class="w-4 h-4 text-gray-500" />
+          </div>
+          <p class="text-sm font-semibold text-gray-500">Total produits</p>
+        </div>
+        <p class="text-3xl font-black text-gray-900 mt-3">{{ products.length }}</p>
       </div>
-      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-        <p class="text-sm text-gray-500">En stock</p>
-        <p class="text-2xl font-bold text-green-600">{{ inStockCount }}</p>
+      <div class="bg-white rounded-2xl border border-green-200/60 p-5 shadow-[0_2px_10px_rgba(34,197,94,0.04)] relative overflow-hidden">
+        <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-green-50 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="flex items-center gap-3 mb-2 relative z-10">
+          <div class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center shrink-0">
+             <Icon name="lucide:check-circle" class="w-4 h-4 text-green-500" />
+          </div>
+          <p class="text-sm font-semibold text-gray-500">En stock</p>
+        </div>
+        <p class="text-3xl font-black text-gray-900 mt-3 relative z-10">{{ inStockCount }}</p>
       </div>
-      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-        <p class="text-sm text-gray-500">Stock faible</p>
-        <p class="text-2xl font-bold text-amber-600">{{ lowStockCount }}</p>
+      <div class="bg-white rounded-2xl border border-amber-200/60 p-5 shadow-[0_2px_10px_rgba(245,158,11,0.04)] relative overflow-hidden">
+        <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-amber-50 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="flex items-center gap-3 mb-2 relative z-10">
+          <div class="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center shrink-0">
+             <Icon name="lucide:alert-triangle" class="w-4 h-4 text-amber-500" />
+          </div>
+          <p class="text-sm font-semibold text-gray-500">Stock faible</p>
+        </div>
+        <p class="text-3xl font-black text-gray-900 mt-3 relative z-10">{{ lowStockCount }}</p>
       </div>
-      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-        <p class="text-sm text-gray-500">Rupture</p>
-        <p class="text-2xl font-bold text-red-600">{{ outOfStockCount }}</p>
+      <div class="bg-white rounded-2xl border border-red-200/60 p-5 shadow-[0_2px_10px_rgba(239,68,68,0.04)] relative overflow-hidden">
+        <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-red-50 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="flex items-center gap-3 mb-2 relative z-10">
+           <div class="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center shrink-0">
+             <Icon name="lucide:x-circle" class="w-4 h-4 text-red-500" />
+          </div>
+          <p class="text-sm font-semibold text-gray-500">Rupture</p>
+        </div>
+        <p class="text-3xl font-black text-gray-900 mt-3 relative z-10">{{ outOfStockCount }}</p>
       </div>
     </div>
 
-    <!-- Filters -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 flex flex-col sm:flex-row gap-4">
+    <!-- Toolbar / Filters -->
+    <div class="mb-6 flex flex-col sm:flex-row gap-4 items-center justify-between">
       <UInput
         v-model="search"
-        placeholder="Rechercher un produit..."
+        placeholder="Rechercher par nom ou référence..."
         icon="i-lucide-search"
-        class="flex-grow"
-      />
+        class="w-full sm:w-80"
+        size="lg"
+        :ui="{ icon: { trailing: { pointer: '' } } }"
+      >
+        <template #trailing>
+           <UButton v-show="search" color="gray" variant="link" icon="i-lucide-x" :padded="false" @click="search = ''" />
+        </template>
+      </UInput>
       <USelectMenu
         v-model="stockFilter"
         :options="stockFilterOptions"
         placeholder="Tous les statuts"
-        class="w-48"
+        class="w-full sm:w-48"
+        size="lg"
       />
     </div>
 
     <!-- Products Table -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <div v-if="loading" class="p-8 text-center">
-        <UIcon name="i-lucide-loader-2" class="w-8 h-8 animate-spin text-primary-500 mx-auto" />
+    <div class="bg-white rounded-2xl border border-gray-200/60 shadow-[0_2px_15px_rgba(0,0,0,0.02)] overflow-hidden">
+      <div v-if="loading" class="p-16 text-center">
+        <UIcon name="i-lucide-loader-2" class="w-8 h-8 animate-spin text-gray-400 mx-auto" />
       </div>
 
-      <div v-else-if="filteredProducts.length === 0" class="p-8 text-center">
-        <Icon name="lucide:package" class="w-12 h-12 mx-auto text-gray-300 mb-3" />
-        <p class="text-gray-500">Aucun produit trouvé</p>
-        <p class="text-sm text-gray-400 mt-1">Cliquez sur "Ajouter un produit" pour commencer</p>
+      <div v-else-if="filteredProducts.length === 0" class="p-16 text-center flex flex-col items-center">
+        <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+          <Icon name="lucide:package-open" class="w-8 h-8 text-gray-400" />
+        </div>
+        <p class="text-lg font-semibold text-gray-900">Aucun produit trouvé</p>
+        <p class="text-sm text-gray-500 mt-1 max-w-sm">Ajustez vos filtres de recherche ou ajoutez un nouveau produit au catalogue.</p>
+        <UButton @click="showCreateModal = true" color="black" icon="i-lucide-plus" class="mt-6">Nouveau produit</UButton>
       </div>
 
-      <div v-else>
-        <table class="w-full">
-          <thead>
-            <tr class="border-b border-gray-100 text-left">
-              <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Produit</th>
-              <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Prix</th>
-              <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Stock</th>
-              <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Statut</th>
-              <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Actions</th>
+      <div v-else class="overflow-x-auto">
+        <table class="w-full text-sm text-left">
+          <thead class="bg-gray-50/50 text-gray-500 uppercase text-xs font-bold tracking-wider border-b border-gray-100">
+            <tr>
+              <th scope="col" class="px-6 py-4">Produit</th>
+              <th scope="col" class="px-6 py-4">Prix</th>
+              <th scope="col" class="px-6 py-4">Inventaire</th>
+              <th scope="col" class="px-6 py-4">État</th>
+              <th scope="col" class="px-6 py-4 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-50">
-            <tr v-for="product in filteredProducts" :key="product.id" class="hover:bg-gray-50 transition-colors">
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-3">
-                  <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden shrink-0">
-                    <img v-if="product.thumbnail" :src="product.thumbnail" :alt="product.title" class="w-full h-full object-cover" />
-                    <Icon v-else name="lucide:package" class="w-5 h-5 text-gray-400" />
+          <tbody class="divide-y divide-gray-100 bg-white">
+            <tr v-for="product in filteredProducts" :key="product.id" class="hover:bg-gray-50/80 transition-colors group">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center gap-4">
+                  <div class="w-12 h-12 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center overflow-hidden shrink-0 transition-transform group-hover:scale-105">
+                    <img v-if="product.thumbnail" :src="product.thumbnail" :alt="product.title" class="w-full h-full object-cover mix-blend-multiply" />
+                    <Icon v-else name="lucide:image" class="w-5 h-5 text-gray-300" />
                   </div>
-                  <div>
-                    <p class="font-medium text-gray-900">{{ product.title }}</p>
-                    <p class="text-xs text-gray-400">{{ product.handle }}</p>
+                  <div class="min-w-0">
+                    <p class="font-semibold text-gray-900 truncate">{{ product.title }}</p>
+                    <p class="text-xs text-gray-500 font-mono mt-0.5 truncate">{{ product.handle }}</p>
                   </div>
                 </div>
               </td>
-              <td class="px-6 py-4 font-medium text-gray-900">{{ formatPrice(product.price) }}</td>
-              <td class="px-6 py-4">
-                <span class="font-semibold" :class="getStockColor(product)">
-                  {{ product.stock_quantity ?? '—' }}
+              <td class="px-6 py-4 whitespace-nowrap font-semibold text-gray-900">{{ formatPrice(product.price) }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="font-bold text-base font-mono bg-gray-50 px-2 py-1 rounded" :class="getStockColor(product)">
+                  {{ product.stock_quantity ?? '∞' }}
                 </span>
+                <span class="text-xs text-gray-400 ml-2">unités</span>
               </td>
-              <td class="px-6 py-4">
-                <UBadge :color="getStatusBadge(product).color" variant="soft" size="sm">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <UBadge :color="getStatusBadge(product).color" variant="subtle" class="font-semibold px-2.5 py-1">
                   {{ getStatusBadge(product).label }}
                 </UBadge>
               </td>
-              <td class="px-6 py-4">
-                <div class="flex gap-2">
+              <td class="px-6 py-4 whitespace-nowrap text-right">
+                <div class="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                   <UButton
                     size="sm"
-                    color="primary"
-                    variant="soft"
-                    icon="i-lucide-pencil"
+                    color="gray"
+                    variant="ghost"
+                    icon="i-lucide-edit-3"
+                    title="Modifier le stock"
                     @click="openEditModal(product)"
-                  >
-                    Modifier
-                  </UButton>
+                  />
                   <UButton
                     size="sm"
                     color="red"
-                    variant="soft"
+                    variant="ghost"
                     icon="i-lucide-trash-2"
+                    title="Supprimer"
                     @click="deleteProduct(product)"
                   />
                 </div>
