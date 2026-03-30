@@ -289,20 +289,47 @@
       <slot />
     </main>
 
+    <!-- Pre-Footer Trust Section -->
+    <div class="bg-amber-50 mt-20 border-t border-amber-100">
+      <div class="container-main py-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-amber-200">
+          <div class="flex flex-col items-center px-4 pt-4 md:pt-0">
+            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-amber-500 shadow-sm mb-4">
+              <Truck class="w-6 h-6" />
+            </div>
+            <h4 class="font-bold text-amber-900 mb-2">Livraison Rapide</h4>
+            <p class="text-sm text-amber-700/80">Sous 3 à 5 jours ouvrés à N'Djamena, directement chez vous.</p>
+          </div>
+          <div class="flex flex-col items-center px-4 pt-8 md:pt-0">
+            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-amber-500 shadow-sm mb-4">
+              <Shield class="w-6 h-6" />
+            </div>
+            <h4 class="font-bold text-amber-900 mb-2">Paiement Sécurisé</h4>
+            <p class="text-sm text-amber-700/80">Transactions encryptées. Nous acceptons Cartes et Mobile Money.</p>
+          </div>
+          <div class="flex flex-col items-center px-4 pt-8 md:pt-0">
+            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-amber-500 shadow-sm mb-4">
+              <Camera class="w-6 h-6" />
+            </div>
+            <h4 class="font-bold text-amber-900 mb-2">Preuve de Livraison</h4>
+            <p class="text-sm text-amber-700/80">Photo de remise envoyée pour garantir la réception de vos proches.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Footer -->
-    <footer class="bg-[var(--color-bg-dark)] text-white mt-20">
-      <div class="h-1 bg-gradient-to-r from-transparent via-[var(--color-accent)] to-transparent" />
-      
-      <div class="container-main py-16">
+    <footer class="bg-[#0b1120] text-white pt-10">
+      <div class="container-main pb-12">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           <!-- Brand -->
           <div>
             <img src="/logo.png" alt="TchadBox" class="h-14 w-auto mb-6" />
-            <p class="text-slate-400 leading-relaxed mb-6">
-              Le service de référence pour la diaspora tchadienne. Envoyez des biens de qualité à vos proches au Tchad, avec preuve de livraison certifiée.
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+              Le lien de confiance de la diaspora tchadienne. Envoyez l'essentiel à vos proches avec l'excellence garantie.
             </p>
             <div class="flex gap-3">
-              <a v-for="s in socials" :key="s.name" :href="s.url" class="w-10 h-10 rounded-xl bg-white/5 hover:bg-[var(--color-accent)] hover:text-[var(--color-primary-dark)] flex items-center justify-center transition-all duration-300 hover:scale-110">
+              <a v-for="s in socials" :key="s.name" :href="s.url" class="w-10 h-10 rounded-xl bg-white/5 hover:bg-amber-500 hover:text-white flex items-center justify-center transition-all duration-300">
                 <component :is="s.icon" class="w-5 h-5" />
               </a>
             </div>
@@ -310,10 +337,10 @@
 
           <!-- Navigation -->
           <div>
-            <h4 class="font-semibold mb-6 text-[var(--color-accent)]">Navigation</h4>
+            <h4 class="font-bold mb-6 text-white tracking-wide uppercase text-xs opacity-50">Navigation</h4>
             <ul class="space-y-3">
               <li v-for="link in navLinks" :key="link.to">
-                <NuxtLink :to="link.to" class="text-slate-400 hover:text-white transition-colors">
+                <NuxtLink :to="link.to" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">
                   {{ link.label }}
                 </NuxtLink>
               </li>
@@ -322,48 +349,55 @@
 
           <!-- Categories -->
           <div>
-            <h4 class="font-semibold mb-6 text-[var(--color-accent)]">Catégories</h4>
+            <h4 class="font-bold mb-6 text-white tracking-wide uppercase text-xs opacity-50">Catégories</h4>
             <ul class="space-y-3">
-              <li><NuxtLink to="/catalogue?categorie=alimentaire" class="text-slate-400 hover:text-white transition-colors">Alimentaire</NuxtLink></li>
-              <li><NuxtLink to="/catalogue?categorie=scolarite" class="text-slate-400 hover:text-white transition-colors">Scolarité</NuxtLink></li>
-              <li><NuxtLink to="/catalogue?categorie=sante" class="text-slate-400 hover:text-white transition-colors">Santé & Bébé</NuxtLink></li>
-              <li><NuxtLink to="/catalogue?categorie=fetes" class="text-slate-400 hover:text-white transition-colors">Fêtes</NuxtLink></li>
+              <li><NuxtLink to="/catalogue?categorie=alimentaire" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Alimentaire</NuxtLink></li>
+              <li><NuxtLink to="/catalogue?categorie=scolarite" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Scolarité</NuxtLink></li>
+              <li><NuxtLink to="/catalogue?categorie=sante" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Santé & Bébé</NuxtLink></li>
+              <li><NuxtLink to="/catalogue?categorie=fetes" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Fêtes & Occasions</NuxtLink></li>
             </ul>
           </div>
 
           <!-- Contact -->
           <div>
-            <h4 class="font-semibold mb-6 text-[var(--color-accent)]">Contact</h4>
+            <h4 class="font-bold mb-6 text-white tracking-wide uppercase text-xs opacity-50">Assistance</h4>
             <ul class="space-y-4">
-              <li class="flex items-center gap-3 text-slate-400">
-                <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
-                  <Mail class="w-4 h-4 text-[var(--color-accent)]" />
-                </div>
-                contact@tchadbox.com
+              <li>
+                <a href="mailto:contact@tchadbox.com" class="group flex items-center gap-3 text-slate-400 hover:text-white transition-colors">
+                  <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-amber-500/20 group-hover:text-amber-400 transition-all">
+                    <Mail class="w-4 h-4" />
+                  </div>
+                  <span class="text-sm">contact@tchadbox.com</span>
+                </a>
+              </li>
+              <li>
+                <a href="tel:+33000000000" class="group flex items-center gap-3 text-slate-400 hover:text-white transition-colors">
+                  <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-amber-500/20 group-hover:text-amber-400 transition-all">
+                    <Phone class="w-4 h-4" />
+                  </div>
+                  <span class="text-sm">+33 X XX XX XX XX</span>
+                </a>
               </li>
               <li class="flex items-center gap-3 text-slate-400">
-                <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
-                  <Phone class="w-4 h-4 text-[var(--color-accent)]" />
+                <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
+                  <MapPin class="w-4 h-4" />
                 </div>
-                +33 X XX XX XX XX
-              </li>
-              <li class="flex items-center gap-3 text-slate-400">
-                <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
-                  <MapPin class="w-4 h-4 text-[var(--color-accent)]" />
-                </div>
-                N'Djamena, Tchad
+                <span class="text-sm">N'Djamena, Tchad</span>
               </li>
             </ul>
           </div>
         </div>
-
-        <div class="border-t border-white/5 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p class="text-slate-500 text-sm">© {{ new Date().getFullYear() }} TchadBox. Tous droits réservés.</p>
-          <div class="flex gap-6 text-sm text-slate-500">
+      </div>
+      
+      <!-- Bottom Bar -->
+      <div class="border-t border-white/10 bg-black/20">
+        <div class="container-main py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p class="text-slate-500 text-xs text-center md:text-left">© {{ new Date().getFullYear() }} TchadBox. Expédié avec ♥ vers le Tchad.</p>
+          <div class="flex flex-wrap justify-center gap-6 text-xs text-slate-500">
             <NuxtLink to="/conditions" class="hover:text-white transition-colors">CGV</NuxtLink>
             <NuxtLink to="/mentions-legales" class="hover:text-white transition-colors">Mentions légales</NuxtLink>
             <NuxtLink to="/confidentialite" class="hover:text-white transition-colors">Confidentialité</NuxtLink>
-</div>
+          </div>
         </div>
       </div>
     </footer>
@@ -375,7 +409,7 @@
 
 <script setup lang="ts">
 import { 
-  Search, ShoppingBag, Menu, X, Mail, Phone, MapPin, Truck,
+  Search, ShoppingBag, Menu, X, Mail, Phone, MapPin, Truck, Shield, Camera,
   Home, Package, HelpCircle, MapPinned, MessageCircle,
   Facebook, Instagram, Twitter, Heart, User, ChevronDown,
   LayoutDashboard, UserCircle, LogOut, UserPlus

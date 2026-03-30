@@ -38,7 +38,7 @@
                 v-model="orderNumber" 
                 type="text" 
                 placeholder="Ex: TCB-2024-001234" 
-                class="input pl-12" 
+                class="input !pl-12" 
                 required 
               />
             </div>
