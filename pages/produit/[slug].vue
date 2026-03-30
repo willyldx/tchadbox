@@ -15,248 +15,279 @@
     <!-- Product Content -->
     <div v-else-if="product" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Breadcrumb -->
-      <nav class="flex items-center gap-2 text-sm mb-6">
-        <NuxtLink to="/" class="text-[var(--color-text-muted)] hover:text-[var(--color-accent-dark)]">Accueil</NuxtLink>
-        <ChevronRightIcon class="w-4 h-4 text-[var(--color-text-muted)]" />
-        <NuxtLink to="/catalogue" class="text-[var(--color-text-muted)] hover:text-[var(--color-accent-dark)]">Catalogue</NuxtLink>
-        <ChevronRightIcon class="w-4 h-4 text-[var(--color-text-muted)]" />
+      <nav class="flex items-center gap-2 text-sm mb-8 text-[var(--color-text-secondary)] font-medium">
+        <NuxtLink to="/" class="hover:text-[var(--color-accent)] transition-colors">Accueil</NuxtLink>
+        <ChevronRightIcon class="w-4 h-4 opacity-50" />
+        <NuxtLink to="/catalogue" class="hover:text-[var(--color-accent)] transition-colors">Catalogue</NuxtLink>
+        <ChevronRightIcon class="w-4 h-4 opacity-50" />
         <NuxtLink 
           :to="`/catalogue?categorie=${product.categoryHandle}`" 
-          class="text-[var(--color-text-muted)] hover:text-[var(--color-accent-dark)]"
+          class="hover:text-[var(--color-accent)] transition-colors"
         >
           {{ product.category }}
         </NuxtLink>
-        <ChevronRightIcon class="w-4 h-4 text-[var(--color-text-muted)]" />
-        <span class="text-[var(--color-text)] font-medium truncate">{{ product.title }}</span>
+        <ChevronRightIcon class="w-4 h-4 opacity-50" />
+        <span class="text-[var(--color-primary)] font-bold truncate max-w-[200px] sm:max-w-none">{{ product.title }}</span>
       </nav>
 
       <div class="grid lg:grid-cols-2 gap-12">
         <!-- Product Images -->
-        <div class="space-y-4">
+        <div class="space-y-6">
           <!-- Main Image -->
-          <div class="relative aspect-square bg-white rounded-2xl border border-[var(--color-border)] overflow-hidden group">
+          <div class="relative aspect-[4/3] sm:aspect-square bg-gray-50/50 rounded-[2rem] overflow-hidden group border border-gray-100 ring-1 ring-slate-900/5">
             <img
               :src="selectedImage || product.thumbnail"
               :alt="product.title"
-              class="w-full h-full object-contain p-8 transition-transform duration-500 group-hover:scale-105"
+              class="w-full h-full object-contain p-8 sm:p-12 transition-transform duration-700 group-hover:scale-105 mix-blend-multiply"
             />
             
             <!-- Favorite Button -->
             <button
               @click="toggleFavorite"
-              class="absolute top-4 right-4 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
+              class="absolute top-6 right-6 w-12 h-12 bg-white/90 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:scale-110 transition-all border border-white/20"
             >
               <HeartIcon 
-                class="w-6 h-6 transition-colors" 
-                :class="isFavorite ? 'fill-red-500 text-red-500' : 'text-[var(--color-text-muted)]'"
+                class="w-5 h-5 transition-colors" 
+                :class="isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400'"
               />
             </button>
 
             <!-- Zoom Button -->
             <button
               @click="showZoom = true"
-              class="absolute bottom-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
+              class="absolute bottom-6 right-6 w-10 h-10 bg-white/90 backdrop-blur-md rounded-xl flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:scale-110 transition-all border border-white/20"
             >
-              <ZoomInIcon class="w-5 h-5 text-[var(--color-text-secondary)]" />
+              <ZoomInIcon class="w-4 h-4 text-gray-400" />
             </button>
 
             <!-- Badges -->
-            <div class="absolute top-4 left-4 flex flex-col gap-2">
-              <span v-if="product.compareAtPrice" class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+            <div class="absolute top-6 left-6 flex flex-col gap-2">
+              <span v-if="product.compareAtPrice" class="bg-red-500 text-white text-[11px] font-extrabold px-3 py-1.5 rounded-lg shadow-sm tracking-wider">
                 -{{ discountPercent }}%
               </span>
-              <span v-if="!product.inStock" class="bg-[var(--color-primary)] text-white text-xs font-bold px-3 py-1 rounded-full">
+              <span v-if="!product.inStock" class="bg-[var(--color-primary)] text-white text-[11px] font-extrabold px-3 py-1.5 rounded-lg shadow-sm tracking-wider uppercase">
                 Rupture
               </span>
             </div>
           </div>
 
           <!-- Thumbnails -->
-          <div v-if="product.images?.length > 1" class="flex gap-3 overflow-x-auto pb-2">
+          <div v-if="product.images?.length > 1" class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x">
             <button
               v-for="(image, index) in product.images"
               :key="index"
               @click="selectedImage = image"
-              class="w-20 h-20 bg-white rounded-xl border-2 overflow-hidden shrink-0 transition-colors"
-              :class="selectedImage === image ? 'border-amber-500' : 'border-[var(--color-border)] hover:border-[var(--color-border)]'"
+              class="w-24 h-24 sm:w-28 sm:h-28 bg-gray-50/50 rounded-2xl border-2 overflow-hidden shrink-0 transition-all snap-start"
+              :class="selectedImage === image ? 'border-[var(--color-accent)] shadow-md scale-105' : 'border-transparent hover:border-gray-200'"
             >
-              <img :src="image" :alt="`Vue ${index + 1}`" class="w-full h-full object-contain p-2" />
+              <img :src="image" :alt="`Vue ${index + 1}`" class="w-full h-full object-contain p-3 mix-blend-multiply" />
             </button>
           </div>
         </div>
 
         <!-- Product Info -->
-        <div class="space-y-6">
-          <!-- Category -->
-          <div class="flex items-center gap-2">
-            <span class="text-sm text-amber-600 font-medium bg-amber-50 px-3 py-1 rounded-full">
-              {{ product.category }}
-            </span>
-            <span v-if="product.inStock" class="text-sm text-green-600 font-medium bg-green-50 px-3 py-1 rounded-full flex items-center gap-1">
-              <CheckIcon class="w-4 h-4" />
-              En stock
-            </span>
-          </div>
-
-          <!-- Title -->
-          <h1 class="text-3xl lg:text-4xl font-bold text-[var(--color-text)]">{{ product.title }}</h1>
-
-          <!-- Subtitle -->
-          <p v-if="product.subtitle" class="text-lg text-[var(--color-text-muted)]">{{ product.subtitle }}</p>
-
-          <!-- Price -->
-          <div class="flex items-baseline gap-4">
-            <span class="text-4xl font-bold text-[var(--color-text)]">{{ formatPrice(currentPrice) }}</span>
-            <span v-if="product.compareAtPrice && !selectedVariant" class="text-xl text-[var(--color-text-muted)] line-through">
-              {{ formatPrice(product.compareAtPrice) }}
-            </span>
-          </div>
-          <p class="text-sm text-[var(--color-text-muted)]">≈ {{ formatFCFA(currentPrice) }}</p>
-
-          <!-- Variants Selector -->
-          <div v-if="product.variants && product.variants.length > 0" class="pt-4 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-sm font-medium text-[var(--color-text)]">Options disponibles</span>
+        <div class="flex flex-col">
+          <div class="space-y-8 flex-grow">
+            <!-- Header (Category & Reviews) -->
+            <div class="flex flex-wrap items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <span class="text-[11px] font-extrabold uppercase tracking-widest text-amber-700 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100">
+                  {{ product.category }}
+                </span>
+                <span v-if="product.inStock" class="text-[11px] font-extrabold uppercase tracking-widest text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100 flex items-center gap-1.5">
+                  <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  En stock
+                </span>
+              </div>
+              <div class="flex items-center gap-1.5 opacity-80">
+                <div class="flex">
+                  <StarIcon v-for="i in 5" :key="i" class="w-4 h-4 fill-amber-400 text-amber-400" />
+                </div>
+                <span class="text-xs text-gray-500 font-bold ml-1">4.9/5</span>
+              </div>
             </div>
-            <div class="flex flex-wrap gap-2">
+
+            <!-- Title & Subtitle -->
+            <div class="space-y-3">
+              <h1 class="text-4xl sm:text-5xl font-extrabold text-[var(--color-primary)] tracking-tight leading-[1.1]">{{ product.title }}</h1>
+              <p v-if="product.subtitle" class="text-lg sm:text-xl text-gray-500 font-medium leading-relaxed">{{ product.subtitle }}</p>
+            </div>
+
+            <!-- Price Block -->
+            <div class="p-6 bg-gray-50/50 rounded-3xl border border-gray-100 ring-1 ring-slate-900/5">
+              <div class="flex flex-col gap-1">
+                <div class="flex items-baseline gap-4">
+                  <span class="text-4xl sm:text-5xl font-black text-[var(--color-primary)] tracking-tighter">{{ formatPrice(currentPrice) }}</span>
+                  <span v-if="product.compareAtPrice && !selectedVariant" class="text-2xl text-gray-400 font-bold line-through decoration-2">
+                    {{ formatPrice(product.compareAtPrice) }}
+                  </span>
+                </div>
+                <p class="text-sm text-gray-500 font-bold uppercase tracking-wider mt-2 flex items-center gap-2">
+                  <span class="w-4 border-t-2 border-gray-300"></span>
+                  Soit environ {{ formatFCFA(currentPrice) }} FCFA
+                </p>
+              </div>
+            </div>
+
+            <!-- Variants Selector -->
+            <div v-if="product.variants && product.variants.length > 0" class="space-y-4">
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-bold text-gray-900 uppercase tracking-wider">Variantes disponibles</span>
+              </div>
+              <div class="flex flex-wrap gap-3">
+                <button
+                  v-for="variant in product.variants"
+                  :key="variant.id"
+                  @click="selectedVariant = variant"
+                  class="px-5 py-3 rounded-2xl border-2 text-sm font-bold transition-all"
+                  :class="selectedVariant?.id === variant.id 
+                    ? 'border-[var(--color-accent)] text-[var(--color-primary)] bg-amber-50 shadow-[0_4px_12px_rgba(245,158,11,0.15)]' 
+                    : 'border-gray-100 text-gray-500 hover:border-gray-200 hover:bg-gray-50'"
+                >
+                  {{ variant.title }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Short Description -->
+            <div v-if="product.description" class="prose prose-stone max-w-none prose-p:leading-relaxed prose-p:text-gray-600 prose-p:font-medium">
+              <p class="line-clamp-3">{{ product.description }}</p>
+              <button @click="activeTab = 'description'" class="text-[var(--color-accent-dark)] font-bold text-sm mt-2 hover:underline">Lire la suite</button>
+            </div>
+
+            <!-- Action Block (Hidden on Mobile) -->
+            <div class="hidden sm:block space-y-6 pt-6 border-t border-gray-100">
+              <div class="flex flex-wrap lg:flex-nowrap items-center gap-4">
+                <!-- Quantity Pill -->
+                <div class="flex items-center bg-gray-50 rounded-2xl p-1.5 border border-gray-200 shadow-sm">
+                  <button
+                    @click="quantity > 1 && quantity--"
+                    :disabled="quantity <= 1"
+                    class="w-12 h-12 rounded-xl flex items-center justify-center text-gray-500 bg-white shadow-[0_2px_4px_rgba(0,0,0,0.02)] hover:text-[var(--color-primary)] hover:bg-gray-50 disabled:opacity-50 disabled:shadow-none transition-all border border-gray-100"
+                  >
+                    <MinusIcon class="w-5 h-5" />
+                  </button>
+                  <span class="w-16 text-center font-black text-xl text-[var(--color-primary)]">{{ quantity }}</span>
+                  <button
+                    @click="quantity++"
+                    :disabled="quantity >= 10"
+                    class="w-12 h-12 rounded-xl flex items-center justify-center text-gray-500 bg-white shadow-[0_2px_4px_rgba(0,0,0,0.02)] hover:text-[var(--color-primary)] hover:bg-gray-50 disabled:opacity-50 disabled:shadow-none transition-all border border-gray-100"
+                  >
+                    <PlusIcon class="w-5 h-5" />
+                  </button>
+                </div>
+
+                <!-- Primary CTA -->
+                <button
+                  @click="addToCart"
+                  :disabled="!product.inStock || isAddingToCart"
+                  class="flex-1 h-16 rounded-2xl bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-light)] active:scale-95 transition-all duration-300 shadow-[0_12px_24px_-8px_rgba(15,23,42,0.5)] disabled:opacity-50 font-bold text-lg flex items-center justify-center gap-3 group relative overflow-hidden"
+                >
+                  <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_2s_infinite]"></span>
+                  <LoaderIcon v-if="isAddingToCart" class="w-6 h-6 animate-spin" />
+                  <template v-else>
+                    <ShoppingCartIcon class="w-6 h-6 group-hover:-translate-y-1 transition-transform" />
+                    Ajouter au panier
+                  </template>
+                </button>
+              </div>
+
+              <!-- Secondary CTA -->
               <button
-                v-for="variant in product.variants"
-                :key="variant.id"
-                @click="selectedVariant = variant"
-                class="px-4 py-2 rounded-xl border-2 text-sm font-medium transition-all"
-                :class="selectedVariant?.id === variant.id 
-                  ? 'border-amber-500 text-amber-600 bg-amber-50' 
-                  : 'border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-gray-300'"
+                @click="buyNow"
+                :disabled="!product.inStock"
+                class="w-full h-16 border-2 border-[var(--color-accent)] text-gray-900 font-extrabold rounded-2xl hover:bg-[var(--color-accent-light)] bg-[var(--color-accent)] transition-all shadow-[0_4px_12px_rgba(245,158,11,0.2)] active:scale-95"
               >
-                {{ variant.title }}
+                Acheter instantanément
               </button>
             </div>
-          </div>
 
-          <!-- Description -->
-          <div class="prose prose-stone max-w-none">
-            <p class="text-[var(--color-text-secondary)] leading-relaxed">{{ product.description }}</p>
-          </div>
+            <!-- Mobile Action Spacer -->
+            <div class="sm:hidden h-24"></div>
 
-          <!-- Quantity Selector -->
-          <div class="flex items-center gap-4">
-            <span class="text-sm font-medium text-[var(--color-text-secondary)]">Quantité</span>
-            <div class="flex items-center border border-[var(--color-border)] rounded-xl overflow-hidden">
-              <button
-                @click="quantity > 1 && quantity--"
-                :disabled="quantity <= 1"
-                class="w-12 h-12 flex items-center justify-center text-[var(--color-text-secondary)] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                <MinusIcon class="w-5 h-5" />
-              </button>
-              <span class="w-16 text-center font-semibold text-[var(--color-text)]">{{ quantity }}</span>
-              <button
-                @click="quantity++"
-                :disabled="quantity >= 10"
-                class="w-12 h-12 flex items-center justify-center text-[var(--color-text-secondary)] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                <PlusIcon class="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-
-          <!-- Add to Cart -->
-          <div class="flex gap-4">
-            <button
-              @click="addToCart"
-              :disabled="!product.inStock || isAddingToCart"
-              class="flex-1 py-4 btn-gold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              <LoaderIcon v-if="isAddingToCart" class="w-5 h-5 animate-spin" />
-              <ShoppingCartIcon v-else class="w-5 h-5" />
-              {{ isAddingToCart ? 'Ajout...' : 'Ajouter au panier' }}
-            </button>
-            <button
-              @click="buyNow"
-              :disabled="!product.inStock"
-              class="px-6 py-4 border-2 border-amber-500 text-amber-600 font-semibold rounded-xl hover:bg-amber-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Acheter
-            </button>
-          </div>
-
-          <!-- Trust Badges -->
-          <div class="grid grid-cols-3 gap-4 pt-6 border-t border-[var(--color-border)]">
-            <div class="text-center">
-              <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-2">
-                <TruckIcon class="w-6 h-6 text-green-600" />
+            <!-- Trust Badges Block -->
+            <div class="bg-gray-50/50 rounded-3xl p-6 border border-gray-100 ring-1 ring-slate-900/5 mt-8">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="flex items-center gap-4 border-b md:border-b-0 md:border-r border-gray-100 pb-4 md:pb-0 pr-0 md:pr-4">
+                  <div class="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-shrink-0 items-center justify-center">
+                    <TruckIcon class="w-6 h-6 text-emerald-600" />
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-gray-900">Livraison Garantie</h4>
+                    <p class="text-xs font-medium text-gray-500 mt-0.5">N'Djamena s/ 3-5j</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-4 border-b md:border-b-0 md:border-r border-gray-100 pb-4 md:pb-0 pr-0 md:pr-4">
+                  <div class="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-shrink-0 items-center justify-center">
+                    <ShieldCheckIcon class="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-gray-900">Paiement Sécurisé</h4>
+                    <p class="text-xs font-medium text-gray-500 mt-0.5">Virement / CB</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-4">
+                  <div class="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-shrink-0 items-center justify-center">
+                    <PackageIcon class="w-6 h-6 text-amber-600" />
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-gray-900">Preuve Photo</h4>
+                    <p class="text-xs font-medium text-gray-500 mt-0.5">À la remise</p>
+                  </div>
+                </div>
               </div>
-              <p class="text-xs text-[var(--color-text-secondary)] font-medium">Livraison N'Djamena</p>
-              <p class="text-xs text-[var(--color-text-muted)]">3-5 jours</p>
-            </div>
-            <div class="text-center">
-              <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-2">
-                <ShieldCheckIcon class="w-6 h-6 text-blue-600" />
-              </div>
-              <p class="text-xs text-[var(--color-text-secondary)] font-medium">Paiement sécurisé</p>
-              <p class="text-xs text-[var(--color-text-muted)]">100% protégé</p>
-            </div>
-            <div class="text-center">
-              <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mx-auto mb-2">
-                <PackageIcon class="w-6 h-6 text-amber-600" />
-              </div>
-              <p class="text-xs text-[var(--color-text-secondary)] font-medium">Photo à la livraison</p>
-              <p class="text-xs text-[var(--color-text-muted)]">Preuve de remise</p>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Product Details Tabs -->
-      <div class="mt-16">
-        <div class="border-b border-[var(--color-border)]">
-          <nav class="flex gap-8">
+      <div class="mt-20">
+        <div class="border-b border-gray-100 relative">
+          <nav class="flex gap-4 sm:gap-12 overflow-x-auto scrollbar-hide">
             <button
               v-for="tab in tabs"
               :key="tab.id"
               @click="activeTab = tab.id"
-              class="py-4 border-b-2 font-medium transition-colors"
+              class="relative py-6 font-bold text-sm sm:text-base uppercase tracking-widest transition-colors whitespace-nowrap"
               :class="activeTab === tab.id 
-                ? 'border-amber-500 text-amber-600' 
-                : 'border-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]'"
+                ? 'text-[var(--color-primary)]' 
+                : 'text-gray-400 hover:text-gray-600'"
             >
               {{ tab.label }}
+              <span v-if="activeTab === tab.id" class="absolute bottom-0 left-0 w-full h-1 bg-[var(--color-accent)] rounded-t-full"></span>
             </button>
           </nav>
         </div>
 
-        <div class="py-8">
+        <div class="py-10 max-w-4xl">
           <!-- Description Tab -->
-          <div v-if="activeTab === 'description'" class="prose prose-stone max-w-none">
+          <div v-if="activeTab === 'description'" class="prose prose-stone max-w-none prose-lg prose-p:leading-loose">
             <p>{{ product.description }}</p>
-            <h3>Caractéristiques</h3>
+            <h3>Caractéristiques TchadBox</h3>
             <ul>
-              <li>Produit de qualité sélectionné en France</li>
-              <li>Emballage soigné pour le transport</li>
-              <li>Livraison directe à N'Djamena</li>
+              <li><strong>Sélection Premium</strong> : Ce produit a été sourcé pour garantir une qualité optimale à N'Djamena.</li>
+              <li><strong>Emballage Blindé</strong> : Protégé spécialement pour le fret et le transport jusqu'au domicile.</li>
+              <li><strong>Zéro Surprise</strong> : Le prix global inclut la logistique et l'acheminement local.</li>
             </ul>
           </div>
 
           <!-- Shipping Tab -->
           <div v-else-if="activeTab === 'shipping'" class="space-y-6">
-            <div class="bg-gray-50 rounded-xl p-6">
-              <h3 class="font-semibold text-[var(--color-text)] mb-4">Informations de livraison</h3>
-              <ul class="space-y-3 text-[var(--color-text-secondary)]">
-                <li class="flex items-start gap-3">
-                  <CheckIcon class="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
-                  <span>Délai de livraison : 3 à 5 jours ouvrés</span>
+            <div class="bg-gray-50 rounded-3xl p-8 border border-gray-100">
+              <h3 class="font-extrabold text-xl text-[var(--color-primary)] mb-6">Logistique & Livraison Intégrée</h3>
+              <ul class="space-y-4 text-gray-600 font-medium">
+                <li class="flex items-start gap-4">
+                  <div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5"><CheckIcon class="w-4 h-4 text-emerald-600" /></div>
+                  <span class="leading-relaxed"><strong>Délai Express N'Djamena</strong> : La livraison se fait en moyenne entre 3 et 5 jours après validation de votre commande.</span>
                 </li>
-                <li class="flex items-start gap-3">
-                  <CheckIcon class="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
-                  <span>Livraison gratuite à partir de 100€</span>
+                <li class="flex items-start gap-4">
+                  <div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5"><CheckIcon class="w-4 h-4 text-emerald-600" /></div>
+                  <span class="leading-relaxed"><strong>Livraison 100% Gratuite</strong> pour toutes les commandes supérieures à 150€. Aucun frais de livraison "surprise" à payer pour le bénéficiaire au Tchad !</span>
                 </li>
-                <li class="flex items-start gap-3">
-                  <CheckIcon class="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
-                  <span>Suivi en temps réel de votre colis</span>
-                </li>
-                <li class="flex items-start gap-3">
-                  <CheckIcon class="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
-                  <span>Photo de confirmation à la livraison</span>
+                <li class="flex items-start gap-4">
+                  <div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5"><CheckIcon class="w-4 h-4 text-emerald-600" /></div>
+                  <span class="leading-relaxed"><strong>Preuve Photographique</strong> : Notre livreur réalise systématiquement une photo avec le bénéficiaire lors de la remise (soumise à autorisation) envoyée dans votre espace client.</span>
                 </li>
               </ul>
             </div>
@@ -264,12 +295,37 @@
 
           <!-- Reviews Tab -->
           <div v-else-if="activeTab === 'reviews'" class="space-y-6">
-            <div class="text-center py-12">
-              <StarIcon class="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <p class="text-[var(--color-text-muted)]">Aucun avis pour le moment</p>
-              <p class="text-sm text-[var(--color-text-muted)]">Soyez le premier à donner votre avis !</p>
+            <div class="bg-gray-50 rounded-3xl p-12 text-center border border-gray-100">
+              <div class="w-16 h-16 bg-white rounded-full mx-auto flex items-center justify-center shadow-sm mb-4">
+                <StarIcon class="w-8 h-8 text-gray-300" />
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 mb-2">Aucun avis publié</h3>
+              <p class="text-gray-500 font-medium">Faites plaisir à vos proches et soyez le premier à certifier ce produit !</p>
             </div>
           </div>
+        </div>
+      </div>
+      
+      <!-- MOBILE STICKY BOTTOM BAR -->
+      <div v-if="product" class="sm:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t border-gray-200 p-4 shadow-[0_-8px_30px_rgb(0,0,0,0.06)] z-40 pb-safe">
+        <div class="flex items-center justify-between gap-4">
+          <div class="flex flex-col">
+            <span class="text-2xl font-black text-[var(--color-primary)] leading-none">{{ formatPrice(currentPrice) }}</span>
+            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wide mt-1">
+              ≈ {{ priceFCFA }} FCFA
+            </span>
+          </div>
+          <button
+            @click="addToCart"
+            :disabled="!product.inStock || isAddingToCart"
+            class="px-8 h-14 rounded-2xl bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)] active:scale-95 transition-all shadow-lg shadow-[var(--color-primary)]/20 flex-shrink-0 disabled:opacity-50 font-extrabold text-base flex items-center justify-center gap-2"
+          >
+            <LoaderIcon v-if="isAddingToCart" class="w-5 h-5 animate-spin" />
+            <template v-else>
+              <ShoppingCartIcon class="w-5 h-5" />
+              Ajouter
+            </template>
+          </button>
         </div>
       </div>
 
