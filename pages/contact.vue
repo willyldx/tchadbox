@@ -176,5 +176,11 @@ const submitForm = async () => {
   isSubmitting.value = false
 }
 
-useHead({ title: 'Contact' })
+useHead({ 
+  title: 'Contactez-nous — TchadBox',
+  meta: [
+    { name: 'description', content: 'Besoin d\'aide ? Contactez l\'équipe TchadBox. Notre support est disponible pour toute question sur vos commandes, paiements ou livraisons à N\'Djamena.' },
+    { property: 'og:title', content: 'Contactez le support TchadBox' }
+  ]
+})
 </script>

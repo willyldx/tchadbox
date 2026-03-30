@@ -79,6 +79,8 @@ import { useMeilisearch } from '~/composables/useMeilisearch'
 const props = defineProps<{ modelValue: boolean }>()
 const emit = defineEmits<{ 'update:modelValue': [value: boolean] }>()
 
+const cartStore = useCartStore()
+
 const query = ref('')
 const searchInput = ref<HTMLInputElement>()
 const searchResults = ref<any[]>([])
@@ -134,7 +136,7 @@ watch(query, (q) => {
   }, 250) // Slightly faster debounce for snappier feel
 })
 
-const formatPrice = (price: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price)
+const formatPrice = (price: number) => cartStore.formatPrice(price)
 
 const close = () => { emit('update:modelValue', false); query.value = ''; searchResults.value = [] }
 

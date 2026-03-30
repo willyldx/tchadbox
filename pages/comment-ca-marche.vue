@@ -207,5 +207,11 @@ const faqs = [
   { question: 'Les frais de livraison sont-ils inclus dans les prix ?', answer: 'Les frais de livraison sont calculés séparément en fonction de la zone de livraison à N\'Djamena et affichés de manière transparente avant la validation de votre commande. Aucun frais caché.' },
 ]
 
-useHead({ title: 'Comment ça marche' })
+useHead({ 
+  title: 'Comment ça marche ? — TchadBox',
+  meta: [
+    { name: 'description', content: 'Découvrez comment envoyer facilement des produits essentiels à votre famille au Tchad. 4 étapes simples, du catalogue premium jusqu\'à la preuve de livraison certifiée.' },
+    { property: 'og:title', content: 'Comment fonctionne TchadBox ?' }
+  ]
+})
 </script>

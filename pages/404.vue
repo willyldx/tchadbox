@@ -22,15 +22,19 @@
           to="/"
           class="btn-gold"
         >
-          <HomeIcon class="w-5 h-5" />
-          Retour à l'accueil
+          <span>
+            <HomeIcon class="w-5 h-5" />
+            Retour à l'accueil
+          </span>
         </NuxtLink>
         <NuxtLink
           to="/catalogue"
           class="btn-outline"
         >
-          <ShoppingBagIcon class="w-5 h-5" />
-          Voir le catalogue
+          <span>
+            <ShoppingBagIcon class="w-5 h-5" />
+            Voir le catalogue
+          </span>
         </NuxtLink>
       </div>
 
