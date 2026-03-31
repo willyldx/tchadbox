@@ -567,8 +567,6 @@ async function submitOrder() {
     isSubmitting.value = false
   }
 }
-
-}
 </script>
 
 <style scoped>
