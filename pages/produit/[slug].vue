@@ -117,12 +117,12 @@
             <div class="p-6 bg-gray-50/50 rounded-3xl border border-gray-100 ring-1 ring-slate-900/5">
               <div class="flex flex-col gap-1">
                 <div class="flex items-baseline gap-4">
-                  <span class="text-4xl sm:text-5xl font-black text-[var(--color-primary)] tracking-tighter">{{ formatPrice(currentPrice) }}</span>
+                  <span class="text-4xl sm:text-5xl font-black text-[var(--color-primary)] tracking-tighter">{{ cartStore.formatPrice(currentPrice) }}</span>
                   <span v-if="product.compareAtPrice && !selectedVariant" class="text-2xl text-gray-400 font-bold line-through decoration-2">
-                    {{ formatPrice(product.compareAtPrice) }}
+                    {{ cartStore.formatPrice(product.compareAtPrice) }}
                   </span>
                 </div>
-                <p class="text-sm text-gray-500 font-bold uppercase tracking-wider mt-2 flex items-center gap-2">
+                <p v-if="cartStore.currency !== 'XAF'" class="text-sm text-gray-500 font-bold uppercase tracking-wider mt-2 flex items-center gap-2">
                   <span class="w-4 border-t-2 border-gray-300"></span>
                   Soit environ {{ formatFCFA(currentPrice) }} FCFA
                 </p>
@@ -310,9 +310,9 @@
       <div v-if="product" class="sm:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t border-gray-200 p-4 shadow-[0_-8px_30px_rgb(0,0,0,0.06)] z-40 pb-safe">
         <div class="flex items-center justify-between gap-4">
           <div class="flex flex-col">
-            <span class="text-2xl font-black text-[var(--color-primary)] leading-none">{{ formatPrice(currentPrice) }}</span>
-            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wide mt-1">
-              ≈ {{ priceFCFA }} FCFA
+            <span class="text-2xl font-black text-[var(--color-primary)] leading-none">{{ cartStore.formatPrice(currentPrice) }}</span>
+            <span v-if="cartStore.currency !== 'XAF'" class="text-[10px] font-bold text-gray-500 uppercase tracking-wide mt-1">
+              ≈ {{ formatFCFA(currentPrice) }}
             </span>
           </div>
           <button
@@ -527,13 +527,6 @@ async function fetchProduct() {
   }
   
   isLoading.value = false
-}
-
-function formatPrice(amount: number): string {
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(amount)
 }
 
 function formatFCFA(amount: number): string {

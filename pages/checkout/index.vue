@@ -246,7 +246,7 @@
               <p v-if="item.variantTitle" class="text-xs text-[var(--color-text-muted)] mt-0.5">{{ item.variantTitle }}</p>
             </div>
             <div class="text-sm font-medium text-[var(--color-text)] shrink-0">
-              {{ formatPrice(item.price * item.quantity) }}
+              {{ cartStore.formatPrice(item.price * item.quantity) }}
             </div>
           </div>
         </div>
@@ -568,11 +568,6 @@ async function submitOrder() {
   }
 }
 
-function formatPrice(amount: number): string {
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(amount)
 }
 </script>
 

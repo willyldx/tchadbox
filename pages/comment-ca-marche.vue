@@ -199,12 +199,12 @@ const steps = [
 ]
 
 const faqs = [
-  { question: 'Dans quelles villes livrez-vous actuellement ?', answer: 'Notre service de livraison couvre actuellement l\'ensemble de N\'Djamena. Nous travaillons activement à l\'ouverture de Moundou et Sarh dans les prochains mois. Inscrivez-vous à notre newsletter pour être informé dès leur lancement.' },
+  { question: 'Dans quelles villes livrez-vous actuellement ?', answer: 'Notre service de livraison couvre actuellement l\'ensemble de N\'Djamena (ainsi que Moundou et Sarh selon les options de transport). Inscrivez-vous à notre newsletter pour être informé de nos ouvertures.' },
   { question: 'Quel est le délai de livraison garanti ?', answer: 'Comptez 3 à 5 jours ouvrés après la confirmation de votre paiement. Pour les commandes urgentes, notre équipe peut organiser une livraison express — contactez-nous directement par WhatsApp pour en discuter.' },
-  { question: 'Comment être sûr que ma famille a bien reçu le colis ?', answer: 'C\'est notre engagement phare : chaque livraison est accompagnée d\'une photo de preuve envoyée par WhatsApp ou email. Vous pouvez également suivre l\'avancement de votre commande en temps réel depuis votre espace client sur notre site.' },
-  { question: 'Quels moyens de paiement sont acceptés ?', answer: 'Nous offrons une large palette de solutions de paiement : cartes Visa et Mastercard, Mobile Money (MTN Money, Orange Money, Wave), ainsi que le virement bancaire. Toutes les transactions sont sécurisées par notre partenaire Paystack.' },
+  { question: 'Comment être sûr que ma famille a bien reçu le colis ?', answer: 'C\'est notre engagement phare : chaque livraison est accompagnée d\'une photo de preuve envoyée par WhatsApp ou email. Vous pouvez également suivre l\'avancement de votre commande en temps réel depuis votre espace client.' },
+  { question: 'Quels moyens de paiement sont acceptés ?', answer: 'Nous acceptons : les cartes bancaires (Visa, Mastercard), le Mobile Money International via Paystack (MTN, Orange Money), le virement bancaire, et bien sûr le Mobile Money local tchadien (Airtel Money et Moov Africa).' },
   { question: 'Est-il possible d\'annuler une commande ?', answer: 'Oui, l\'annulation est gratuite tant que la préparation de votre colis n\'a pas débuté. Il vous suffit de nous contacter par email ou WhatsApp et nous procéderons au remboursement intégral sous 48h.' },
-  { question: 'Les frais de livraison sont-ils inclus dans les prix ?', answer: 'Les frais de livraison sont calculés séparément en fonction de la zone de livraison à N\'Djamena et affichés de manière transparente avant la validation de votre commande. Aucun frais caché.' },
+  { question: 'Les frais de livraison sont-ils inclus dans les prix ?', answer: 'Les frais de livraison sont calculés et affichés de manière totalement transparente avant la validation de votre commande. Aucun frais caché.' },
 ]
 
 useHead({ 

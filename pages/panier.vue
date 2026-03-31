@@ -104,8 +104,8 @@
                     
                     <!-- Price -->
                     <div class="text-right">
-                      <span class="text-xl font-bold text-[var(--color-text)]">{{ formatPrice(item.price * item.quantity) }}</span>
-                      <p v-if="item.quantity > 1" class="text-xs text-[var(--color-text-muted)]">{{ formatPrice(item.price) }} /pièce</p>
+                      <span class="text-xl font-bold text-[var(--color-text)]">{{ cartStore.formatPrice(item.price * item.quantity) }}</span>
+                      <p v-if="item.quantity > 1" class="text-xs text-[var(--color-text-muted)]">{{ cartStore.formatPrice(item.price) }} /pièce</p>
                     </div>
                   </div>
                 </div>
@@ -132,7 +132,7 @@
             <div class="space-y-3">
               <div v-for="item in cartStore.items" :key="item.id" class="flex justify-between text-sm">
                 <span class="text-[var(--color-text-secondary)] truncate mr-3">{{ item.title }} × {{ item.quantity }}</span>
-                <span class="text-[var(--color-text)] font-medium flex-shrink-0">{{ formatPrice(item.price * item.quantity) }}</span>
+                <span class="text-[var(--color-text)] font-medium flex-shrink-0">{{ cartStore.formatPrice(item.price * item.quantity) }}</span>
               </div>
             </div>
             
@@ -190,8 +190,6 @@ const cartStore = useCartStore()
 const toast = useToast()
 
 onMounted(() => cartStore.loadFromStorage())
-
-const formatPrice = (price: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price)
 
 const removeItem = (itemId: string) => {
   cartStore.removeItem(itemId)
