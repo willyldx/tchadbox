@@ -405,7 +405,7 @@ const confirmDelivery = async () => {
 
 // Helpers
 const formatPrice = (amount: number) => {
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount || 0)
+  return useCartStore().formatPrice(amount || 0)
 }
 
 const formatDateTime = (date: string | undefined) => {
