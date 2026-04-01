@@ -99,12 +99,6 @@
                   En stock
                 </span>
               </div>
-              <div class="flex items-center gap-1.5 opacity-80">
-                <div class="flex">
-                  <StarIcon v-for="i in 5" :key="i" class="w-4 h-4 fill-amber-400 text-amber-400" />
-                </div>
-                <span class="text-xs text-gray-500 font-bold ml-1">4.9/5</span>
-              </div>
             </div>
 
             <!-- Title & Subtitle -->
@@ -124,7 +118,7 @@
                 </div>
                 <p v-if="cartStore.currency !== 'XAF'" class="text-sm text-gray-500 font-bold uppercase tracking-wider mt-2 flex items-center gap-2">
                   <span class="w-4 border-t-2 border-gray-300"></span>
-                  Soit environ {{ formatFCFA(currentPrice) }} FCFA
+                  Soit environ {{ formatFCFA(currentPrice) }}
                 </p>
               </div>
             </div>
