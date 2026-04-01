@@ -394,8 +394,14 @@ const createProduct = async () => {
 
 // Upload Image
 const onImageSelected = async (e: any) => {
-  const file = e.target.files?.[0]
-  if (!file) return
+  // Gère à la fois l'événement natif et l'émission directe de liste de fichiers par Nuxt UI
+  const file = e?.target?.files?.[0] || (e instanceof FileList ? e[0] : null) || (Array.isArray(e) ? e[0] : e)
+  
+  if (!file || !(file instanceof File)) {
+    console.error('Aucun fichier valide sélectionné', e);
+    return;
+  }
+  
   uploadingImage.value = true
   try {
     const res = await api.adminUploadFile(file)
