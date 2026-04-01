@@ -215,7 +215,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Sous-titre *</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Sous-titre (Optionnel)</label>
             <UInput v-model="createForm.subtitle" placeholder="Courte description d'accroche" />
           </div>
 
@@ -246,7 +246,7 @@
 
         <div class="flex justify-end gap-3 mt-6">
           <UButton color="gray" variant="outline" @click="showCreateModal = false">Annuler</UButton>
-          <UButton color="primary" :loading="creating" :disabled="!createForm.title || !createForm.price || !createForm.subtitle || !createForm.category || !createForm.category_handle || !createForm.thumbnail || !createForm.description" @click="createProduct">Créer le produit</UButton>
+          <UButton color="primary" :loading="creating" :disabled="!createForm.title || !createForm.price || !createForm.category || !createForm.category_handle || !createForm.thumbnail || !createForm.description" @click="createProduct">Créer le produit</UButton>
         </div>
       </div>
     </UModal>
