@@ -81,14 +81,10 @@ export const usePaystack = () => {
       throw new Error('Paystack SDK not loaded')
     }
 
-    // Paystack treats XAF as XOF in many configurations for CFA
-    const currencyCode = options.currency === 'XAF' ? 'XOF' : (options.currency || 'EUR')
-
     const handler = PaystackPop.setup({
       key: publicKey,
       email: options.email,
       amount: options.amount, 
-      currency: currencyCode,
       ref: options.reference || generateReference(),
       metadata: {
         custom_fields: [
