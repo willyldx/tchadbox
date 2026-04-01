@@ -209,29 +209,29 @@
               <UInput v-model.number="createForm.price" type="number" min="0" step="0.01" placeholder="0.00" />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Stock initial</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Stock initial *</label>
               <UInput v-model.number="createForm.stock_quantity" type="number" min="0" placeholder="0" />
             </div>
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Sous-titre</label>
-            <UInput v-model="createForm.subtitle" placeholder="Courte description" />
+            <label class="block text-sm font-medium text-gray-700 mb-1">Sous-titre *</label>
+            <UInput v-model="createForm.subtitle" placeholder="Courte description d'accroche" />
           </div>
 
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie *</label>
               <UInput v-model="createForm.category" placeholder="Ex: Alimentaire" />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Slug catégorie</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Slug catégorie *</label>
               <UInput v-model="createForm.category_handle" placeholder="Ex: alimentaire" />
             </div>
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Image du produit</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Image du produit *</label>
             <div class="flex flex-col gap-2">
               <UInput type="file" accept="image/*" :loading="uploadingImage" @change="onImageSelected" />
               <img v-if="createForm.thumbnail" :src="createForm.thumbnail" class="h-20 w-20 object-cover rounded-md border border-gray-200" alt="Aperçu" />
@@ -239,14 +239,14 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <UTextarea v-model="createForm.description" :rows="3" placeholder="Description détaillée du produit..." />
+            <label class="block text-sm font-medium text-gray-700 mb-1">Description détaillée *</label>
+            <UTextarea v-model="createForm.description" :rows="3" placeholder="Description complète du produit..." />
           </div>
         </div>
 
         <div class="flex justify-end gap-3 mt-6">
           <UButton color="gray" variant="outline" @click="showCreateModal = false">Annuler</UButton>
-          <UButton color="primary" :loading="creating" :disabled="!createForm.title || !createForm.price" @click="createProduct">Créer le produit</UButton>
+          <UButton color="primary" :loading="creating" :disabled="!createForm.title || !createForm.price || !createForm.subtitle || !createForm.category || !createForm.category_handle || !createForm.thumbnail || !createForm.description" @click="createProduct">Créer le produit</UButton>
         </div>
       </div>
     </UModal>
