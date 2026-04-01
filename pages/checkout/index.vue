@@ -327,9 +327,12 @@ const steps = [
   { id: 'confirm', label: 'Confirmation' },
 ]
 
+// Flag pour éviter le retour au catalogue pendant le processus de confirmation
+const isOrderCompleted = ref(false)
+
 // Redirect if cart is empty (wait for hydration)
 watchEffect(() => {
-  if (cartStore.isHydrated && cartStore.isEmpty) {
+  if (cartStore.isHydrated && cartStore.isEmpty && !isOrderCompleted.value) {
     navigateTo('/catalogue')
   }
 })
@@ -516,6 +519,7 @@ async function submitOrder() {
     // 2. Si Mobile Money Tchad, rediriger directement vers la confirmation avec instructions
     if (selectedPayment.value === 'tchad_mobile_money') {
       const totalFCFA = cartStore.totalFCFA
+      isOrderCompleted.value = true
       cartStore.clearCart()
       navigateTo(`/checkout/confirmation?order=${reference}&method=tchad_mobile_money&amount=${totalFCFA}`)
       return
@@ -542,6 +546,7 @@ async function submitOrder() {
           const verification = await verifyPayment(response.reference)
           if (verification.success) {
             // L'état de l'ordre est mis à jour en base de données par le webhook Laravel
+            isOrderCompleted.value = true
             cartStore.clearCart()
             navigateTo(`/checkout/confirmation?order=${reference}`)
           } else {
