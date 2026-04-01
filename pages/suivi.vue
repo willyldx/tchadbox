@@ -69,12 +69,15 @@
             <div class="flex justify-between items-center">
               <div>
                 <p class="text-sm text-white/60 mb-1">Commande</p>
-                <p class="text-xl font-bold font-mono">{{ order.number }}</p>
+                <p class="text-xl font-bold font-mono">{{ order.reference }}</p>
+                <p v-if="order.recipient_name" class="text-sm text-white/70 mt-1">
+                  Pour : {{ order.recipient_name }} — {{ order.shipping_city }}
+                </p>
               </div>
               <span class="px-4 py-2 rounded-xl text-sm font-semibold"
-                :class="order.delivered ? 'bg-green-500/20 text-green-300' : 'bg-amber-500/20 text-amber-300'"
+                :class="order.status === 'delivered' ? 'bg-green-500/20 text-green-300' : 'bg-amber-500/20 text-amber-300'"
               >
-                {{ order.delivered ? '✓ Livré' : '⏳ En cours' }}
+                {{ order.status === 'delivered' ? '✓ Livré' : '⏳ En cours' }}
               </span>
             </div>
           </div>
@@ -112,6 +115,16 @@
             </div>
           </div>
           
+          <!-- Delivery Photo -->
+          <div v-if="order.delivery_photo" class="px-6 pb-0">
+            <p class="text-xs font-bold uppercase tracking-wider text-[var(--color-text-muted)] mb-3">Preuve de livraison</p>
+            <img
+              :src="order.delivery_photo"
+              alt="Preuve de livraison"
+              class="w-full rounded-2xl object-cover max-h-64 border border-gray-100 mb-6"
+            />
+          </div>
+
           <!-- Order footer -->
           <div class="px-6 pb-6 flex gap-3">
             <NuxtLink to="/contact" class="btn-outline flex-1 text-center text-sm">
@@ -145,35 +158,46 @@
 </template>
 
 <script setup lang="ts">
-import { MapPin, Search, Check, SearchX, Package, Info, MessageCircle, Loader, CreditCard, Truck, Camera, Clock } from 'lucide-vue-next'
+import { MapPin, Search, Check, SearchX, Package, Info, MessageCircle, Loader, Clock } from 'lucide-vue-next'
 
-const orderNumber = ref('')
+const route = useRoute()
+const config = useRuntimeConfig()
+
+const orderNumber = ref((route.query.ref as string) || '')
 const order = ref<any>(null)
 const notFound = ref(false)
 const isSearching = ref(false)
 
 const completedPercent = computed(() => {
-  if (!order.value) return 0
+  if (!order.value?.timeline) return 0
   const completed = order.value.timeline.filter((s: any) => s.completed).length
   return (completed / order.value.timeline.length) * 100
 })
 
 const trackOrder = async () => {
+  if (!orderNumber.value.trim()) return
   order.value = null
   notFound.value = false
   isSearching.value = true
-  
+
   try {
-    // TODO: Implement order tracking with Laravel Backend
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    const data = await $fetch<any>(
+      `${config.public.apiUrl}/orders/status/${encodeURIComponent(orderNumber.value.trim())}`
+    )
+    order.value = data
+  } catch (e: any) {
     notFound.value = true
-  } catch (e) {
-    console.error('Tracking error:', e)
-    notFound.value = true
+    if (e?.status !== 404) console.error('Tracking error:', e)
+  } finally {
+    isSearching.value = false
   }
-  
-  isSearching.value = false
 }
 
-useHead({ title: 'Suivre ma commande' })
+// Auto-recherche si un numero est passe dans l'URL (?ref=TCB-XXX)
+onMounted(() => {
+  if (orderNumber.value) trackOrder()
+})
+
+useHead({ title: 'Suivre ma commande - TchadBox' })
 </script>
+
