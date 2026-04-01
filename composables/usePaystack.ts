@@ -96,7 +96,6 @@ export const usePaystack = () => {
         ],
         ...options.metadata,
       },
-      channels: options.channels || ['card', 'mobile_money', 'bank_transfer'],
       callback: (response: PaystackResponse) => {
         options.onSuccess(response)
       },

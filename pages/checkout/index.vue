@@ -527,7 +527,6 @@ async function submitOrder() {
       amount: Math.round(cartStore.total * 100), // En centimes d'Euro
       currency: 'EUR',
       reference,
-      channels: paystackChannels.value,
       metadata: {
         order_id: orderId,
         customer_name: `${form.firstName} ${form.lastName}`,
