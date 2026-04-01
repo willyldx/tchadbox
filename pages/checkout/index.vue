@@ -522,11 +522,10 @@ async function submitOrder() {
     }
 
     // 3. Ouvrir Paystack avec la référence renvoyée par l'API (pour les autres méthodes)
-    const amountInXof = eurToXof(cartStore.total)
     await initializePayment({
       email: form.email,
-      amount: amountInXof * 100,
-      currency: 'XOF',
+      amount: Math.round(cartStore.total * 100), // En centimes d'Euro
+      currency: 'EUR',
       reference,
       channels: paystackChannels.value,
       metadata: {
