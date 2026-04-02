@@ -115,12 +115,18 @@ export const useAuthStore = defineStore('auth', {
       authCookie.value = token
     },
 
-    _clearSession() {
+    _clearSession(existingCookie?: any) {
       this.user = null
       this.token = null
       this.isAuthenticated = false
-      const authCookie = useCookie('tchadbox_auth_token', { path: '/' })
-      authCookie.value = null
+      if (existingCookie) {
+         existingCookie.value = null
+      } else {
+         try {
+           const authCookie = useCookie('tchadbox_auth_token', { path: '/' })
+           authCookie.value = null
+         } catch(e) {}
+      }
     },
 
     // =============================================
@@ -131,7 +137,7 @@ export const useAuthStore = defineStore('auth', {
       this.sessionChecked = true
 
       // Lisez le jeton depuis les cookies (fonctionne SSR et CSR)
-      const authCookie = useCookie('tchadbox_auth_token')
+      const authCookie = useCookie('tchadbox_auth_token', { path: '/' })
       const savedToken = authCookie.value
       
       if (!savedToken) return
@@ -147,11 +153,11 @@ export const useAuthStore = defineStore('auth', {
           this.user = this._parseUser(response.user)
           this.isAuthenticated = true
         } else {
-          this._clearSession()
+          this._clearSession(authCookie)
         }
       } catch (e) {
         // Token expired or invalid
-        this._clearSession()
+        this._clearSession(authCookie)
       }
     },
 
