@@ -186,8 +186,8 @@
   .btn-primary {
     @apply relative inline-flex items-center justify-center font-bold overflow-hidden;
     padding: 0.75rem 2rem;
-    background: var(--color-accent);
-    color: white;
+    background: var(--color-accent) !important;
+    color: white !important;
     border-radius: 12px;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: var(--shadow-sm);
@@ -202,7 +202,7 @@
   }
 
   .btn-primary:hover {
-    background: var(--color-accent-hover);
+    background: var(--color-accent-hover) !important;
     box-shadow: var(--shadow-md);
   }
 
@@ -244,8 +244,8 @@
   .btn-gold {
     @apply relative inline-flex items-center justify-center font-bold overflow-hidden;
     padding: 0.75rem 2rem;
-    background: var(--color-accent-light);
-    color: var(--color-primary-dark);
+    background: var(--color-accent-light) !important;
+    color: var(--color-primary-dark) !important;
     border-radius: 12px;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: var(--shadow-sm);

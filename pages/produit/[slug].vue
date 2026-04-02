@@ -175,7 +175,7 @@
                 <button
                   @click="addToCart"
                   :disabled="!product.inStock || isAddingToCart"
-                  class="flex-1 h-16 rounded-2xl bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-light)] active:scale-95 transition-all duration-300 shadow-[0_12px_24px_-8px_rgba(15,23,42,0.5)] disabled:opacity-50 font-bold text-lg flex items-center justify-center gap-3 group relative overflow-hidden"
+                  class="flex-1 h-16 rounded-2xl bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-hover)] active:scale-95 transition-all duration-300 shadow-[0_12px_24px_-8px_rgba(245,158,11,0.5)] disabled:opacity-50 font-bold text-lg flex items-center justify-center gap-3 group relative overflow-hidden"
                 >
                   <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_2s_infinite]"></span>
                   <LoaderIcon v-if="isAddingToCart" class="w-6 h-6 animate-spin" />
@@ -319,7 +319,7 @@
           <button
             @click="addToCart"
             :disabled="!product.inStock || isAddingToCart"
-            class="px-8 h-14 rounded-2xl bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)] active:scale-95 transition-all shadow-lg shadow-[var(--color-primary)]/20 flex-shrink-0 disabled:opacity-50 font-extrabold text-base flex items-center justify-center gap-2"
+            class="px-8 h-14 rounded-2xl bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-hover)] active:scale-95 transition-all shadow-lg shadow-[var(--color-accent)]/20 flex-shrink-0 disabled:opacity-50 font-extrabold text-base flex items-center justify-center gap-2"
           >
             <LoaderIcon v-if="isAddingToCart" class="w-5 h-5 animate-spin" />
             <template v-else>
@@ -569,6 +569,7 @@ async function addToCart() {
     category: product.value.category,
   }, quantity.value)
   
+  cartStore.isOpen = true
   isAddingToCart.value = false
 }
 

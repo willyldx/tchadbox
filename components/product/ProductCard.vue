@@ -145,5 +145,6 @@ const addToCart = () => {
     category: categoryName.value
   })
   toast.add({ title: 'Ajouté au panier', description: props.product.title, icon: 'i-heroicons-check-circle', color: 'green', timeout: 2500 })
+  cartStore.isOpen = true
 }
 </script>
