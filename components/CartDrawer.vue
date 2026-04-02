@@ -84,10 +84,10 @@
           <!-- Items -->
           <div v-else class="p-4 space-y-3">
             <div v-for="item in cartStore.items" :key="item.id" class="flex gap-4 p-4 rounded-xl bg-gray-50 border border-gray-100">
-              <div class="w-16 h-16 rounded-lg bg-white flex items-center justify-center flex-shrink-0 border border-gray-100">
-                <img v-if="item.thumbnail" :src="item.thumbnail" :alt="item.title" class="w-full h-full object-cover rounded-lg" />
-                <Package v-else class="w-6 h-6 text-gray-300" />
-              </div>
+            <div class="w-16 h-16 rounded-lg bg-white flex items-center justify-center flex-shrink-0 border border-gray-100">
+              <NuxtImg v-if="item.thumbnail" :src="item.thumbnail" :alt="item.title" class="w-full h-full object-cover rounded-lg" />
+              <Package v-else class="w-6 h-6 text-gray-300" />
+            </div>
               <div class="flex-grow min-w-0">
                 <h4 class="font-medium text-[var(--color-text)] text-sm truncate">{{ item.title }}</h4>
                 <p v-if="item.variantTitle" class="text-xs text-amber-600 font-medium">{{ item.variantTitle }}</p>
