@@ -52,15 +52,10 @@
 
           <!-- Actions -->
           <div class="flex items-center gap-1 sm:gap-2">
-            <!-- Navigation (Desktop only, hidden if search is too large) -->
+            <!-- Navigation (Desktop only) -->
             <nav class="hidden xl:flex items-center gap-6 mr-4">
-              <NuxtLink 
-                v-for="link in navLinks.slice(1, 3)" 
-                :key="link.to" 
-                :to="link.to"
-                class="nav-link text-sm"
-              >
-                {{ link.label }}
+              <NuxtLink to="/catalogue" class="nav-link text-sm font-medium flex items-center gap-2">
+                <Package class="w-4 h-4" /> Catalogue
               </NuxtLink>
             </nav>
 
@@ -80,91 +75,109 @@
               </ClientOnly>
             </NuxtLink>
 
-            <!-- User Menu -->
-            <div class="hidden md:block relative" ref="userMenuRef">
-              <ClientOnly>
-                <template v-if="authStore.isAuthenticated">
-                  <button
-                    @click="isUserMenuOpen = !isUserMenuOpen"
-                    class="flex items-center gap-2 p-2 rounded-xl hover:bg-gray-100 transition-colors"
-                  >
-                    <div class="w-8 h-8 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center text-white text-sm font-bold">
-                      {{ authStore.initials }}
-                    </div>
-                    <ChevronDown class="w-4 h-4 text-gray-500" :class="{ 'rotate-180': isUserMenuOpen }" />
-                  </button>
-                </template>
-                <template v-else>
-                  <NuxtLink
-                    to="/auth/login"
-                    class="flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-gray-100 transition-colors text-gray-700"
-                  >
-                    <User class="w-5 h-5" />
-                    <span class="text-sm font-medium">Connexion</span>
-                  </NuxtLink>
-                </template>
-              </ClientOnly>
-
-              <!-- User Dropdown -->
+            <!-- Help Dropdown -->
+            <div class="hidden md:block relative" ref="helpMenuRef" @mouseenter="isHelpMenuOpen = true" @mouseleave="isHelpMenuOpen = false">
+              <button class="flex items-center gap-1.5 px-3 py-2 rounded-xl hover:bg-gray-100 transition-colors text-gray-700 font-medium text-sm">
+                <HelpCircle class="w-5 h-5 text-gray-500" />
+                <span>Aide</span>
+                <ChevronDown class="w-4 h-4 text-gray-400" :class="{ 'rotate-180': isHelpMenuOpen }" />
+              </button>
+              
               <Transition
                 enter-active-class="transition-all duration-200"
-                enter-from-class="opacity-0 scale-95 -translate-y-2"
-                enter-to-class="opacity-100 scale-100 translate-y-0"
+                enter-from-class="opacity-0 translate-y-2"
+                enter-to-class="opacity-100 translate-y-0"
                 leave-active-class="transition-all duration-150"
-                leave-from-class="opacity-100 scale-100"
-                leave-to-class="opacity-0 scale-95"
+                leave-from-class="opacity-100"
+                leave-to-class="opacity-0"
               >
-                <div 
-                  v-if="isUserMenuOpen && authStore.isAuthenticated" 
-                  class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50"
-                >
-                  <div class="px-4 py-3 border-b border-gray-100">
-                    <p class="font-medium text-gray-800">{{ authStore.fullName }}</p>
-                    <p class="text-sm text-gray-500 truncate">{{ authStore.user?.email }}</p>
-                  </div>
-                  <NuxtLink
-                    to="/compte"
-                    class="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
-                    @click="isUserMenuOpen = false"
-                  >
-                    <LayoutDashboard class="w-4 h-4" />
-                    <span>Tableau de bord</span>
-                  </NuxtLink>
-                  <NuxtLink
-                    to="/compte/commandes"
-                    class="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
-                    @click="isUserMenuOpen = false"
-                  >
-                    <Package class="w-4 h-4" />
-                    <span>Mes commandes</span>
-                  </NuxtLink>
-                  <NuxtLink
-                    to="/compte/profil"
-                    class="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
-                    @click="isUserMenuOpen = false"
-                  >
-                    <UserCircle class="w-4 h-4" />
-                    <span>Mon profil</span>
-                  </NuxtLink>
-                  <NuxtLink
-                    to="/favoris"
-                    class="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
-                    @click="isUserMenuOpen = false"
-                  >
-                    <Heart class="w-4 h-4" />
-                    <span>Mes favoris</span>
-                  </NuxtLink>
-                  <div class="border-t border-gray-100 mt-2 pt-2">
-                    <button
-                      @click="handleLogout"
-                      class="flex items-center gap-3 px-4 py-2.5 text-red-600 hover:bg-red-50 transition-colors w-full"
-                    >
-                      <LogOut class="w-4 h-4" />
-                      <span>Déconnexion</span>
-                    </button>
+                <div v-show="isHelpMenuOpen" class="absolute right-0 mt-1 w-64 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50 pt-2">
+                  <div class="flex flex-col">
+                    <NuxtLink to="/comment-ca-marche" class="flex flex-col px-5 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50">
+                      <span class="text-sm font-medium text-gray-800">Centre d'aide</span>
+                      <span class="text-xs text-gray-500">Guides et questions fréquentes</span>
+                    </NuxtLink>
+                    <NuxtLink to="/suivi" class="flex flex-col px-5 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50">
+                      <span class="text-sm font-medium text-gray-800">Suivre une commande</span>
+                      <span class="text-xs text-gray-500">Où se trouve mon colis ?</span>
+                    </NuxtLink>
+                    <NuxtLink to="/conditions" class="px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-50">
+                      Politique de retour & Remboursement
+                    </NuxtLink>
+                    <div class="px-5 py-4 bg-gray-50 flex gap-2">
+                      <NuxtLink to="https://wa.me/235xxxxxxx" target="_blank" class="flex-1 btn-primary text-xs py-2 px-0 bg-green-500 text-white hover:bg-green-600 shadow-none border-none justify-center">
+                        WhatsApp
+                      </NuxtLink>
+                      <NuxtLink to="/contact" class="flex-1 btn-outline text-xs py-2 px-0 shadow-none border-gray-200 justify-center">
+                        Email
+                      </NuxtLink>
+                    </div>
                   </div>
                 </div>
               </Transition>
+            </div>
+
+            <!-- User Menu Dropdown -->
+            <div class="hidden md:block relative" ref="userMenuRef" @mouseenter="isUserMenuOpen = true" @mouseleave="isUserMenuOpen = false">
+              <ClientOnly>
+                <button class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-100 transition-colors text-gray-700 font-medium text-sm">
+                  <template v-if="authStore.isAuthenticated">
+                    <div class="w-7 h-7 bg-[var(--color-accent)] rounded-md flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                      {{ authStore.initials }}
+                    </div>
+                  </template>
+                  <template v-else>
+                    <User class="w-5 h-5 text-gray-500" />
+                  </template>
+                  <span>Compte</span>
+                  <ChevronDown class="w-4 h-4 text-gray-400" :class="{ 'rotate-180': isUserMenuOpen }" />
+                </button>
+
+                <Transition
+                  enter-active-class="transition-all duration-200"
+                  enter-from-class="opacity-0 translate-y-2"
+                  enter-to-class="opacity-100 translate-y-0"
+                  leave-active-class="transition-all duration-150"
+                  leave-from-class="opacity-100"
+                  leave-to-class="opacity-0"
+                >
+                  <div v-show="isUserMenuOpen" class="absolute right-0 mt-1 w-64 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50 pt-2">
+                    
+                    <!-- Not Logged In State -->
+                    <div v-if="!authStore.isAuthenticated" class="p-4 border-b border-gray-100">
+                      <NuxtLink to="/auth/login" class="btn-primary w-full flex justify-center py-2.5 text-sm shadow-md mb-2">
+                        Se connecter
+                      </NuxtLink>
+                      <p class="text-xs text-center text-gray-500">Nouveau client ? <NuxtLink to="/auth/login" class="font-bold text-[var(--color-primary)] hover:underline">Créer un compte</NuxtLink></p>
+                    </div>
+
+                    <!-- Logged In State -->
+                    <div v-else class="px-4 py-3 border-b border-gray-100">
+                      <p class="font-bold text-gray-800 truncate">{{ authStore.fullName }}</p>
+                      <p class="text-xs text-gray-500 truncate">{{ authStore.user?.email }}</p>
+                    </div>
+
+                    <!-- Links -->
+                    <div class="py-2">
+                      <NuxtLink to="/compte" class="flex items-center gap-3 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-[var(--color-accent-dark)] transition-colors">
+                        <LayoutDashboard class="w-4 h-4" /> Mon Compte
+                      </NuxtLink>
+                      <NuxtLink to="/compte/commandes" class="flex items-center gap-3 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-[var(--color-accent-dark)] transition-colors">
+                        <Package class="w-4 h-4" /> Vos Commandes
+                      </NuxtLink>
+                      <NuxtLink to="/favoris" class="flex items-center gap-3 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-[var(--color-accent-dark)] transition-colors">
+                        <Heart class="w-4 h-4" /> Votre Liste d'envies
+                      </NuxtLink>
+                      
+                      <div v-if="authStore.isAuthenticated" class="border-t border-gray-100 mt-1 pt-1">
+                        <button @click="handleLogout" class="flex items-center gap-3 px-5 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors w-full">
+                          <LogOut class="w-4 h-4" /> Déconnexion
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </Transition>
+              </ClientOnly>
             </div>
 
             <!-- Currency Selector -->
@@ -199,89 +212,10 @@
         </div>
       </div>
 
-      <!-- Mobile Menu -->
-      <Transition
-        enter-active-class="transition-all duration-300 ease-out"
-        enter-from-class="opacity-0 -translate-y-2"
-        enter-to-class="opacity-100 translate-y-0"
-        leave-active-class="transition-all duration-200 ease-in"
-        leave-from-class="opacity-100 translate-y-0"
-        leave-to-class="opacity-0 -translate-y-2"
-      >
-        <div v-if="isMobileMenuOpen" class="lg:hidden bg-white border-t border-gray-100 shadow-lg">
-          <nav class="container-main py-4 space-y-1">
-            <NuxtLink 
-              v-for="link in navLinks" 
-              :key="link.to" 
-              :to="link.to"
-              class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
-              @click="isMobileMenuOpen = false"
-            >
-              <component :is="link.icon" class="w-5 h-5" />
-              {{ link.label }}
-            </NuxtLink>
-            
-            <!-- Divider -->
-            <div class="border-t border-gray-100 my-2"></div>
-            
-            <!-- Favorites -->
-            <NuxtLink 
-              to="/favoris"
-              class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
-              @click="isMobileMenuOpen = false"
-            >
-              <Heart class="w-5 h-5" />
-              Favoris
-              <span v-if="favoritesStore.count > 0" class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                {{ favoritesStore.count }}
-              </span>
-            </NuxtLink>
-            
-            <!-- Auth Section -->
-            <template v-if="authStore.isAuthenticated">
-              <NuxtLink 
-                to="/compte"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
-                @click="isMobileMenuOpen = false"
-              >
-                <User class="w-5 h-5" />
-                Mon compte
-              </NuxtLink>
-              <NuxtLink 
-                to="/compte/commandes"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-[var(--color-primary)] transition-colors"
-                @click="isMobileMenuOpen = false"
-              >
-                <Package class="w-5 h-5" />
-                Mes commandes
-              </NuxtLink>
-              <button 
-                @click="handleLogout(); isMobileMenuOpen = false"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-colors w-full"
-              >
-                <LogOut class="w-5 h-5" />
-                Déconnexion
-              </button>
-            </template>
-            <template v-else>
-              <NuxtLink 
-                to="/auth/login"
-                class="btn-gold w-full justify-center"
-                @click="isMobileMenuOpen = false"
-              >
-                <span><User class="w-5 h-5" />Connexion</span>
-              </NuxtLink>
-              <NuxtLink 
-                to="/auth/register"
-                class="btn-outline w-full justify-center mt-2"
-                @click="isMobileMenuOpen = false"
-              >
-                <span><UserPlus class="w-5 h-5" />Créer un compte</span>
-              </NuxtLink>
-            </template>
-          </nav>
-        </div>
-      </Transition>
+      <!-- Mobile Menu Sidebar -->
+      <ClientOnly>
+        <MobileSidebar v-model="isMobileMenuOpen" />
+      </ClientOnly>
     </header>
 
     <!-- Main -->
@@ -321,10 +255,10 @@
     <!-- Footer -->
     <footer class="bg-[#0b1120] text-white pt-10">
       <div class="container-main pb-12">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          <!-- Brand -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+          <!-- Brand (Visible on Mobile & Desktop) -->
           <div>
-            <img src="/logo.png" alt="TchadBox" class="h-14 w-auto mb-6" />
+            <img src="/logo.png" alt="TchadBox" class="h-10 md:h-14 w-auto mb-6" />
             <p class="text-slate-400 text-sm leading-relaxed mb-6">
               Le lien de confiance de la diaspora tchadienne. Envoyez l'essentiel à vos proches avec l'excellence garantie.
             </p>
@@ -335,33 +269,33 @@
             </div>
           </div>
 
-          <!-- Navigation -->
-          <div>
-            <h4 class="font-bold mb-6 text-white tracking-wide uppercase text-xs opacity-50">Navigation</h4>
+          <!-- A PROPOS (Hidden on Mobile) -->
+          <div class="hidden md:block">
+            <h4 class="font-bold mb-6 text-white tracking-wide uppercase text-xs opacity-50">TchadBox</h4>
             <ul class="space-y-3">
-              <li v-for="link in navLinks" :key="link.to">
-                <NuxtLink :to="link.to" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">
-                  {{ link.label }}
-                </NuxtLink>
-              </li>
+              <li><NuxtLink to="/a-propos" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Qui sommes-nous ?</NuxtLink></li>
+              <li><NuxtLink to="/comment-ca-marche" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Comment ça marche</NuxtLink></li>
+              <li><NuxtLink to="/conditions" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Politique de remboursement</NuxtLink></li>
+              <li><NuxtLink to="/mentions-legales" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Mentions Légales</NuxtLink></li>
+              <li><NuxtLink to="/confidentialite" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Confidentialité</NuxtLink></li>
             </ul>
           </div>
 
-          <!-- Categories -->
-          <div>
-            <h4 class="font-bold mb-6 text-white tracking-wide uppercase text-xs opacity-50">Catégories</h4>
+          <!-- ASSISTANCE (Hidden on Mobile) -->
+          <div class="hidden md:block">
+            <h4 class="font-bold mb-6 text-white tracking-wide uppercase text-xs opacity-50">Besoin d'aide ?</h4>
             <ul class="space-y-3">
-              <li><NuxtLink to="/catalogue?categorie=alimentaire" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Alimentaire</NuxtLink></li>
-              <li><NuxtLink to="/catalogue?categorie=scolarite" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Scolarité</NuxtLink></li>
-              <li><NuxtLink to="/catalogue?categorie=sante" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Santé & Bébé</NuxtLink></li>
-              <li><NuxtLink to="/catalogue?categorie=fetes" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Fêtes & Occasions</NuxtLink></li>
+              <li><NuxtLink to="/comment-ca-marche" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Centre d'aide</NuxtLink></li>
+              <li><NuxtLink to="/contact" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Contactez-nous</NuxtLink></li>
+              <li><NuxtLink to="/suivi" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Suivre ma commande</NuxtLink></li>
+              <li><NuxtLink to="/conditions" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Options de livraison</NuxtLink></li>
             </ul>
           </div>
 
-          <!-- Contact -->
-          <div>
-            <h4 class="font-bold mb-6 text-white tracking-wide uppercase text-xs opacity-50">Assistance</h4>
-            <ul class="space-y-4">
+          <!-- PAIEMENT & CONTACT (Visible on Desktop) -->
+          <div class="hidden md:block">
+            <h4 class="font-bold mb-6 text-white tracking-wide uppercase text-xs opacity-50">Paiement & Contact</h4>
+            <ul class="space-y-4 mb-6">
               <li>
                 <a href="mailto:contact@tchadbox.com" class="group flex items-center gap-3 text-slate-400 hover:text-white transition-colors">
                   <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-amber-500/20 group-hover:text-amber-400 transition-all">
@@ -371,18 +305,12 @@
                 </a>
               </li>
               <li>
-                <a href="tel:+33000000000" class="group flex items-center gap-3 text-slate-400 hover:text-white transition-colors">
-                  <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-amber-500/20 group-hover:text-amber-400 transition-all">
-                    <Phone class="w-4 h-4" />
+                <a href="https://wa.me/235xxxxxxx" target="_blank" class="group flex items-center gap-3 text-slate-400 hover:text-white transition-colors">
+                  <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-green-500/20 group-hover:text-green-400 transition-all">
+                    <MessageCircle class="w-4 h-4" />
                   </div>
-                  <span class="text-sm">+33 X XX XX XX XX</span>
+                  <span class="text-sm">WhatsApp Assistance</span>
                 </a>
-              </li>
-              <li class="flex items-center gap-3 text-slate-400">
-                <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
-                  <MapPin class="w-4 h-4" />
-                </div>
-                <span class="text-sm">N'Djamena, Tchad</span>
               </li>
             </ul>
           </div>
@@ -392,11 +320,14 @@
       <!-- Bottom Bar -->
       <div class="border-t border-white/10 bg-black/20">
         <div class="container-main py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p class="text-slate-500 text-xs text-center md:text-left">© {{ new Date().getFullYear() }} TchadBox. Expédié avec ♥ vers le Tchad.</p>
-          <div class="flex flex-wrap justify-center gap-6 text-xs text-slate-500">
-            <NuxtLink to="/conditions" class="hover:text-white transition-colors">CGV</NuxtLink>
-            <NuxtLink to="/mentions-legales" class="hover:text-white transition-colors">Mentions légales</NuxtLink>
-            <NuxtLink to="/confidentialite" class="hover:text-white transition-colors">Confidentialité</NuxtLink>
+          <p class="text-slate-500 text-xs text-center md:text-left">© {{ new Date().getFullYear() }} TchadBox. Tous droits réservés.</p>
+          <div class="flex items-center gap-4">
+            <span class="text-xs text-slate-500 font-bold tracking-widest uppercase">Paiements Sécurisés</span>
+            <div class="flex gap-2">
+              <div class="w-10 h-6 bg-white/10 rounded flex items-center justify-center text-[10px] font-bold text-white">VISA</div>
+              <div class="w-10 h-6 bg-white/10 rounded flex items-center justify-center text-[10px] font-bold text-white">MC</div>
+              <div class="w-10 h-6 bg-white/10 rounded flex items-center justify-center text-[10px] font-bold text-white">MM</div>
+            </div>
           </div>
         </div>
       </div>
@@ -431,7 +362,9 @@ const isMobileMenuOpen = ref(false)
 const isSearchOpen = ref(false)
 const isScrolled = ref(false)
 const isUserMenuOpen = ref(false)
+const isHelpMenuOpen = ref(false)
 const userMenuRef = ref<HTMLElement | null>(null)
+const helpMenuRef = ref<HTMLElement | null>(null)
 
 // Close user menu when clicking outside
 onClickOutside(userMenuRef, () => {

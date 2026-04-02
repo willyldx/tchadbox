@@ -3,14 +3,14 @@
     <!-- ==============================================
          1. CINEMATIC HERO (EDGE-TO-EDGE)
          ============================================== -->
-    <section class="relative h-[90vh] min-h-[600px] w-full flex items-center justify-center overflow-hidden">
+    <section class="relative h-[50vh] min-h-[400px] w-full flex items-center justify-center overflow-hidden">
       <!-- Background slider -->
       <div v-for="(slide, i) in heroSlides" :key="'bg-'+i" class="absolute inset-0 w-full h-full">
         <Transition
-          enter-active-class="transition-opacity duration-[2000ms] ease-out"
+          enter-active-class="transition-opacity duration-700 ease-out"
           enter-from-class="opacity-0"
           enter-to-class="opacity-100"
-          leave-active-class="transition-opacity duration-[2000ms] ease-in"
+          leave-active-class="transition-opacity duration-700 ease-in"
           leave-from-class="opacity-100"
           leave-to-class="opacity-0"
         >
@@ -18,77 +18,68 @@
             <NuxtImg 
               :src="slide.image" 
               :alt="slide.title"
-              class="w-full h-full object-cover transform scale-105 opacity-[0.85]"
-              :class="{ 'animate-slow-zoom': currentSlide === i }"
+              class="w-full h-full object-cover opacity-[0.85]"
               format="webp"
               loading="eager"
             />
             <!-- Ultra-luminous bright gradient overlay -->
-            <div class="absolute inset-0 bg-gradient-to-b from-white/70 via-white/50 to-[var(--color-bg)]"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-white/80 via-white/60 to-[var(--color-bg)]"></div>
           </div>
         </Transition>
       </div>
 
       <!-- Center Content (Glassmorphism) -->
-      <div class="relative z-10 container-main flex flex-col items-center text-center mt-10">
+      <div class="relative z-10 container-main flex flex-col items-center text-center mt-6">
         <div 
           v-motion
-          :initial="{ opacity: 0, y: 20 }"
-          :enter="{ opacity: 1, y: 0, transition: { duration: 800, ease: 'easeOut' } }"
+          :initial="{ opacity: 0, y: 10 }"
+          :enter="{ opacity: 1, y: 0, transition: { duration: 500, ease: 'easeOut' } }"
           class="max-w-4xl mx-auto flex flex-col items-center"
         >
           <!-- Premium Pill -->
-          <div class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/40 backdrop-blur-xl border border-white/40 mb-8 shadow-sm">
-            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+          <div class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/60 backdrop-blur-md border border-white/40 mb-6 shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-green-500" />
             <span class="text-sm font-bold tracking-wide text-[var(--color-primary)] uppercase letter-spacing-1">L'Excellence au Tchad</span>
           </div>
 
           <!-- Title -->
-          <div class="relative min-h-[140px] md:min-h-[180px] w-full flex justify-center items-center">
+          <div class="relative min-h-[100px] md:min-h-[120px] w-full flex justify-center items-center">
             <TransitionGroup
-              enter-active-class="transition-all duration-1000 ease-out"
-              enter-from-class="opacity-0 translate-y-8 blur-sm"
-              enter-to-class="opacity-100 translate-y-0 blur-none"
-              leave-active-class="transition-all duration-700 ease-in absolute"
-              leave-from-class="opacity-100 translate-y-0 blur-none"
-              leave-to-class="opacity-0 -translate-y-8 blur-sm"
+              enter-active-class="transition-all duration-500 ease-out"
+              enter-from-class="opacity-0 translate-y-4"
+              enter-to-class="opacity-100 translate-y-0"
+              leave-active-class="transition-all duration-300 ease-in absolute"
+              leave-from-class="opacity-100 translate-y-0"
+              leave-to-class="opacity-0 -translate-y-4"
             >
               <div v-for="(slide, i) in heroSlides" :key="'text-'+i" v-show="currentSlide === i" class="absolute w-full text-center">
-                <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-[var(--color-primary)] leading-tight tracking-tight drop-shadow-sm" v-html="slide.title"></h1>
+                <h1 class="text-4xl md:text-6xl font-black text-[var(--color-primary)] leading-tight tracking-tight drop-shadow-sm" v-html="slide.title"></h1>
               </div>
             </TransitionGroup>
           </div>
 
           <!-- Subtitle -->
-          <p class="text-sm sm:text-lg md:text-2xl text-[var(--color-text-secondary)] max-w-2xl mt-4 md:mt-6 mb-8 md:mb-12 font-medium px-4 md:px-0">
+          <p class="text-sm sm:text-base md:text-xl text-[var(--color-text-secondary)] max-w-2xl mt-4 md:mt-2 mb-8 font-medium px-4 md:px-0">
             Envoyez des produits de qualité à votre famille, partout au Tchad. Livraison premium certifiée par photo.
           </p>
 
-          <!-- Glowing CTA -->
+          <!-- Solid CTA -->
           <div class="flex flex-col sm:flex-row gap-5">
-            <NuxtLink to="/catalogue" class="relative group overflow-hidden rounded-full p-px shadow-[0_10px_40px_rgba(245,158,11,0.3)]">
-              <span class="absolute inset-0 bg-gradient-to-r from-[var(--color-accent)] via-yellow-400 to-[var(--color-accent)] animate-gradient-xy"></span>
-              <div class="relative flex items-center justify-center gap-2 px-8 py-4 bg-white/90 backdrop-blur-xl rounded-full text-[var(--color-primary)] font-bold text-lg transition-transform duration-300 group-hover:scale-[0.98]">
-                Explorer le Catalogue <ArrowRight class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </div>
+            <NuxtLink to="/catalogue" class="btn-primary flex items-center gap-2 text-lg px-8 py-4">
+              Explorer le Catalogue <ArrowRight class="w-5 h-5 ml-1" />
             </NuxtLink>
           </div>
         </div>
 
         <!-- Pagination Dots -->
-        <div class="flex items-center gap-4 mt-16 md:mt-24">
+        <div class="flex items-center gap-4 mt-12 md:mt-16">
           <button 
             v-for="(slide, i) in heroSlides" :key="'dot-'+i"
             @click="goToSlide(i)"
-            class="relative h-1.5 rounded-full overflow-hidden transition-all duration-500 shadow-sm"
-            :class="currentSlide === i ? 'w-16 bg-[var(--color-primary)]/40' : 'w-6 bg-[var(--color-primary)]/10 hover:bg-[var(--color-primary)]/30'"
-          >
-            <div 
-              v-if="currentSlide === i"
-              class="absolute inset-0 bg-[var(--color-primary)] rounded-full"
-              style="animation: progressFill 6s linear forwards; transform-origin: left;"
-            />
-          </button>
+            class="relative h-2 rounded-full overflow-hidden transition-all duration-300 shadow-sm"
+            :class="currentSlide === i ? 'w-10 bg-[var(--color-primary)]' : 'w-2 bg-[var(--color-border)] hover:bg-[var(--color-primary)]/50'"
+            aria-label="Changer de diapositive"
+          />
         </div>
       </div>
     </section>
