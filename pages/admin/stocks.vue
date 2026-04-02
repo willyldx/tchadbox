@@ -8,6 +8,9 @@
       </div>
       <div class="flex items-center gap-3">
         <UButton @click="fetchProducts" color="gray" variant="ghost" icon="i-lucide-refresh-cw" :loading="loading" class="text-gray-500 hover:bg-gray-100" />
+        <UButton @click="showImportModal = true" color="gray" icon="i-lucide-upload-cloud" class="shadow-sm font-semibold px-4 ring-1 ring-gray-200">
+          Importer CSV
+        </UButton>
         <UButton @click="showCreateModal = true" color="black" icon="i-lucide-plus" class="shadow-sm font-semibold px-4">
           Nouveau produit
         </UButton>
@@ -250,6 +253,47 @@
         </div>
       </div>
     </UModal>
+
+    <!-- Import CSV Modal -->
+    <UModal v-model="showImportModal">
+      <div class="p-6">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+             <Icon name="lucide:file-spreadsheet" class="w-5 h-5 text-blue-500" />
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900">Importation Massif (CSV)</h3>
+        </div>
+        <p class="text-sm text-gray-500 mb-6">Mettez à jour votre inventaire ou ajoutez de nouveaux produits en un seul clic à l'aide d'un fichier CSV (Excel).</p>
+
+        <div class="bg-gray-50 p-4 rounded-lg border border-gray-100 mb-6">
+          <p class="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wider">Colonnes obligatoires :</p>
+          <div class="flex flex-wrap gap-2 text-xs font-mono">
+            <UBadge color="gray" variant="solid">title</UBadge>
+            <UBadge color="gray" variant="solid">price</UBadge>
+            <UBadge color="gray" variant="solid">stock</UBadge>
+            <UBadge color="gray" variant="solid">category</UBadge>
+          </div>
+          <p class="text-xs text-gray-500 mt-3">Optionnels: <span class="font-mono">description, image, category_handle</span></p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Fichier CSV *</label>
+            <UInput type="file" accept=".csv" @change="onCsvSelected" />
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center mt-6">
+          <UButton color="gray" variant="ghost" icon="i-lucide-download" to="/template_import_tchadbox.csv" target="_blank" download class="text-xs">
+            Modèle CSV
+          </UButton>
+          <div class="flex gap-3">
+            <UButton color="gray" variant="outline" @click="showImportModal = false">Annuler</UButton>
+            <UButton color="black" :loading="importing" :disabled="!csvFile" @click="processImportCSV">Lancer l'importation</UButton>
+          </div>
+        </div>
+      </div>
+    </UModal>
   </div>
 </template>
 
@@ -272,6 +316,9 @@ const search = ref('')
 const stockFilter = ref('')
 const showEditModal = ref(false)
 const showCreateModal = ref(false)
+const showImportModal = ref(false)
+const importing = ref(false)
+const csvFile = ref<File | null>(null)
 const editingProduct = ref<any>(null)
 const editForm = reactive({
   stockQuantity: 0,
@@ -425,6 +472,43 @@ const deleteProduct = async (product: any) => {
     fetchProducts()
   } catch (error: any) {
     toast.add({ title: 'Erreur', description: error.message || 'Impossible de supprimer', color: 'red' })
+  }
+}
+
+// Upload CSV logic
+const onCsvSelected = (e: any) => {
+  const file = e?.target?.files?.[0] || (e instanceof FileList ? e[0] : null) || (Array.isArray(e) ? e[0] : e)
+  if (file && file instanceof File) {
+    csvFile.value = file
+  } else {
+    csvFile.value = null
+  }
+}
+
+const processImportCSV = async () => {
+  if (!csvFile.value) return
+  
+  importing.value = true
+  try {
+    const res = await api.adminStockImport(csvFile.value)
+    if (res.success) {
+      toast.add({ 
+        title: 'Importation réussie 🎉', 
+        description: `${res.stats?.created} créés, ${res.stats?.updated} mis à jour.`, 
+        color: 'green',
+        timeout: 6000
+      })
+      showImportModal.value = false
+      csvFile.value = null
+      fetchProducts()
+    } else {
+      toast.add({ title: 'Erreur', description: res.message || 'Erreur lors de l\'importation', color: 'red' })
+    }
+  } catch (error: any) {
+    console.error('Import failed:', error)
+    toast.add({ title: 'Échec de l\'importation', description: error.message || 'Vérifiez le format de votre fichier CSV.', color: 'red' })
+  } finally {
+    importing.value = false
   }
 }
 

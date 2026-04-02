@@ -111,18 +111,16 @@ export const useAuthStore = defineStore('auth', {
 
     _persistToken(token: string) {
       this.token = token
-      if (import.meta.client) {
-        localStorage.setItem('tchadbox_auth_token', token)
-      }
+      const authCookie = useCookie('tchadbox_auth_token', { maxAge: 60 * 60 * 24 * 30, path: '/' })
+      authCookie.value = token
     },
 
     _clearSession() {
       this.user = null
       this.token = null
       this.isAuthenticated = false
-      if (import.meta.client) {
-        localStorage.removeItem('tchadbox_auth_token')
-      }
+      const authCookie = useCookie('tchadbox_auth_token', { path: '/' })
+      authCookie.value = null
     },
 
     // =============================================
@@ -132,10 +130,10 @@ export const useAuthStore = defineStore('auth', {
       if (this.sessionChecked) return
       this.sessionChecked = true
 
-      if (import.meta.server) return
-
-      // Try to restore token from localStorage
-      const savedToken = localStorage.getItem('tchadbox_auth_token')
+      // Lisez le jeton depuis les cookies (fonctionne SSR et CSR)
+      const authCookie = useCookie('tchadbox_auth_token')
+      const savedToken = authCookie.value
+      
       if (!savedToken) return
 
       this.token = savedToken

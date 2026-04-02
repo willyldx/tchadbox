@@ -225,7 +225,7 @@ const mapOrder = (o: any): Order => ({
 
 // Helpers
 const formatPrice = (amount: number) => {
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount)
+  return useCartStore().formatPrice(amount || 0)
 }
 
 const formatTime = (date: string | undefined) => {

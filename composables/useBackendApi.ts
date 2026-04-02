@@ -4,6 +4,8 @@
  */
 
 export function useBackendApi() {
+  const authCookie = useCookie('tchadbox_auth_token')
+
   const getBaseUrl = () => {
     const config = useRuntimeConfig()
     let url = config.public.apiUrl || 'https://api.spencerai.tech'
@@ -18,11 +20,8 @@ export function useBackendApi() {
     path: string,
     options: { method?: any; body?: any; query?: Record<string, any> } = {}
   ): Promise<T> => {
-    // Get Sanctum token from localStorage
-    let token = ''
-    if (import.meta.client) {
-      token = localStorage.getItem('tchadbox_auth_token') || ''
-    }
+    // Get Sanctum token from cookies
+    const token = authCookie.value || ''
 
     const baseUrl = getBaseUrl()
     // Ensure path starts with /api/
@@ -101,6 +100,15 @@ export function useBackendApi() {
     /** GET /api/admin/stocks */
     adminStocks: () =>
       fetchWithAuth<{ data: any[] }>('api/admin/stocks'),
+    /** POST /api/admin/stocks/import */
+    adminStockImport: (file: File) => {
+      const formData = new FormData()
+      formData.append('file', file)
+      return fetchWithAuth<{ success: boolean; message?: string; stats?: any }>('api/admin/stocks/import', {
+        method: 'POST',
+        body: formData,
+      })
+    },
     /** PATCH /api/admin/stocks/:id */
     adminStockUpdate: (id: number, body: Record<string, unknown>) =>
       fetchWithAuth<{ product: any }>(`api/admin/stocks/${id}`, { method: 'PATCH', body }),

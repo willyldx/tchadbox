@@ -281,6 +281,12 @@ const clearPhoto = () => {
 // Complete delivery
 const completeDelivery = async () => {
   if (!delivery.value) return
+
+  if (!photoFile.value) {
+    toast.add({ title: 'Photo obligatoire', description: 'Veuillez prendre une photo de la livraison.', color: 'amber' })
+    return
+  }
+
   updating.value = true
 
   try {
@@ -307,9 +313,10 @@ const completeDelivery = async () => {
 
     showCompleteModal.value = false
     toast.add({ title: 'Succès', description: 'Livraison confirmée !', color: 'green' })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error completing delivery:', error)
-    toast.add({ title: 'Erreur', description: 'Impossible de confirmer la livraison', color: 'red' })
+    const errMessage = error?.data?.error || 'Impossible de confirmer la livraison'
+    toast.add({ title: 'Erreur', description: errMessage, color: 'red' })
   } finally {
     updating.value = false
   }
@@ -352,7 +359,7 @@ const mapOrder = (o: any): Order => ({
 
 // Helpers
 const formatPrice = (amount: number) => {
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount)
+  return useCartStore().formatPrice(amount || 0)
 }
 
 const formatDateTime = (date: string | undefined) => {
