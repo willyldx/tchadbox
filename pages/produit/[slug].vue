@@ -300,8 +300,15 @@
         </div>
       </div>
       
-      <!-- MOBILE STICKY BOTTOM BAR -->
-      <div v-if="product" class="sm:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t border-gray-200 p-4 shadow-[0_-8px_30px_rgb(0,0,0,0.06)] z-40 pb-safe">
+      <!-- UNIVERSAL STICKY BOTTOM BAR -->
+      <div 
+        v-if="product" 
+        class="fixed left-0 w-full bg-white/90 backdrop-blur-xl border-t border-gray-200 p-4 shadow-[0_-8px_30px_rgb(0,0,0,0.06)] z-50 pb-safe transition-transform duration-500 ease-out"
+        :class="[
+          'bottom-[4rem] lg:bottom-0',
+          isScrolledPastCTA ? 'translate-y-0' : 'translate-y-[150%]'
+        ]"
+      >
         <div class="flex items-center justify-between gap-4">
           <div class="flex flex-col">
             <span class="text-2xl font-black text-[var(--color-primary)] leading-none">{{ cartStore.formatPrice(currentPrice) }}</span>
@@ -415,6 +422,20 @@ const selectedImage = ref<string | null>(null)
 const quantity = ref(1)
 const activeTab = ref('description')
 const showZoom = ref(false)
+const isScrolledPastCTA = ref(false)
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
+
+function handleScroll() {
+  // If we scroll down 500px, show the sticky bar
+  isScrolledPastCTA.value = window.scrollY > 400
+}
 
 // Tabs
 const tabs = [

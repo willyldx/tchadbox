@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col pb-16 lg:pb-0">
     <!-- Announcement Bar -->
     <div 
       class="text-white py-2.5 transition-all duration-500"
@@ -77,8 +77,47 @@
           <div class="flex items-center gap-1 sm:gap-2">
             <!-- Navigation (Desktop only) -->
             <nav class="hidden xl:flex items-center gap-6 mr-4">
+              <!-- MegaMenu Categories -->
+              <div class="relative group" @mouseenter="isCategoryMenuOpen = true" @mouseleave="isCategoryMenuOpen = false">
+                <button class="nav-link text-sm font-medium flex items-center gap-2 py-2">
+                  <LayoutList class="w-4 h-4" /> Catégories <ChevronDown class="w-3 h-3 group-hover:rotate-180 transition-transform" />
+                </button>
+                <div 
+                  v-show="isCategoryMenuOpen"
+                  class="absolute top-full left-0 w-[400px] mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-[100] transition-opacity duration-200"
+                >
+                  <div class="p-6 grid grid-cols-2 gap-4">
+                    <NuxtLink to="/catalogue?categorie=alimentaire" class="flex flex-col gap-1 p-3 rounded-xl hover:bg-green-50 transition-colors group/link" @click="isCategoryMenuOpen = false">
+                      <div class="w-8 h-8 rounded-lg bg-green-100 text-green-600 flex items-center justify-center mb-1 group-hover/link:scale-110 transition-transform"><Wheat class="w-4 h-4"/></div>
+                      <span class="font-bold text-sm text-gray-800">Alimentaire</span>
+                      <span class="text-[10px] text-gray-500">Marché & Supermarché</span>
+                    </NuxtLink>
+                    <NuxtLink to="/catalogue?categorie=scolarite" class="flex flex-col gap-1 p-3 rounded-xl hover:bg-blue-50 transition-colors group/link" @click="isCategoryMenuOpen = false">
+                      <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center mb-1 group-hover/link:scale-110 transition-transform"><BookOpen class="w-4 h-4"/></div>
+                      <span class="font-bold text-sm text-gray-800">Scolarité</span>
+                      <span class="text-[10px] text-gray-500">Kits & Fournitures</span>
+                    </NuxtLink>
+                    <NuxtLink to="/catalogue?categorie=sante" class="flex flex-col gap-1 p-3 rounded-xl hover:bg-pink-50 transition-colors group/link" @click="isCategoryMenuOpen = false">
+                      <div class="w-8 h-8 rounded-lg bg-pink-100 text-pink-600 flex items-center justify-center mb-1 group-hover/link:scale-110 transition-transform"><Heart class="w-4 h-4"/></div>
+                      <span class="font-bold text-sm text-gray-800">Santé & Bébé</span>
+                      <span class="text-[10px] text-gray-500">Pharmacie & Soins</span>
+                    </NuxtLink>
+                    <NuxtLink to="/catalogue?categorie=btp" class="flex flex-col gap-1 p-3 rounded-xl hover:bg-orange-50 transition-colors group/link" @click="isCategoryMenuOpen = false">
+                      <div class="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center mb-1 group-hover/link:scale-110 transition-transform"><Hammer class="w-4 h-4"/></div>
+                      <span class="font-bold text-sm text-gray-800">Construction</span>
+                      <span class="text-[10px] text-gray-500">Matériaux BTP</span>
+                    </NuxtLink>
+                  </div>
+                  <div class="bg-gray-50 p-4 border-t border-gray-100">
+                    <NuxtLink to="/catalogue" class="text-sm text-[var(--color-accent-dark)] font-medium flex items-center justify-center gap-2 hover:underline" @click="isCategoryMenuOpen = false">
+                      Voir tout le catalogue <ArrowRight class="w-4 h-4"/>
+                    </NuxtLink>
+                  </div>
+                </div>
+              </div>
+
               <NuxtLink to="/catalogue" class="nav-link text-sm font-medium flex items-center gap-2">
-                <Package class="w-4 h-4" /> Catalogue
+                <Package class="w-4 h-4" /> Promos & Nouveautés
               </NuxtLink>
             </nav>
 
@@ -358,6 +397,11 @@
 
     <!-- Search Modal -->
     <SearchModal v-model="isSearchOpen" />
+    
+    <!-- Mobile Bottom Navigation (App-like) -->
+    <ClientOnly>
+      <MobileBottomNav @open-sidebar="isMobileMenuOpen = true" />
+    </ClientOnly>
   </div>
 </template>
 
@@ -366,7 +410,8 @@ import {
   Search, ShoppingBag, Menu, X, Mail, Phone, MapPin, Truck, Shield, Camera,
   Home, Package, HelpCircle, MapPinned, MessageCircle,
   Facebook, Instagram, Twitter, Heart, User, ChevronDown,
-  LayoutDashboard, UserCircle, LogOut, UserPlus
+  LayoutDashboard, UserCircle, LogOut, UserPlus,
+  LayoutList, Wheat, BookOpen, Hammer, ArrowRight
 } from 'lucide-vue-next'
 import { useCartStore } from '~/stores/cart'
 import { useAuthStore } from '~/stores/auth'
@@ -386,6 +431,7 @@ const isSearchOpen = ref(false)
 const isScrolled = ref(false)
 const isUserMenuOpen = ref(false)
 const isHelpMenuOpen = ref(false)
+const isCategoryMenuOpen = ref(false)
 const userMenuRef = ref<HTMLElement | null>(null)
 const helpMenuRef = ref<HTMLElement | null>(null)
 
