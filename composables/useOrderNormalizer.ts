@@ -1,7 +1,7 @@
 import type { Order, OrderItem } from '~/types'
 
 /**
- * Normalise une commande venue de Supabase vers le format attendu par l'UI.
+ * Normalise une commande venue de l'API Laravel vers le format attendu par l'UI.
  * Gère à la fois:
  * - items dans metadata.items (checkout API)
  * - order_items en jointure (ancien schéma)

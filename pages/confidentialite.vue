@@ -92,7 +92,6 @@
           <ul>
             <li><strong>Nos partenaires de livraison</strong> : pour acheminer vos colis</li>
             <li><strong>Paystack</strong> : pour le traitement des paiements</li>
-            <li><strong>Supabase</strong> : pour l'hébergement des données</li>
             <li><strong>Vercel</strong> : pour l'hébergement du site</li>
           </ul>
           <p>

@@ -24,7 +24,7 @@ export default defineNuxtConfig({
   image: {
     quality: 80,
     format: ['webp', 'avif'],
-    domains: ['xoeybpypyghunujnlhpa.supabase.co'],
+    domains: ['api.spencerai.tech'],
   },
   app: {
     pageTransition: { name: 'page', mode: 'out-in' },
