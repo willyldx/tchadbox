@@ -85,7 +85,7 @@
           <div v-else class="p-4 space-y-3">
             <div v-for="item in cartStore.items" :key="item.id" class="flex gap-4 p-4 rounded-xl bg-gray-50 border border-gray-100">
             <div class="w-16 h-16 rounded-lg bg-white flex items-center justify-center flex-shrink-0 border border-gray-100">
-              <NuxtImg v-if="item.thumbnail" :src="item.thumbnail" :alt="item.title" class="w-full h-full object-cover rounded-lg" />
+              <NuxtImg v-if="item.thumbnail" :src="resolveThumb(item.thumbnail)" :alt="item.title" class="w-full h-full object-cover rounded-lg" />
               <Package v-else class="w-6 h-6 text-gray-300" />
             </div>
               <div class="flex-grow min-w-0">
@@ -146,5 +146,13 @@ import { ShoppingBag, X, Package, Trash2, Minus, Plus, Truck, Check, Lock } from
 import { useCartStore } from '~/stores/cart'
 
 const cartStore = useCartStore()
+
+const resolveThumb = (path: string | undefined) => {
+  if (!path) return ''
+  if (path.startsWith('http')) return path
+  if (path.startsWith('storage/')) return `https://api.spencerai.tech/${path}`
+  if (path.startsWith('/storage/')) return `https://api.spencerai.tech${path}`
+  return path
+}
 </script>
 

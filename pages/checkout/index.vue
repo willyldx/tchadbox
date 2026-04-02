@@ -234,7 +234,7 @@
           <div v-for="item in cartStore.items" :key="item.id" class="flex items-center gap-4">
             <div class="relative shrink-0">
                <div class="w-16 h-16 bg-white border border-gray-200 rounded-xl flex items-center justify-center overflow-hidden shadow-sm">
-                  <NuxtImg v-if="item.thumbnail" :src="item.thumbnail" :alt="item.title" class="w-full h-full object-cover mix-blend-multiply" />
+                  <NuxtImg v-if="item.thumbnail" :src="resolveThumb(item.thumbnail)" :alt="item.title" class="w-full h-full object-cover mix-blend-multiply" />
                   <PackageIcon v-else class="w-6 h-6 text-gray-300" />
                </div>
                <div class="absolute -top-2 -right-2 w-5 h-5 bg-gray-500/90 backdrop-blur text-white text-[11px] font-bold rounded-full flex items-center justify-center shadow-sm">
@@ -319,6 +319,14 @@ const cartStore = useCartStore()
 const authStore = useAuthStore()
 const { checkout: apiCheckout } = useBackendApi()
 const { initializePayment, verifyPayment, eurToXof } = usePaystack()
+
+const resolveThumb = (path: string | undefined) => {
+  if (!path) return ''
+  if (path.startsWith('http')) return path
+  if (path.startsWith('storage/')) return `https://api.spencerai.tech/${path}`
+  if (path.startsWith('/storage/')) return `https://api.spencerai.tech${path}`
+  return path
+}
 
 const currentStep = ref(0)
 const steps = [
