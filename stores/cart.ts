@@ -10,6 +10,7 @@ interface CartState {
   isHydrated: boolean
   currency: CurrencyCode
   rates: Record<Exclude<CurrencyCode, 'EUR'>, number>
+  _closeTimeout?: any
 }
 
 function getFormattedPrice(amount: number, currencyCode: CurrencyCode, rates: Record<string, number>): string {
@@ -57,6 +58,7 @@ export const useCartStore = defineStore('cart', {
       CAD: 1.48,
       CHF: 0.94,
     },
+    _closeTimeout: undefined,
   }),
 
   getters: {
@@ -99,11 +101,23 @@ export const useCartStore = defineStore('cart', {
     },
 
     toggleCart() {
+      if (this._closeTimeout) clearTimeout(this._closeTimeout)
       this.isOpen = !this.isOpen
     },
 
     closeCart() {
+      if (this._closeTimeout) clearTimeout(this._closeTimeout)
       this.isOpen = false
+    },
+
+    openTemporarily(duration: number = 3000) {
+      if (this._closeTimeout) clearTimeout(this._closeTimeout)
+      this.isOpen = true
+      if (typeof window !== 'undefined') {
+        this._closeTimeout = setTimeout(() => {
+          this.isOpen = false
+        }, duration)
+      }
     },
 
     addItem(product: Omit<CartItem, 'quantity' | 'id'>, quantity: number = 1) {
@@ -115,7 +129,7 @@ export const useCartStore = defineStore('cart', {
         this.items.push({ ...product, id: itemId, quantity })
       }
       this.saveToStorage()
-      this.isOpen = true
+      this.openTemporarily()
     },
 
     removeItem(itemId: string) {

@@ -569,7 +569,6 @@ async function addToCart() {
     category: product.value.category,
   }, quantity.value)
   
-  cartStore.isOpen = true
   isAddingToCart.value = false
 }
 
