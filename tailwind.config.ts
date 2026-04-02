@@ -8,6 +8,15 @@ export default {
         sans: ['"Amazon Ember"', 'Arial', 'sans-serif'],
         display: ['"Amazon Ember"', 'Arial', 'sans-serif'],
         body: ['"Amazon Ember"', 'Arial', 'sans-serif'],
+      },
+      animation: {
+        marquee: 'marquee 25s linear infinite',
+      },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-100%)' },
+        }
       }
     }
   }

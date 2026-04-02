@@ -9,10 +9,7 @@
     >
       <div v-if="modelValue" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-start justify-center pt-24 px-4" @click.self="close">
         <div 
-          v-motion
-          :initial="{ opacity: 0, y: -10, scale: 0.98 }"
-          :enter="{ opacity: 1, y: 0, scale: 1 }"
-          class="w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden"
+          class="w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden transform transition-all"
         >
           <div class="relative border-b border-gray-100">
             <Search class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />

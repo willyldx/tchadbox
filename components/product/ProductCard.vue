@@ -1,8 +1,5 @@
 <template>
   <article 
-    v-motion
-    :initial="{ opacity: 0, y: 30 }"
-    :visibleOnce="{ opacity: 1, y: 0, transition: { delay: delay, duration: 500 } }"
     class="card-product group relative flex flex-col h-full bg-white rounded-2xl transition-all duration-300 hover:shadow-[0_20px_40px_-15px_rgba(245,158,11,0.15)] hover:-translate-y-1 overflow-hidden ring-1 ring-slate-900/5"
   >
     <!-- Image Section -->

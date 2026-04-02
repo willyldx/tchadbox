@@ -6,11 +6,34 @@
       :class="isScrolled ? 'bg-[var(--color-primary)]/80 backdrop-blur-md' : 'bg-[var(--color-primary)]'"
     >
       <div class="container-main">
-        <div class="flex items-center justify-center gap-2 text-sm">
-          <Truck class="w-4 h-4 text-[var(--color-accent)]" />
-          <span>Livraison certifiée à N'Djamena sous 3 à 5 jours — Preuve photo incluse</span>
-          <span class="hidden sm:inline text-[var(--color-accent)]">•</span>
-          <span class="hidden sm:inline">Paiement 100% sécurisé</span>
+        <div class="flex items-center gap-4 text-sm whitespace-nowrap overflow-hidden">
+          <div class="flex items-center gap-4 animate-marquee">
+            <div class="flex items-center gap-2">
+              <Truck class="w-4 h-4 text-[var(--color-accent)]" />
+              <span>Livraison certifiée à N'Djamena sous 3 à 5 jours — Preuve photo incluse</span>
+            </div>
+            <span class="text-[var(--color-accent)]">•</span>
+            <span>Paiement 100% sécurisé</span>
+            <span class="text-[var(--color-accent)]">•</span>
+            <div class="flex items-center gap-2">
+              <Truck class="w-4 h-4 text-[var(--color-accent)]" />
+              <span>Support Client Tchad & Diaspora</span>
+            </div>
+          </div>
+          <!-- Repeat for infinite smooth scrolling effect -->
+          <div class="flex items-center gap-4 animate-marquee" aria-hidden="true">
+            <div class="flex items-center gap-2">
+              <Truck class="w-4 h-4 text-[var(--color-accent)]" />
+              <span>Livraison certifiée à N'Djamena sous 3 à 5 jours — Preuve photo incluse</span>
+            </div>
+            <span class="text-[var(--color-accent)]">•</span>
+            <span>Paiement 100% sécurisé</span>
+            <span class="text-[var(--color-accent)]">•</span>
+            <div class="flex items-center gap-2">
+              <Truck class="w-4 h-4 text-[var(--color-accent)]" />
+              <span>Support Client Tchad & Diaspora</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

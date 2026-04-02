@@ -31,9 +31,6 @@
       <!-- Center Content (Glassmorphism) -->
       <div class="relative z-10 container-main flex flex-col items-center text-center mt-6">
         <div 
-          v-motion
-          :initial="{ opacity: 0, y: 10 }"
-          :enter="{ opacity: 1, y: 0, transition: { duration: 500, ease: 'easeOut' } }"
           class="max-w-4xl mx-auto flex flex-col items-center"
         >
           <!-- Premium Pill -->
@@ -100,9 +97,6 @@
           <NuxtLink 
             v-for="(cat, i) in categories" :key="cat.handle"
             :to="`/categories/${cat.handle}`"
-            v-motion
-            :initial="{ opacity: 0, y: 20 }"
-            :visibleOnce="{ opacity: 1, y: 0, transition: { delay: i * 100, duration: 500, ease: 'easeOut' } }"
             class="group relative h-[320px] rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 bg-white"
             :style="{ borderTop: `4px solid ${cat.color}` }"
           >
@@ -175,9 +169,6 @@
           
           <div 
             v-for="(step, i) in steps" :key="i"
-            v-motion
-            :initial="{ opacity: 0, y: 20 }"
-            :visibleOnce="{ opacity: 1, y: 0, transition: { delay: i * 150, duration: 600 } }"
             class="relative z-10 flex flex-col items-center text-center group"
           >
             <!-- Sleek Icon Box -->
@@ -197,9 +188,6 @@
          ============================================== -->
     <section class="py-24 px-4 bg-[var(--color-bg)]">
       <div 
-        v-motion
-        :initial="{ opacity: 0, scale: 0.95 }"
-        :visibleOnce="{ opacity: 1, scale: 1, transition: { duration: 800 } }"
         class="max-w-6xl mx-auto rounded-[3rem] bg-[var(--color-primary)] overflow-hidden relative shadow-2xl"
       >
         <div class="absolute inset-0 opacity-20 mix-blend-overlay" style="background-image: url('/hero-bg.png'); background-size: cover; background-position: center; filter: grayscale(100%);" />

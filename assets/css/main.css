@@ -184,26 +184,56 @@
 
 @layer components {
   .btn-primary {
-    @apply relative inline-flex items-center justify-center font-semibold overflow-hidden;
+    @apply relative inline-flex items-center justify-center font-bold overflow-hidden;
     padding: 0.75rem 2rem;
-    background: var(--color-primary);
+    background: var(--color-accent);
     color: white;
-    border-radius: 100px;
-    transition: all 0.2s;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-sm);
   }
 
   .btn-primary::before {
     display: none;
   }
 
+  .btn-primary:active {
+    transform: scale(0.98);
+  }
+
   .btn-primary:hover {
-    background: var(--color-primary-light);
-    transform: none;
-    box-shadow: 0 2px 5px rgba(15, 23, 42, 0.2);
+    background: var(--color-accent-hover);
+    box-shadow: var(--shadow-md);
   }
 
   .btn-primary span {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .btn-secondary {
+    @apply relative inline-flex items-center justify-center font-bold overflow-hidden;
+    padding: 0.75rem 2rem;
+    background: var(--color-primary);
+    color: white;
+    border-radius: 12px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn-secondary:hover {
+    background: var(--color-primary-light);
+    box-shadow: var(--shadow-md);
+  }
+
+  .btn-secondary:active {
+    transform: scale(0.98);
+  }
+
+  .btn-secondary span {
     position: relative;
     z-index: 1;
     display: flex;
@@ -215,18 +245,15 @@
     @apply relative inline-flex items-center justify-center font-bold overflow-hidden;
     padding: 0.75rem 2rem;
     background: var(--color-accent-light);
-    color: #0F1111;
-    border: 1px solid #FCD200;
-    border-radius: 100px;
-    transition: all 0.2s;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    color: var(--color-primary-dark);
+    border-radius: 12px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-sm);
   }
 
   .btn-gold:hover {
     background: #F7CA00;
-    border-color: #F2C200;
-    transform: none;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
   }
 
   .btn-gold span {
