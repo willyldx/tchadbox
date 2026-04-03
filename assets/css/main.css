@@ -9,26 +9,26 @@
 
 :root {
   /* Backgrounds — clean & professional retail */
-  --color-bg: #FAFAFA;
+  --color-bg: #F8FAFC;
   --color-bg-warm: #FFFFFF;
   --color-bg-card: #FFFFFF;
   --color-bg-elevated: #FFFFFF;
   --color-bg-dark: #0B1120;
 
-  /* Primary — Deep Midnight Navy (Trust) */
+  /* Primary — Deep Midnight Navy (Trust, Header, Text) */
   --color-primary: #0F172A;
   --color-primary-light: #1E293B;
   --color-primary-dark: #020617;
 
-  /* Accent — Warm African Gold Saffron */
+  /* Accent — Warm African Gold Saffron (Buttons, CTAs, Accents) */
   --color-accent: #F59E0B;
-  --color-accent-light: #FBBF24;
+  --color-accent-light: #FCD34D;
   --color-accent-dark: #D97706;
   --color-accent-hover: #B45309;
 
   /* Links & Success */
-  --color-link: #0369a1;
-  --color-link-hover: #075985;
+  --color-link: #F59E0B;
+  --color-link-hover: #D97706;
 
   /* Alerts / Terracotta */
   --color-terracotta: #B12704;
@@ -39,7 +39,7 @@
   --color-success-light: #10B981;
 
   /* Text */
-  --color-text: #1E293B;
+  --color-text: #0F172A;
   --color-text-secondary: #475569;
   --color-text-muted: #94A3B8;
 
@@ -50,19 +50,33 @@
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
   --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
   --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.06);
-  --shadow-accent: 0 4px 10px rgba(255, 153, 0, 0.2);
-  --shadow-primary: 0 4px 10px rgba(35, 47, 62, 0.15);
-  --shadow-glow: 0 0 40px rgba(255, 153, 0, 0.1);
+  --shadow-accent: 0 4px 10px rgba(245, 158, 11, 0.3);
+  --shadow-primary: 0 4px 10px rgba(15, 23, 42, 0.15);
+  --shadow-glow: 0 0 40px rgba(245, 158, 11, 0.15);
 
-  /* Typography - Amazon Inspired */
-  --font-display: "Amazon Ember", Arial, sans-serif;
-  --font-body: "Amazon Ember", Arial, sans-serif;
+  /* Typography — Inter (premium, clean) */
+  --font-display: "Inter", system-ui, -apple-system, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Animation */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* Nuxt UI override — force amber as primary color token */
+  --ui-primary: #F59E0B;
+  --ui-color-primary-50: #fffbeb;
+  --ui-color-primary-100: #fef3c7;
+  --ui-color-primary-200: #fde68a;
+  --ui-color-primary-300: #fcd34d;
+  --ui-color-primary-400: #fbbf24;
+  --ui-color-primary-500: #f59e0b;
+  --ui-color-primary-600: #d97706;
+  --ui-color-primary-700: #b45309;
+  --ui-color-primary-800: #92400e;
+  --ui-color-primary-900: #78350f;
+  --ui-color-primary-950: #451a03;
 }
 
 /* ============================================

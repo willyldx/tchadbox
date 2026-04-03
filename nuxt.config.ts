@@ -15,9 +15,13 @@ export default defineNuxtConfig({
     preference: 'light',
     fallback: 'light',
   },
+  ui: {
+    primary: 'amber',
+    gray: 'slate',
+  },
   googleFonts: {
     families: {
-      // System sans-serif used as Amazon Ember fallback, no external fonts needed for UI
+      Inter: [400, 500, 600, 700, 800, 900],
     },
     display: 'swap',
   },
@@ -25,6 +29,13 @@ export default defineNuxtConfig({
     quality: 80,
     format: ['webp', 'avif'],
     domains: ['api.spencerai.tech'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'api.spencerai.tech',
+        pathname: '/storage/**',
+      },
+    ],
   },
   app: {
     pageTransition: { name: 'page', mode: 'out-in' },
@@ -35,7 +46,7 @@ export default defineNuxtConfig({
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: 'TchadBox - La diaspora tchadienne envoie des biens à sa famille. Livraison garantie avec photo à N\'Djamena.' },
-        { name: 'theme-color', content: '#002395' },
+        { name: 'theme-color', content: '#0F172A' },
       ],
       link: [
         { rel: 'icon', type: 'image/png', href: '/logo.png' },
