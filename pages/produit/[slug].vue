@@ -472,8 +472,6 @@ onMounted(async () => {
   await fetchProduct()
 })
 
-const { trackProductView } = usePulse()
-
 async function fetchProduct() {
   const slug = route.params.slug as string
   const { getProduct, getProducts } = useProducts()
