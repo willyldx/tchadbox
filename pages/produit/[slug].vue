@@ -466,9 +466,13 @@ useSeoMeta({
 })
 
 // Fetch product
+const { trackProductView } = usePulse()
+
 onMounted(async () => {
   await fetchProduct()
 })
+
+const { trackProductView } = usePulse()
 
 async function fetchProduct() {
   const slug = route.params.slug as string
@@ -541,6 +545,10 @@ async function fetchProduct() {
     console.error('Failed to fetch product:', e)
   }
   
+  if (product.value) {
+    trackProductView(parseInt(product.value.id), product.value.category)
+  }
+
   isLoading.value = false
 }
 

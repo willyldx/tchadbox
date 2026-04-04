@@ -82,42 +82,19 @@
     </section>
 
     <!-- ==============================================
-         2. BENTO GRID CATEGORIES (MODERN IOS STYLE)
+         2. BENTO GRID CATEGORIES (MODERN IOS STYLE) -> REPLACED WITH AI RECOMMENDATIONS
          ============================================== -->
-    <section class="py-24 relative z-20 -mt-10 bg-[var(--color-bg)] rounded-t-[3rem] shadow-[0_-20px_40px_rgba(0,0,0,0.05)]">
+    <section v-if="recommendedProducts.length > 0" class="py-24 relative z-20 -mt-10 bg-[var(--color-bg)] rounded-t-[3rem] shadow-[0_-20px_40px_rgba(0,0,0,0.05)]">
       <div class="container-main">
         <div class="flex flex-col md:flex-row justify-between items-end mb-12">
           <div class="max-w-2xl">
-            <h2 class="text-4xl md:text-5xl font-extrabold text-[var(--color-text)] tracking-tight">L'Univers <span class="text-gradient">TchadBox</span></h2>
-            <p class="text-[var(--color-text-muted)] text-lg mt-4 font-light">Des catégories pensées pour répondre à tous les besoins vitaux de vos proches, emballées avec soin.</p>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-[var(--color-text)] tracking-tight">Recommandé <span class="text-gradient">Pour Vous</span></h2>
+            <p class="text-[var(--color-text-muted)] text-lg mt-4 font-light">Une sélection intelligente de produits basée sur vos récentes recherches sur TchadBox.</p>
           </div>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <NuxtLink 
-            v-for="(cat, i) in categories" :key="cat.handle"
-            :to="`/categories/${cat.handle}`"
-            class="group relative h-[320px] rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 bg-white"
-            :style="{ borderTop: `4px solid ${cat.color}` }"
-          >
-            <!-- Background Glow -->
-            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700" :style="{ background: `radial-gradient(circle at bottom right, ${cat.color}15, transparent 60%)` }"></div>
-            
-            <div class="p-8 flex flex-col h-full relative z-10">
-              <div 
-                class="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-sm transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"
-                :style="{ background: `${cat.color}15`, color: cat.color }"
-              >
-                <component :is="cat.icon" class="w-8 h-8" />
-              </div>
-              <h3 class="text-2xl font-bold text-[var(--color-text)] mb-3">{{ cat.name }}</h3>
-              <p class="text-[var(--color-text-muted)] font-light leading-relaxed flex-grow">{{ cat.description }}</p>
-              
-              <div class="flex items-center gap-2 text-sm font-semibold opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300" :style="{ color: cat.color }">
-                Découvrir <ArrowRight class="w-4 h-4" />
-              </div>
-            </div>
-          </NuxtLink>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <ProductCard v-for="(product, i) in recommendedProducts" :key="'rec-'+product.id" :product="product" :delay="i * 100" />
         </div>
       </div>
     </section>
@@ -254,16 +231,57 @@ const goToSlide = (index: number) => {
 onMounted(() => {
   startAutoPlay()
   fetchFeaturedProducts()
+  fetchRecommendedProducts()
 })
 onUnmounted(() => { if (slideInterval) clearInterval(slideInterval) })
 
-// 2. Bento Grid Categories
-const categories = [
-  { name: 'Alimentaire', handle: 'alimentaire', description: 'Riz, huile, sucre et produits de première nécessité sourcés localement.', icon: Wheat, color: '#10B981' }, // Emerald
-  { name: 'Scolarité', handle: 'scolarite', description: 'Kits scolaires complets pour garantir la réussite de vos enfants.', icon: BookOpen, color: '#3B82F6' }, // Blue
-  { name: 'Santé & Bébé', handle: 'sante', description: 'Gamme de soins essentiels, pharmacie de base et produits infantiles.', icon: Heart, color: '#EC4899' }, // Pink
-  { name: 'Événements', handle: 'fetes', description: 'Packs spéciaux créés sur-mesure pour Ramadan, Tabaski et célébrations.', icon: Gift, color: '#F59E0B' }, // Amber
-]
+// 2. AI Recommendations
+const recommendedProducts = ref<any[]>([])
+
+const fetchRecommendedProducts = async () => {
+  const { pulseContext } = usePulse()
+  const { viewed_ids, viewed_categories } = pulseContext.value
+
+  if (viewed_ids.length > 0 || viewed_categories.length > 0) {
+    try {
+      const config = useRuntimeConfig()
+      // 1. Call Python AI Microservice
+      const aiResponse = await $fetch<{ recommendations: number[] }>(`${config.public.aiApiUrl}/recommend`, {
+        method: 'POST',
+        body: {
+          viewed_product_ids: viewed_ids,
+          viewed_categories: viewed_categories,
+          limit: 4
+        }
+      }).catch(() => null)
+      
+      let idsToFetch = aiResponse?.recommendations
+
+      // Fallback si serveur Python down
+      if (!idsToFetch || idsToFetch.length === 0) {
+        return; // Cache fallback
+      }
+
+      // 2. Get full products from Laravel API using ?ids=
+      const { getProducts } = useProducts()
+      const laravelResponse = await getProducts({ ids: idsToFetch.join(',') })
+      
+      recommendedProducts.value = laravelResponse.products.map((p: any) => ({
+        id: p.id.toString(),
+        title: p.title,
+        handle: p.slug,
+        subtitle: p.subtitle || '',
+        price: p.price || 0,
+        thumbnail: p.thumbnail || '',
+        category: p.category || '',
+        categoryHandle: p.category_handle || '',
+        inStock: p.in_stock,
+      }))
+    } catch (e) {
+      console.warn("Recommendation AI non disponible", e)
+    }
+  }
+}
 
 // 3. Featured Products
 const featuredProducts = ref<any[]>([])

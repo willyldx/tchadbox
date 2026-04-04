@@ -1,0 +1,16 @@
+@echo off
+echo Initialization of TchadBox AI Engine...
+
+IF NOT EXIST venv (
+    echo Creating Python Virtual Environment...
+    python -m venv venv
+)
+
+echo Activating Virtual Environment...
+call venv\Scripts\activate
+
+echo Installing Requirements...
+pip install -r requirements.txt
+
+echo Starting FastAPI Server...
+uvicorn main:app --host 0.0.0.0 --port 8001 --reload

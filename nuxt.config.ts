@@ -72,6 +72,7 @@ export default defineNuxtConfig({
     paystackSecretKey: process.env.PAYSTACK_SECRET_KEY || '',
     public: {
       apiUrl: process.env.VITE_API_URL || 'https://api.spencerai.tech/api',
+      aiApiUrl: process.env.NUXT_PUBLIC_AI_API_URL || 'https://ai.spencerai.tech',
       siteUrl: process.env.SITE_URL || 'https://tchadbox.vercel.app',
       paystackPublicKey: process.env.PAYSTACK_PUBLIC_KEY || '',
       meilisearchHost: process.env.NUXT_PUBLIC_MEILISEARCH_HOST || '',
