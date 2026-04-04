@@ -291,7 +291,6 @@
           <div v-else-if="activeTab === 'reviews'">
             <ProductReviews :productId="product.id" />
           </div>
-          </div>
         </div>
       </div>
       
