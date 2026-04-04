@@ -288,14 +288,9 @@
           </div>
 
           <!-- Reviews Tab -->
-          <div v-else-if="activeTab === 'reviews'" class="space-y-6">
-            <div class="bg-gray-50 rounded-3xl p-12 text-center border border-gray-100">
-              <div class="w-16 h-16 bg-white rounded-full mx-auto flex items-center justify-center shadow-sm mb-4">
-                <StarIcon class="w-8 h-8 text-gray-300" />
-              </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-2">Aucun avis publié</h3>
-              <p class="text-gray-500 font-medium">Faites plaisir à vos proches et soyez le premier à certifier ce produit !</p>
-            </div>
+          <div v-else-if="activeTab === 'reviews'">
+            <ProductReviews :productId="product.id" />
+          </div>
           </div>
         </div>
       </div>
@@ -330,17 +325,8 @@
         </div>
       </div>
 
-      <!-- Related Products -->
-      <div class="mt-16">
-        <h2 class="text-2xl font-bold text-[var(--color-text)] mb-8">Vous aimerez aussi</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <ProductCard
-            v-for="relatedProduct in relatedProducts"
-            :key="relatedProduct.id"
-            :product="relatedProduct"
-          />
-        </div>
-      </div>
+      <!-- Related Products / Recommendations via AI -->
+      <ProductRecommendations :product="product" />
     </div>
 
     <!-- Error State -->
