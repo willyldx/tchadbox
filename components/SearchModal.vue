@@ -120,7 +120,7 @@ watch(query, (q) => {
         title: p._highlightResult?.title?.value || p.title,
         handle: p.slug || p.handle || p.id,
         price: p.price,
-        thumbnail: p.thumbnail,
+        thumbnail: p.thumbnail ? (p.thumbnail.startsWith('http') ? p.thumbnail : (p.thumbnail.startsWith('/') ? 'https://api.spencerai.tech' + p.thumbnail : 'https://api.spencerai.tech/' + p.thumbnail)) : '',
         category: p._highlightResult?.category?.value || p.category || '',
       }))
     } catch (e) {

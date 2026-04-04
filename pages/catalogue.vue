@@ -117,6 +117,14 @@ import type { Product } from '~/types'
 const route = useRoute()
 const { getProducts } = useProducts()
 
+const resolveThumb = (path: string | undefined) => {
+  if (!path) return ''
+  if (path.startsWith('http')) return path
+  if (path.startsWith('storage/')) return `https://api.spencerai.tech/${path}`
+  if (path.startsWith('/storage/')) return `https://api.spencerai.tech${path}`
+  return path
+}
+
 // State
 const products = ref<Product[]>([])
 const isLoading = ref(true)
@@ -222,7 +230,7 @@ const doMeilisearch = async (query: string) => {
       subtitle: p.subtitle || '',
       description: p.description || '',
       price: p.price || 0,
-      thumbnail: p.thumbnail || '',
+      thumbnail: resolveThumb(p.thumbnail),
       images: [],
       category: p.category || '',
       categoryHandle: p.category_handle || '',
@@ -276,6 +284,12 @@ const filteredProducts = computed(() => {
   
   if (selectedCategory.value) {
     result = result.filter(p => p.categoryHandle === selectedCategory.value)
+  }
+  
+  // Apply fallback text search if there is a query but Meilisearch failed
+  if (searchQuery.value && searchQuery.value.length >= 2) {
+    const q = searchQuery.value.toLowerCase()
+    result = result.filter(p => p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q))
   }
   
   if (selectedPrice.value) {
