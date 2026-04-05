@@ -1,35 +1,28 @@
 <template>
-  <div>
-    <!-- Hero -->
-    <section class="relative py-20 overflow-hidden text-center">
-      <div class="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-dark)]" />
-      <div class="orb orb-amber w-80 h-80 -top-20 left-1/4 opacity-10" />
+  <div class="bg-white min-h-screen pt-32 pb-24">
+    <!-- Clean Minimalist Header -->
+    <section class="max-w-4xl mx-auto px-6 mb-16 text-center">
+      <nav class="flex items-center justify-center gap-2 text-sm font-medium text-gray-500 mb-8">
+        <NuxtLink to="/" class="hover:text-gray-900 transition-colors">Accueil</NuxtLink>
+        <ChevronRightIcon class="w-4 h-4" />
+        <span class="text-gray-900">Juridique</span>
+      </nav>
       
-      <div class="container-main relative z-10">
-        <nav class="flex items-center justify-center gap-2 text-sm mb-6">
-          <NuxtLink to="/" class="text-white/60 hover:text-white transition-colors">Accueil</NuxtLink>
-          <ChevronRightIcon class="w-4 h-4 text-white/40" />
-          <span class="text-white font-medium">Mentions Légales</span>
-        </nav>
-        <h1 
-          v-motion :initial="{ opacity: 0, y: 20 }" :enter="{ opacity: 1, y: 0, transition: { delay: 100 } }"
-          class="heading-section text-white mb-4"
-        >
-          Mentions <span class="text-gradient-gold">Légales</span>
-        </h1>
-        <p 
-          v-motion :initial="{ opacity: 0, y: 20 }" :enter="{ opacity: 1, y: 0, transition: { delay: 200 } }"
-          class="text-white/60"
-        >Informations légales relatives à la plateforme tchadbox.com</p>
-      </div>
+      <h1 class="text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-6">
+        Mentions Légales
+      </h1>
+      <p class="text-lg text-gray-500 font-medium">
+        Informations légales relatives à la plateforme tchadbox.com
+      </p>
     </section>
 
     <!-- Content -->
-    <div class="container-main py-12 max-w-4xl">
-      <div class="card p-8 md:p-12">
-        <div class="prose prose-stone max-w-none">
+    <div class="container-main max-w-4xl mx-auto px-6">
+      <div class="bg-white border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2rem] p-8 md:p-16">
+        <div class="prose prose-lg max-w-none prose-headings:font-black prose-headings:text-gray-900 prose-heading:tracking-tight prose-p:text-gray-600 prose-p:leading-relaxed prose-a:text-[var(--color-accent)] hover:prose-a:text-[var(--color-accent-hover)] prose-strong:text-gray-900 prose-ul:font-medium prose-ul:text-gray-600">
+          
           <h2>1. Éditeur du Site</h2>
-          <p>La plateforme tchadbox.com est éditée par :</p>
+          <p>La plateforme tchadbox.com est éditée et gérée de manière exclusive par :</p>
           <ul>
             <li><strong>Raison sociale :</strong> TchadBox</li>
             <li><strong>Forme juridique :</strong> [À compléter]</li>
@@ -38,94 +31,69 @@
             <li><strong>SIRET :</strong> [À compléter]</li>
             <li><strong>RCS :</strong> [À compléter]</li>
             <li><strong>TVA Intracommunautaire :</strong> [À compléter]</li>
-            <li><strong>Email :</strong> contact@tchadbox.com</li>
+            <li><strong>Email de contact :</strong> contact@tchadbox.com</li>
           </ul>
 
           <h2>2. Directeur de la Publication</h2>
           <p>
-            Le directeur de la publication est [Nom du responsable], en qualité de [Fonction].
+            Le directeur de la publication est <strong>[Nom du responsable]</strong>, agissant en qualité de CEO.
           </p>
 
-          <h2>3. Hébergement</h2>
-          <p>Le site est hébergé par :</p>
+          <h2>3. Hébergement des Infrastructures</h2>
+          <p>Afin de garantir une sécurité maximale et une vitesse optimale, la plateforme TchadBox est hébergée sur des infrastructures cloud de l'industrie :</p>
           <ul>
-            <li><strong>Vercel Inc.</strong></li>
-            <li>340 S Lemon Ave #4133</li>
-            <li>Walnut, CA 91789, USA</li>
-            <li>Site web : vercel.com</li>
+            <li><strong>Frontend & Edge Network :</strong> Amazon Web Services (AWS) — Amazon.com Inc. (P.O. Box 81226, Seattle, WA 98108-1226, Centres de données européens)</li>
+            <li><strong>Backend & Bases de Données :</strong> Grappe de Serveurs Privés Virtuels (VPS) localisée exclusivement en Union Européenne, garantissant la pleine conformité RGPD et la souveraineté des données.</li>
           </ul>
 
           <h2>4. Propriété Intellectuelle</h2>
           <p>
-            L’intégralité du contenu de ce site (textes, images, vidéos, logos, icônes, sons, 
-            logiciels, etc.) est la propriété exclusive de TchadBox ou de ses partenaires 
-            et bénéficie de la protection conférée par les lois françaises et internationales 
+            L’intégralité du contenu de ce site (charte graphique, photographies, vidéos, logos, icônes, animations, 
+            code informatique, etc.) est la propriété exclusive de TchadBox et bénéficie de la protection conférée par les lois françaises et internationales 
             relatives à la propriété intellectuelle.
           </p>
           <p>
-            Toute reproduction, représentation, modification, publication, adaptation totale 
-            ou partielle des éléments du site, quel que soit le moyen ou le procédé utilisé, 
-            est strictement interdite sans autorisation écrite préalable de TchadBox.
+            Toute reproduction, représentation, extraction, modification ou publication des éléments constitutifs de TchadBox, 
+            quel que soit le procédé matériel ou digital utilisé, est strictement interdite sans autorisation écrite formelle de la direction.
           </p>
 
-          <h2>5. Données Personnelles</h2>
+          <h2>5. Traitement des Données Personnelles</h2>
           <p>
-            Conformément au Règlement Général sur la Protection des Données (RGPD) et à la 
-            loi Informatique et Libertés, vous bénéficiez d’un droit d’accès, de rectification, 
-            de suppression et de portabilité de vos données personnelles.
+            Conformément au Règlement Général sur la Protection des Données (RGPD), vos données personnelles (incluant les informations relatives aux destinataires au Tchad) sont traitées avec des protocoles cryptographiques stricts (SSL 256-bit).
           </p>
           <p>
-            Pour exercer ces droits, adressez votre demande à : contact@tchadbox.com
+            Vos données ne sont ni vendues ni cédées à des courtiers. Vous bénéficiez d’un droit d’accès, de rectification, 
+            et de suppression immédiate. Pour l'exercer, adressez votre requête à : <strong>contact@tchadbox.com</strong>.
           </p>
           <p>
-            Pour de plus amples informations, veuillez consulter notre 
-            <NuxtLink to="/confidentialite" class="text-amber-600">Politique de Confidentialité</NuxtLink>.
-          </p>
-
-          <h2>6. Cookies</h2>
-          <p>
-            La plateforme tchadbox.com utilise des cookies pour améliorer votre expérience 
-            de navigation, analyser le trafic et personnaliser le contenu. En poursuivant 
-            votre navigation, vous consentez à l’utilisation de ces cookies.
-          </p>
-          <p>
-            Vous conservez la possibilité de configurer votre navigateur pour refuser les cookies 
-            ou être alerté lors de leur envoi.
+            Pour de plus amples informations sur nos processus de sécurisation, consultez notre 
+            <NuxtLink to="/confidentialite">Politique de Confidentialité</NuxtLink>.
           </p>
 
-          <h2>7. Liens Hypertextes</h2>
+          <h2>6. Traçabilité (Cookies)</h2>
           <p>
-            Le site peut contenir des liens vers des sites tiers. TchadBox décline toute 
-            responsabilité quant au contenu de ces sites externes et à leurs pratiques 
-            en matière de protection des données.
+            La plateforme utilise un minimum de traceurs et de cookies pour sécuriser vos sessions e-commerce, maintenir les paniers d'achat actifs, et fluidifier l'expérience. Vous pouvez purger ces traceurs à tout moment depuis les réglages natifs de votre navigateur.
           </p>
 
-          <h2>8. Limitation de Responsabilité</h2>
+          <h2>7. Responsabilités</h2>
           <p>
-            TchadBox met tout en œuvre pour garantir l’exactitude et l’actualité des informations 
-            diffusées sur son site. Toutefois, TchadBox ne peut garantir l’absence d’erreurs 
-            ou d’omissions dans les informations mises à disposition.
-          </p>
-          <p>
-            TchadBox décline toute responsabilité pour toute imprécision, inexactitude 
-            ou omission portant sur les informations disponibles sur le site.
+            TchadBox effectue un audit régulier de l'ensemble de la chaine logistique et de son offre numérique. Toutefois, des erreurs typographiques, des omissions techniques ou des dysfonctionnements du réseau intercontinental peuvent survenir hors de l'emprise de la direction. L'utilisation du service vaut acceptation de nos conditions commerciales.
           </p>
 
-          <h2>9. Droit Applicable et Juridiction</h2>
+          <h2>8. Droit Applicable</h2>
           <p>
             Les présentes mentions légales sont régies par le droit français. En cas de 
-            litige, et après épuisement de toute tentative de résolution amiable, 
-            les tribunaux français seront seuls compétents.
+            litige, et seulement après l'épuisement de toute procédure de conciliation amiable engagée avec notre support, 
+            les tribunaux français seront reconnus comme seuls compétents.
           </p>
 
-          <h2>10. Nous Contacter</h2>
+          <h2>9. Contacter le Service Légal</h2>
           <p>
-            Pour toute question relative aux présentes mentions légales, vous pouvez 
-            nous contacter :
+            Pour toute injonction ou requête administrative :
           </p>
           <ul>
-            <li>Par email : contact@tchadbox.com</li>
-            <li>Via notre <NuxtLink to="/contact" class="text-amber-600">formulaire de contact</NuxtLink></li>
+            <li>Par email sécurisé : <strong>contact@tchadbox.com</strong></li>
+            <li>En ligne : <NuxtLink to="/contact">Formulaire de demande légale</NuxtLink></li>
           </ul>
         </div>
       </div>
@@ -137,7 +105,11 @@
 import { ChevronRight as ChevronRightIcon } from 'lucide-vue-next'
 
 useSeoMeta({
-  title: 'Mentions Légales - TchadBox',
-  description: 'Mentions légales du site TchadBox.',
+  title: 'Mentions Légales | TchadBox',
+  description: 'Mentions légales et détails concernant l\'éditeur et l\'hébergeur de la plateforme TchadBox.',
 })
 </script>
+
+<style scoped>
+/* Styling matches the clean luxury conditions.vue page */
+</style>
