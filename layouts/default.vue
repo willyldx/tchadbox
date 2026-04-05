@@ -335,11 +335,11 @@
           <div class="hidden md:block">
             <h4 class="font-bold mb-6 text-white tracking-wide uppercase text-xs opacity-50">TchadBox</h4>
             <ul class="space-y-3">
-              <li><NuxtLink to="/a-propos" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Qui sommes-nous ?</NuxtLink></li>
-              <li><NuxtLink to="/comment-ca-marche" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Comment ça marche</NuxtLink></li>
-              <li><NuxtLink to="/conditions" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Politique de remboursement</NuxtLink></li>
-              <li><NuxtLink to="/mentions-legales" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Mentions Légales</NuxtLink></li>
-              <li><NuxtLink to="/confidentialite" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Confidentialité</NuxtLink></li>
+              <li><NuxtLink to="/a-propos" class="text-slate-400 hover:text-[var(--color-accent)] text-sm font-medium transition-colors">Qui sommes-nous ?</NuxtLink></li>
+              <li><NuxtLink to="/comment-ca-marche" class="text-slate-400 hover:text-[var(--color-accent)] text-sm font-medium transition-colors">Comment ça marche</NuxtLink></li>
+              <li><NuxtLink to="/conditions" class="text-slate-400 hover:text-[var(--color-accent)] text-sm font-medium transition-colors">Conditions Générales (CGV)</NuxtLink></li>
+              <li><NuxtLink to="/mentions-legales" class="text-slate-400 hover:text-[var(--color-accent)] text-sm font-medium transition-colors">Mentions Légales</NuxtLink></li>
+              <li><NuxtLink to="/confidentialite" class="text-slate-400 hover:text-[var(--color-accent)] text-sm font-medium transition-colors">Confidentialité</NuxtLink></li>
             </ul>
           </div>
 
@@ -347,10 +347,10 @@
           <div class="hidden md:block">
             <h4 class="font-bold mb-6 text-white tracking-wide uppercase text-xs opacity-50">Besoin d'aide ?</h4>
             <ul class="space-y-4">
-              <li><NuxtLink to="/faq" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Foire aux questions</NuxtLink></li>
-              <li><NuxtLink to="/contact" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Contactez-nous</NuxtLink></li>
-              <li><NuxtLink to="/suivi" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Suivre ma commande</NuxtLink></li>
-              <li><NuxtLink to="/conditions" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Options de livraison</NuxtLink></li>
+              <li><NuxtLink to="/faq" class="text-slate-400 hover:text-[var(--color-accent)] text-sm font-medium transition-colors">Foire aux questions</NuxtLink></li>
+              <li><NuxtLink to="/contact" class="text-slate-400 hover:text-[var(--color-accent)] text-sm font-medium transition-colors">Contactez-nous</NuxtLink></li>
+              <li><NuxtLink to="/suivi" class="text-slate-400 hover:text-[var(--color-accent)] text-sm font-medium transition-colors">Suivre ma commande</NuxtLink></li>
+              <li><NuxtLink to="/conditions#remboursement" class="text-slate-400 hover:text-[var(--color-accent)] text-sm font-medium transition-colors">Remboursement & Retours</NuxtLink></li>
             </ul>
           </div>
 
