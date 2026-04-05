@@ -5,9 +5,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Amazon Ember"', 'Arial', 'sans-serif'],
-        display: ['"Amazon Ember"', 'Arial', 'sans-serif'],
-        body: ['"Amazon Ember"', 'Arial', 'sans-serif'],
+        sans: ['"Inter"', 'system-ui', 'sans-serif'],
+        display: ['"Inter"', 'system-ui', 'sans-serif'],
+        body: ['"Inter"', 'system-ui', 'sans-serif'],
       },
       animation: {
         marquee: 'marquee 25s linear infinite',

@@ -15,20 +15,20 @@
   --color-bg-elevated: #FFFFFF;
   --color-bg-dark: #0B1120;
 
-  /* Primary — Deep Midnight Navy (Trust, Header, Text) */
-  --color-primary: #0F172A;
-  --color-primary-light: #1E293B;
-  --color-primary-dark: #020617;
+  /* Primary — Crisp White & Minimalist Grays (High-End E-commerce) */
+  --color-primary: #000000;
+  --color-primary-light: #18181b;
+  --color-primary-dark: #000000;
 
-  /* Accent — Warm African Gold Saffron (Buttons, CTAs, Accents) */
-  --color-accent: #F59E0B;
-  --color-accent-light: #FCD34D;
-  --color-accent-dark: #D97706;
-  --color-accent-hover: #B45309;
+  /* Accent — Jet Black (Luxury Fashion/Tech E-commerce CTA) */
+  --color-accent: #000000;
+  --color-accent-light: #27272a;
+  --color-accent-dark: #000000;
+  --color-accent-hover: #18181b;
 
   /* Links & Success */
-  --color-link: #F59E0B;
-  --color-link-hover: #D97706;
+  --color-link: #000000;
+  --color-link-hover: #3f3f46;
 
   /* Alerts / Terracotta */
   --color-terracotta: #B12704;
@@ -50,9 +50,9 @@
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
   --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
   --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.06);
-  --shadow-accent: 0 4px 10px rgba(245, 158, 11, 0.3);
-  --shadow-primary: 0 4px 10px rgba(15, 23, 42, 0.15);
-  --shadow-glow: 0 0 40px rgba(245, 158, 11, 0.15);
+  --shadow-accent: 0 4px 10px rgba(0, 0, 0, 0.2);
+  --shadow-primary: 0 4px 10px rgba(0, 0, 0, 0.15);
+  --shadow-glow: 0 0 30px rgba(0, 0, 0, 0.1);
 
   /* Typography — Inter (premium, clean) */
   --font-display: "Inter", system-ui, -apple-system, sans-serif;
@@ -64,19 +64,19 @@
   --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-  /* Nuxt UI override — force amber as primary color token */
-  --ui-primary: #F59E0B;
-  --ui-color-primary-50: #fffbeb;
-  --ui-color-primary-100: #fef3c7;
-  --ui-color-primary-200: #fde68a;
-  --ui-color-primary-300: #fcd34d;
-  --ui-color-primary-400: #fbbf24;
-  --ui-color-primary-500: #f59e0b;
-  --ui-color-primary-600: #d97706;
-  --ui-color-primary-700: #b45309;
-  --ui-color-primary-800: #92400e;
-  --ui-color-primary-900: #78350f;
-  --ui-color-primary-950: #451a03;
+  /* Nuxt UI override — force neutral as primary color token */
+  --ui-primary: #171717;
+  --ui-color-primary-50: #fafafa;
+  --ui-color-primary-100: #f5f5f5;
+  --ui-color-primary-200: #e5e5e5;
+  --ui-color-primary-300: #d4d4d4;
+  --ui-color-primary-400: #a3a3a3;
+  --ui-color-primary-500: #737373;
+  --ui-color-primary-600: #525252;
+  --ui-color-primary-700: #404040;
+  --ui-color-primary-800: #262626;
+  --ui-color-primary-900: #171717;
+  --ui-color-primary-950: #0a0a0a;
 }
 
 /* ============================================

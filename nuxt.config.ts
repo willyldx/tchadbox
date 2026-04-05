@@ -16,8 +16,8 @@ export default defineNuxtConfig({
     fallback: 'light',
   },
   ui: {
-    primary: 'amber',
-    gray: 'slate',
+    primary: 'neutral',
+    gray: 'zinc',
   },
   googleFonts: {
     families: {
@@ -49,8 +49,7 @@ export default defineNuxtConfig({
         { name: 'theme-color', content: '#0F172A' },
       ],
       link: [
-        { rel: 'icon', type: 'image/png', href: '/logo.png' },
-        { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/amazon-fonts@1.0.1/fonts/stylesheet.css' }
+        { rel: 'icon', type: 'image/png', href: '/logo.png' }
       ],
       script: [
         {
