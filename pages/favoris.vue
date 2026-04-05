@@ -1,126 +1,134 @@
 <template>
-  <div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="min-h-screen bg-gray-50/50 pt-32 pb-24">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
       <!-- Header -->
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
         <div>
-          <h1 class="text-3xl font-bold text-[var(--color-text)]">Mes favoris</h1>
-          <p class="text-[var(--color-text-muted)] mt-1">{{ favoritesStore.count }} article{{ favoritesStore.count > 1 ? 's' : '' }} sauvegardé{{ favoritesStore.count > 1 ? 's' : '' }}</p>
+          <h1 class="text-4xl font-black text-gray-900 tracking-tight">Favoris</h1>
+          <p class="text-gray-500 font-medium mt-2">{{ favoritesStore.count }} article{{ favoritesStore.count > 1 ? 's' : '' }} sauvegardé{{ favoritesStore.count > 1 ? 's' : '' }}</p>
         </div>
 
         <div v-if="!favoritesStore.isEmpty" class="flex gap-3">
           <button
-            @click="moveAllToCart"
-            class="flex items-center gap-2 px-4 py-2 btn-gold !py-2 !px-4 !text-sm"
+            @click="showClearConfirm = true"
+            class="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-200 text-gray-600 font-bold rounded-xl hover:bg-gray-50 hover:text-red-500 transition-all shadow-sm"
           >
-            <ShoppingCartIcon class="w-5 h-5" />
-            Tout ajouter au panier
+            <TrashIcon class="w-4 h-4" /> Vider
           </button>
           <button
-            @click="showClearConfirm = true"
-            class="flex items-center gap-2 px-4 py-2 btn-outline !py-2 !px-4 !text-sm"
+            @click="moveAllToCart"
+            class="flex items-center gap-2 px-6 py-2.5 bg-gray-900 text-white font-bold rounded-xl hover:bg-gray-800 transition-all shadow-md"
           >
-            <TrashIcon class="w-5 h-5" />
-            Vider
+            <ShoppingCartIcon class="w-4 h-4" /> Tout acheter
           </button>
         </div>
       </div>
 
-      <!-- Empty State -->
-      <div v-if="favoritesStore.isEmpty" class="card p-12 text-center">
-        <div class="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4">
-          <HeartIcon class="w-10 h-10 text-amber-300" />
+      <!-- Premium Empty State -->
+      <div v-if="favoritesStore.isEmpty" class="bg-white rounded-[2rem] border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-16 text-center max-w-3xl mx-auto mt-10">
+        <div class="relative mb-10 group mx-auto w-max">
+           <div class="absolute inset-0 bg-gray-100 rounded-full scale-150 opacity-50 blur-2xl"></div>
+           <div class="w-32 h-32 rounded-full border border-gray-100 bg-white shadow-sm flex items-center justify-center relative z-10">
+             <HeartIcon class="w-12 h-12 text-gray-200" />
+           </div>
         </div>
-        <h3 class="text-lg font-semibold text-[var(--color-text)] mb-2">Aucun favori</h3>
-        <p class="text-[var(--color-text-muted)] mb-6 max-w-md mx-auto">
-          Parcourez notre catalogue et cliquez sur le cœur pour sauvegarder vos produits préférés.
+        <h3 class="text-3xl font-black text-gray-900 mb-4 tracking-tight">Aucun coup de cœur</h3>
+        <p class="text-gray-500 font-medium mb-12 max-w-lg mx-auto leading-relaxed">
+          Votre liste d'envies est vide. Cliquez sur le petit cœur des produits pour sauvegarder vos cadeaux idéaux pour vos proches à N'Djamena.
         </p>
         <NuxtLink
           to="/catalogue"
-          class="btn-gold"
+          class="inline-flex items-center justify-center gap-3 px-10 py-4 bg-gray-900 text-white font-bold rounded-xl hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl"
         >
-          <SearchIcon class="w-5 h-5" />
-          Découvrir nos produits
+          <SearchIcon class="w-5 h-5 opacity-70" /> Explorer la collection
         </NuxtLink>
       </div>
 
       <!-- Favorites Grid -->
-      <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div v-else class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
         <div
           v-for="item in favoritesStore.items"
           :key="item.productId"
-          class="card overflow-hidden group hover:!border-[var(--color-accent)]/15"
+          class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] group hover:border-gray-300 hover:shadow-xl transition-all duration-300"
         >
           <!-- Product Image -->
-          <NuxtLink :to="`/produit/${item.productId}`" class="block relative aspect-square bg-gray-50">
+          <NuxtLink :to="`/produit/${item.productId}`" class="block relative aspect-[4/5] bg-gray-50 overflow-hidden">
             <img
               v-if="item.thumbnail"
               :src="item.thumbnail"
               :alt="item.title"
-              class="w-full h-full object-contain p-6 group-hover:scale-105 transition-transform duration-300"
+              class="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-out"
             />
             <div v-else class="w-full h-full flex items-center justify-center">
-              <PackageIcon class="w-12 h-12 text-gray-300" />
+              <PackageIcon class="w-12 h-12 text-gray-200" />
             </div>
 
             <!-- Remove Button -->
             <button
               @click.prevent="removeFromFavorites(item.productId)"
-              class="absolute top-3 right-3 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-red-50 transition-colors group/btn"
+              class="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-sm hover:bg-red-50 hover:shadow-md transition-all group/btn z-10"
             >
-              <HeartIcon class="w-5 h-5 fill-red-500 text-red-500 group-hover/btn:scale-110 transition-transform" />
+              <HeartIcon class="w-5 h-5 fill-gray-900 text-gray-900 group-hover/btn:fill-red-500 group-hover/btn:text-red-500 transition-colors" />
             </button>
-
-            <!-- Category Badge -->
-            <span v-if="item.category" class="absolute bottom-3 left-3 text-xs bg-white/90 backdrop-blur-sm text-[var(--color-text-secondary)] px-2 py-1 rounded-full">
-              {{ item.category }}
-            </span>
+            
+            <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/20 to-transparent flex opacity-0 group-hover:opacity-100 transition-opacity">
+               <span v-if="item.category" class="text-[10px] font-bold tracking-widest uppercase bg-white/95 backdrop-blur-md text-gray-900 px-3 py-1.5 rounded-full shadow-sm">
+                 {{ item.category }}
+               </span>
+            </div>
           </NuxtLink>
 
           <!-- Product Info -->
-          <div class="p-4">
+          <div class="p-6">
             <NuxtLink :to="`/produit/${item.productId}`">
-              <h3 class="font-medium text-[var(--color-text)] mb-1 line-clamp-2 hover:text-[var(--color-accent-dark)] transition-colors">
+              <h3 class="font-bold text-gray-900 mb-1 line-clamp-1 group-hover:text-[var(--color-accent)] transition-colors">
                 {{ item.title }}
               </h3>
             </NuxtLink>
             
-            <div class="flex items-center justify-between mt-3">
-              <p class="font-bold text-lg text-[var(--color-text)]">{{ formatPrice(item.price) }}</p>
+            <div class="flex items-center justify-between mt-4">
+              <div class="flex flex-col">
+                 <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Prix total</p>
+                 <p class="font-black text-xl text-gray-900">{{ formatPrice(item.price) }}</p>
+              </div>
               <button
                 @click="addToCart(item)"
-                class="w-10 h-10 bg-amber-100 hover:bg-amber-500 text-amber-600 hover:text-white rounded-xl flex items-center justify-center transition-colors"
+                class="w-12 h-12 bg-gray-50 hover:bg-gray-900 text-gray-400 hover:text-white rounded-xl flex items-center justify-center transition-colors shadow-sm"
               >
                 <ShoppingCartIcon class="w-5 h-5" />
               </button>
             </div>
-
-            <p class="text-xs text-[var(--color-text-muted)] mt-1">Ajouté {{ formatDate(item.addedAt) }}</p>
           </div>
         </div>
       </div>
 
       <!-- Sync Notice for logged in users -->
-      <div v-if="authStore.isAuthenticated && !favoritesStore.isEmpty" class="mt-8 p-4 bg-green-50 border border-green-100 rounded-xl flex items-start gap-3">
-        <CheckCircleIcon class="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
+      <div v-if="authStore.isAuthenticated && !favoritesStore.isEmpty" class="mt-12 p-6 bg-white border border-gray-100 rounded-2xl shadow-sm flex items-start gap-4">
+        <div class="w-10 h-10 rounded-full bg-[var(--color-accent)]/10 flex items-center justify-center shrink-0">
+          <CheckCircleIcon class="w-5 h-5 text-[var(--color-accent)]" />
+        </div>
         <div>
-          <p class="text-sm text-green-800 font-medium">Favoris synchronisés</p>
-          <p class="text-sm text-green-600">Vos favoris sont sauvegardés sur votre compte et accessibles depuis tous vos appareils.</p>
+          <p class="text-sm font-bold text-gray-900">Synchronisation active</p>
+          <p class="text-sm text-gray-500 font-medium mt-1">Vos favoris sont sauvegardés en toute sécurité sur votre compte client TchadBox.</p>
         </div>
       </div>
 
       <!-- Login prompt for guests -->
-      <div v-if="!authStore.isAuthenticated && !favoritesStore.isEmpty" class="mt-8 p-4 bg-amber-50 border border-amber-100 rounded-xl flex items-start gap-3">
-        <UserIcon class="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
-        <div>
-          <p class="text-sm text-amber-800 font-medium">Connectez-vous pour sauvegarder</p>
-          <p class="text-sm text-amber-600">
-            <NuxtLink to="/auth/login?redirect=/favoris" class="underline hover:no-underline">
-              Connectez-vous
-            </NuxtLink>
-            pour synchroniser vos favoris sur tous vos appareils.
-          </p>
+      <div v-if="!authStore.isAuthenticated && !favoritesStore.isEmpty" class="mt-12 p-6 bg-white border border-gray-100 rounded-2xl shadow-sm flex items-start flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="flex items-start gap-4">
+           <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
+             <UserIcon class="w-5 h-5 text-gray-600" />
+           </div>
+           <div>
+             <p class="text-sm font-bold text-gray-900">Ne perdez pas votre sélection</p>
+             <p class="text-sm text-gray-500 font-medium mt-1">
+               Connectez-vous pour retrouver vos favoris sur votre téléphone ou votre ordinateur à tout moment.
+             </p>
+           </div>
         </div>
+        <NuxtLink to="/auth/login?redirect=/favoris" class="px-6 py-3 bg-gray-100 text-gray-900 font-bold rounded-xl hover:bg-gray-200 transition-colors whitespace-nowrap">
+          S'identifier
+        </NuxtLink>
       </div>
     </div>
 
@@ -134,27 +142,27 @@
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
       >
-        <div v-if="showClearConfirm" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div class="bg-white rounded-2xl max-w-md w-full p-6">
-            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <TrashIcon class="w-8 h-8 text-red-600" />
+        <div v-if="showClearConfirm" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
+          <div class="bg-white rounded-[2rem] max-w-sm w-full p-8 shadow-2xl relative">
+            <div class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <TrashIcon class="w-8 h-8 text-red-500" />
             </div>
-            <h3 class="text-xl font-bold text-[var(--color-text)] text-center mb-2">Vider les favoris ?</h3>
-            <p class="text-[var(--color-text-muted)] text-center mb-6">
-              Tous vos {{ favoritesStore.count }} articles favoris seront supprimés.
+            <h3 class="text-2xl font-black text-gray-900 text-center mb-3">Vider les favoris ?</h3>
+            <p class="text-gray-500 font-medium text-center mb-8 leading-relaxed">
+              Vos {{ favoritesStore.count }} coups de cœur seront définitivement effacés de votre sélection.
             </p>
-            <div class="flex gap-3">
-              <button
-                @click="showClearConfirm = false"
-                class="flex-1 py-3 border border-[var(--color-border)] text-[var(--color-text-secondary)] font-medium rounded-xl hover:bg-gray-50 transition-colors"
-              >
-                Annuler
-              </button>
+            <div class="flex flex-col gap-3">
               <button
                 @click="clearAll"
-                class="flex-1 py-3 bg-red-600 text-white font-medium rounded-xl hover:bg-red-700 transition-colors"
+                class="w-full py-4 bg-red-500 text-white font-bold rounded-xl hover:bg-red-600 transition-colors shadow-md shadow-red-500/20"
               >
-                Vider
+                Confirmer la suppression
+              </button>
+              <button
+                @click="showClearConfirm = false"
+                class="w-full py-4 bg-gray-50 text-gray-600 font-bold rounded-xl hover:bg-gray-100 transition-colors"
+              >
+                Annuler
               </button>
             </div>
           </div>
@@ -176,7 +184,7 @@ import {
 } from 'lucide-vue-next'
 
 useSeoMeta({
-  title: 'Mes favoris - TchadBox',
+  title: 'Mes favoris | TchadBox',
   description: 'Retrouvez tous vos produits favoris sur TchadBox.',
 })
 
@@ -186,7 +194,6 @@ const authStore = useAuthStore()
 
 const showClearConfirm = ref(false)
 
-// Initialize favorites
 onMounted(() => {
   favoritesStore.initialize()
 })
