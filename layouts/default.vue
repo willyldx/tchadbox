@@ -346,8 +346,8 @@
           <!-- ASSISTANCE (Hidden on Mobile) -->
           <div class="hidden md:block">
             <h4 class="font-bold mb-6 text-white tracking-wide uppercase text-xs opacity-50">Besoin d'aide ?</h4>
-            <ul class="space-y-3">
-              <li><NuxtLink to="/comment-ca-marche" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Centre d'aide</NuxtLink></li>
+            <ul class="space-y-4">
+              <li><NuxtLink to="/faq" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Foire aux questions</NuxtLink></li>
               <li><NuxtLink to="/contact" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Contactez-nous</NuxtLink></li>
               <li><NuxtLink to="/suivi" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Suivre ma commande</NuxtLink></li>
               <li><NuxtLink to="/conditions" class="text-slate-400 hover:text-amber-400 text-sm font-medium transition-colors">Options de livraison</NuxtLink></li>
