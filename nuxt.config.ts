@@ -16,7 +16,7 @@ export default defineNuxtConfig({
     fallback: 'light',
   },
   ui: {
-    primary: 'neutral',
+    primary: 'emerald',
     gray: 'zinc',
   },
   googleFonts: {

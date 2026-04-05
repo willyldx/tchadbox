@@ -20,15 +20,15 @@
   --color-primary-light: #18181b;
   --color-primary-dark: #000000;
 
-  /* Accent — Jet Black (Luxury Fashion/Tech E-commerce CTA) */
-  --color-accent: #000000;
-  --color-accent-light: #27272a;
-  --color-accent-dark: #000000;
-  --color-accent-hover: #18181b;
+  /* Accent — Emerald Green (Luxury E-commerce CTA, High-Conversion) */
+  --color-accent: #10b981;
+  --color-accent-light: #34d399;
+  --color-accent-dark: #059669;
+  --color-accent-hover: #047857;
 
   /* Links & Success */
-  --color-link: #000000;
-  --color-link-hover: #3f3f46;
+  --color-link: #10b981;
+  --color-link-hover: #059669;
 
   /* Alerts / Terracotta */
   --color-terracotta: #B12704;
@@ -50,9 +50,9 @@
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
   --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
   --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.06);
-  --shadow-accent: 0 4px 10px rgba(0, 0, 0, 0.2);
+  --shadow-accent: 0 4px 10px rgba(16, 185, 129, 0.25);
   --shadow-primary: 0 4px 10px rgba(0, 0, 0, 0.15);
-  --shadow-glow: 0 0 30px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 30px rgba(16, 185, 129, 0.15);
 
   /* Typography — Inter (premium, clean) */
   --font-display: "Inter", system-ui, -apple-system, sans-serif;
