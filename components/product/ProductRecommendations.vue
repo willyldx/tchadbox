@@ -49,7 +49,7 @@ const fetchRecommendations = async () => {
         id: p.id,
         title: p.title,
         price: p.price || 0,
-        slug: p.slug || p.id.toString(),
+        handle: p.slug || p.id.toString(),
         // Format thumbnail just like we did in Search!
         thumbnail: p.thumbnail ? 
           (p.thumbnail.startsWith('http') ? p.thumbnail : 
