@@ -237,53 +237,82 @@
 
       <!-- Product Details Tabs -->
       <div class="mt-20">
-        <div class="border-b border-gray-100 relative">
-          <nav class="flex gap-4 sm:gap-12 overflow-x-auto scrollbar-hide">
+        <div class="relative flex justify-start sm:justify-start">
+          <nav class="inline-flex items-center gap-2 p-1.5 bg-gray-50 border border-gray-200/60 rounded-2xl shadow-inner overflow-x-auto scrollbar-hide">
             <button
               v-for="tab in tabs"
               :key="tab.id"
               @click="activeTab = tab.id"
-              class="relative py-6 font-bold text-sm sm:text-base uppercase tracking-widest transition-colors whitespace-nowrap"
+              class="relative px-6 py-3 font-bold text-sm sm:text-base transition-all whitespace-nowrap rounded-xl"
               :class="activeTab === tab.id 
-                ? 'text-[var(--color-primary)]' 
-                : 'text-gray-400 hover:text-gray-600'"
+                ? 'bg-white text-gray-900 shadow-sm border border-gray-100 ring-1 ring-black/5' 
+                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100/50'"
             >
               {{ tab.label }}
-              <span v-if="activeTab === tab.id" class="absolute bottom-0 left-0 w-full h-1 bg-[var(--color-accent)] rounded-t-full"></span>
             </button>
           </nav>
         </div>
 
         <div class="py-10 max-w-4xl">
           <!-- Description Tab -->
-          <div v-if="activeTab === 'description'" class="prose prose-stone max-w-none prose-lg prose-p:leading-loose">
-            <p>{{ product.description }}</p>
-            <h3>Caractéristiques TchadBox</h3>
-            <ul>
-              <li><strong>Sélection Premium</strong> : Ce produit a été sourcé pour garantir une qualité optimale à N'Djamena.</li>
-              <li><strong>Emballage Blindé</strong> : Protégé spécialement pour le fret et le transport jusqu'au domicile.</li>
-              <li><strong>Zéro Surprise</strong> : Le prix global inclut la logistique et l'acheminement local.</li>
-            </ul>
+          <div v-if="activeTab === 'description'" class="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <!-- Main description -->
+            <p class="text-lg md:text-xl text-gray-700 leading-relaxed font-medium mb-12 max-w-3xl">
+              {{ product.description }}
+            </p>
+
+            <!-- Premium Features Grid -->
+            <h3 class="text-sm font-bold text-gray-400 uppercase tracking-[0.2em] mb-6">L'Engagement TchadBox</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="p-6 bg-white rounded-2xl border-2 border-gray-50 hover:border-gray-200 transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] group">
+                <Icon name="ph:star-four-duotone" class="w-8 h-8 text-[var(--color-accent)] mb-4 group-hover:scale-110 transition-transform" />
+                <h4 class="text-base font-bold text-gray-900 mb-2">Sélection Premium</h4>
+                <p class="text-sm text-gray-500 font-medium leading-relaxed">Sourcé avec rigueur pour certifier une qualité absolue jusqu'à N'Djamena.</p>
+              </div>
+              <div class="p-6 bg-white rounded-2xl border-2 border-gray-50 hover:border-gray-200 transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] group">
+                <Icon name="ph:shield-check-duotone" class="w-8 h-8 text-[var(--color-accent)] mb-4 group-hover:scale-110 transition-transform" />
+                <h4 class="text-base font-bold text-gray-900 mb-2">Emballage Blindé</h4>
+                <p class="text-sm text-gray-500 font-medium leading-relaxed">Protégé sur-mesure pour résister parfaitement au transport international.</p>
+              </div>
+              <div class="p-6 bg-white rounded-2xl border-2 border-gray-50 hover:border-gray-200 transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] group">
+                <Icon name="ph:bank-duotone" class="w-8 h-8 text-[var(--color-accent)] mb-4 group-hover:scale-110 transition-transform" />
+                <h4 class="text-base font-bold text-gray-900 mb-2">Zéro Surprise</h4>
+                <p class="text-sm text-gray-500 font-medium leading-relaxed">Prix net : logistique et douanes incluses. Votre proche ne paie rien à la réception.</p>
+              </div>
+            </div>
           </div>
 
           <!-- Shipping Tab -->
-          <div v-else-if="activeTab === 'shipping'" class="space-y-6">
-            <div class="bg-gray-50 rounded-3xl p-8 border border-gray-100">
-              <h3 class="font-extrabold text-xl text-[var(--color-primary)] mb-6">Logistique & Livraison Intégrée</h3>
-              <ul class="space-y-4 text-gray-600 font-medium">
-                <li class="flex items-start gap-4">
-                  <div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5"><CheckIcon class="w-4 h-4 text-emerald-600" /></div>
-                  <span class="leading-relaxed"><strong>Délai Express N'Djamena</strong> : La livraison se fait en moyenne entre 3 et 5 jours après validation de votre commande.</span>
-                </li>
-                <li class="flex items-start gap-4">
-                  <div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5"><CheckIcon class="w-4 h-4 text-emerald-600" /></div>
-                  <span class="leading-relaxed"><strong>Livraison 100% Gratuite</strong> pour toutes les commandes supérieures à 150€. Aucun frais de livraison "surprise" à payer pour le bénéficiaire au Tchad !</span>
-                </li>
-                <li class="flex items-start gap-4">
-                  <div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5"><CheckIcon class="w-4 h-4 text-emerald-600" /></div>
-                  <span class="leading-relaxed"><strong>Preuve Photographique</strong> : Notre livreur réalise systématiquement une photo avec le bénéficiaire lors de la remise (soumise à autorisation) envoyée dans votre espace client.</span>
-                </li>
-              </ul>
+          <div v-else-if="activeTab === 'shipping'" class="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-2xl">
+            <h3 class="text-2xl font-black text-[var(--color-primary)] mb-10">Logistique & Délais d'Acheminement</h3>
+            
+            <div class="relative pl-8 space-y-10 before:absolute before:inset-y-0 before:left-[11px] before:w-[3px] before:bg-gray-100">
+              <div class="relative">
+                <div class="absolute -left-[41px] bg-white p-1.5 rounded-full border-2 border-gray-100">
+                  <div class="w-3 h-3 bg-gray-300 rounded-full"></div>
+                </div>
+                <h4 class="text-xl font-bold text-gray-900 mb-2">Préparation Express</h4>
+                <p class="text-gray-500 font-medium leading-relaxed">La commande est vérifiée, soigneusement emballée et préparée pour expédition aérienne sous 24h ouvrées.</p>
+              </div>
+
+              <div class="relative">
+                <div class="absolute -left-[41px] bg-white p-1 rounded-full border-2 border-[var(--color-accent)] shadow-sm">
+                  <div class="w-4 h-4 bg-[var(--color-accent)] rounded-full animate-pulse"></div>
+                </div>
+                <h4 class="text-xl font-bold text-[var(--color-primary)] mb-2 flex items-center gap-3">
+                  N'Djamena (3 à 5 Jours)
+                  <span class="text-[10px] font-black bg-[var(--color-accent)]/10 text-[var(--color-accent)] px-2.5 py-1 rounded-md uppercase tracking-widest">Gratuit dès 150€</span>
+                </h4>
+                <p class="text-gray-500 font-medium leading-relaxed">Le produit atterrit au Tchad. Il passe rapidement la douane via notre réseau sans aucun frais supplémentaire pour le destinaire.</p>
+              </div>
+
+              <div class="relative">
+                <div class="absolute -left-[41px] bg-white p-1.5 rounded-full border-2 border-gray-100">
+                   <div class="w-3 h-3 bg-gray-300 rounded-full"></div>
+                </div>
+                <h4 class="text-xl font-bold text-gray-900 mb-2">Remise en main propre</h4>
+                <p class="text-gray-500 font-medium leading-relaxed">Notre livreur contacte le proche, se déplace à domicile et réalise une photographie de la remise disponible directement sur ton espace client.</p>
+              </div>
             </div>
           </div>
 
