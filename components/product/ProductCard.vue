@@ -16,22 +16,22 @@
       <div v-else class="w-full h-full flex items-center justify-center">
         <component :is="getCategoryIcon" class="w-16 h-16 text-gray-200" />
       </div>
-
-      <!-- Quick Status Badges -->
-      <div class="absolute top-4 left-4 flex flex-col gap-2">
-        <span 
-          v-if="product.category"
-          class="px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-xl bg-white backdrop-blur-md shadow-sm border border-gray-100 text-gray-900"
-        >
-          {{ categoryName }}
-        </span>
-      </div>
-
-      <!-- Quick Action: Wishlist -->
-      <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:bg-gray-900 hover:text-white hover:border-transparent transition-all duration-300 shadow-sm border border-gray-100 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0">
-        <Heart class="w-4 h-4" />
-      </button>
     </NuxtLink>
+
+    <!-- Quick Status Badges -->
+    <div class="absolute top-4 left-4 flex flex-col gap-2 pointer-events-none">
+      <span 
+        v-if="product.category"
+        class="px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-xl bg-white backdrop-blur-md shadow-sm border border-gray-100 text-gray-900 pointer-events-auto"
+      >
+        {{ categoryName }}
+      </span>
+    </div>
+
+    <!-- Quick Action: Wishlist -->
+    <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:bg-gray-900 hover:text-white hover:border-transparent transition-all duration-300 shadow-sm border border-gray-100 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 cursor-pointer z-10">
+      <Heart class="w-4 h-4" />
+    </button>
 
     <!-- Content Section -->
     <div class="p-6 sm:p-8 flex flex-col flex-grow bg-white border-t border-gray-50/50">
