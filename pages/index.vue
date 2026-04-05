@@ -177,7 +177,7 @@
           <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-6">Prêt à faire un heureux ?</h2>
           <p class="text-xl text-white/70 font-light mb-10 max-w-2xl">Rejoignez des centaines de familles qui se font confiance pour leurs transferts de produits vers le Tchad.</p>
           
-          <NuxtLink to="/catalogue" class="btn-gold px-10 py-5 text-xl shadow-[0_0_40px_rgba(217,119,6,0.4)]">
+          <NuxtLink to="/catalogue" class="px-10 py-5 bg-white text-gray-900 font-black rounded-2xl hover:bg-gray-100 transition-all shadow-[0_0_40px_rgba(255,255,255,0.2)] text-xl active:scale-95">
             Créer ma première commande
           </NuxtLink>
         </div>

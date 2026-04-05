@@ -1,68 +1,68 @@
 <template>
   <article 
-    class="card-product group relative flex flex-col h-full bg-white rounded-2xl transition-all duration-300 hover:shadow-[0_20px_40px_-15px_rgba(245,158,11,0.15)] hover:-translate-y-1 overflow-hidden ring-1 ring-slate-900/5"
+    class="card-product group relative flex flex-col h-full bg-white rounded-[2rem] transition-all duration-500 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-2 overflow-hidden border border-gray-100"
   >
     <!-- Image Section -->
-    <NuxtLink :to="`/produit/${product.handle || product.id}`" class="block relative aspect-[4/3] sm:aspect-[4/3] overflow-hidden bg-gray-50/80 p-4">
+    <NuxtLink :to="`/produit/${product.handle || product.id}`" class="block relative aspect-[4/3] sm:aspect-[4/3] overflow-hidden bg-gray-50/50 p-6 flex items-center justify-center">
       <NuxtImg 
         v-if="product.thumbnail || product.images?.[0]"
         :src="product.thumbnail || product.images[0]"
         :alt="product.title"
-        class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+        class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105 mix-blend-multiply"
         loading="lazy"
         format="webp"
         quality="90"
       />
       <div v-else class="w-full h-full flex items-center justify-center">
-        <component :is="getCategoryIcon" class="w-16 h-16 text-gray-300" />
+        <component :is="getCategoryIcon" class="w-16 h-16 text-gray-200" />
       </div>
 
       <!-- Quick Status Badges -->
-      <div class="absolute top-3 left-3 flex flex-col gap-1.5">
+      <div class="absolute top-4 left-4 flex flex-col gap-2">
         <span 
           v-if="product.category"
-          class="px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest rounded-lg bg-white/90 backdrop-blur-md shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-white/20"
-          :class="getCategoryTextClass"
+          class="px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-xl bg-white backdrop-blur-md shadow-sm border border-gray-100 text-gray-900"
         >
           {{ categoryName }}
         </span>
       </div>
 
       <!-- Quick Action: Wishlist -->
-      <button class="absolute top-3 right-3 p-2 rounded-full bg-white/90 backdrop-blur-md text-gray-400 hover:text-red-500 hover:scale-110 shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-white/20 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+      <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:bg-gray-900 hover:text-white hover:border-transparent transition-all duration-300 shadow-sm border border-gray-100 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0">
         <Heart class="w-4 h-4" />
       </button>
     </NuxtLink>
 
     <!-- Content Section -->
-    <div class="p-5 flex flex-col flex-grow bg-white">
+    <div class="p-6 sm:p-8 flex flex-col flex-grow bg-white border-t border-gray-50/50">
       <!-- Title & Subtitle -->
-      <div class="mb-3">
+      <div class="mb-4">
         <NuxtLink :to="`/produit/${product.handle || product.id}`">
-          <h3 class="font-bold text-gray-900 text-sm sm:text-base line-clamp-2 leading-snug group-hover:text-[var(--color-accent)] transition-colors min-h-[2.5rem]">
+          <h3 class="font-black text-gray-900 text-lg sm:text-xl line-clamp-2 leading-snug group-hover:underline decoration-2 underline-offset-4 min-h-[3rem] tracking-tight">
             {{ product.title }}
           </h3>
         </NuxtLink>
-        <p v-if="product.subtitle" class="text-xs text-gray-400 mt-1 line-clamp-1 font-medium">
+        <p v-if="product.subtitle" class="text-xs font-bold uppercase tracking-widest text-gray-400 mt-2 line-clamp-1">
           {{ product.subtitle }}
         </p>
       </div>
 
-      <!-- Rating (Static for trust) -->
-      <div class="flex items-center gap-1 mb-4 opacity-80">
-        <div class="flex">
-          <Star v-for="i in 5" :key="i" class="w-3 h-3 fill-amber-400 text-amber-400" />
+      <!-- Rating (Static for trust, Monochrome Premium) -->
+      <div class="flex items-center gap-2 mb-6">
+        <div class="flex gap-0.5">
+          <Star v-for="i in 5" :key="i" class="w-3 h-3 fill-gray-900 text-gray-900" />
         </div>
-        <span class="text-[10px] text-gray-400 font-bold ml-1">4.9/5</span>
+        <span class="text-[10px] text-gray-900 font-black tracking-widest uppercase">4.9/5 Trust</span>
       </div>
 
       <!-- Price & Stock -->
-      <div class="mt-auto flex items-end justify-between gap-2">
+      <div class="mt-auto flex items-end justify-between gap-4">
         <div class="flex flex-col">
-          <span class="text-xl sm:text-2xl font-extrabold text-[var(--color-primary)] tracking-tight leading-none group-hover:text-amber-600 transition-colors">
+          <span class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Valeur Nette</span>
+          <span class="text-2xl sm:text-3xl font-black text-gray-900 tracking-tighter leading-none">
             {{ cartStore.formatPrice(product.price) }}
           </span>
-          <span v-if="cartStore.currency !== 'XAF'" class="text-[11px] text-gray-400 font-bold mt-1.5 uppercase tracking-wide">
+          <span v-if="cartStore.currency !== 'XAF'" class="text-[10px] text-gray-500 font-bold mt-2 uppercase tracking-widest">
             ≈ {{ priceFCFA }} FCFA
           </span>
         </div>
@@ -70,10 +70,12 @@
         <!-- Add to Cart: Minimalist Retail style -->
         <button 
           @click="addToCart"
-          class="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gray-50 text-[var(--color-primary)] hover:bg-[var(--color-accent)] hover:text-white transition-all duration-300 active:scale-95 group/btn"
-          title="Ajouter au panier"
+          class="flex items-center justify-center w-12 h-12 rounded-[1rem] border-2 border-gray-200 text-gray-900 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all duration-300 active:scale-95 group/btn shrink-0"
+          title="Ajouter au bordereau"
         >
-          <ShoppingBag class="w-5 h-5 group-hover/btn:scale-110 transition-transform" />
+           <!-- Subtle inner glow on hover -->
+          <div class="absolute inset-0 bg-white/20 rounded-[1rem] opacity-0 group-hover/btn:opacity-100 transition-opacity"></div>
+          <ShoppingBag class="w-5 h-5 relative z-10 transition-transform group-hover/btn:-translate-y-0.5" />
         </button>
       </div>
     </div>
@@ -123,18 +125,6 @@ const getCategoryIcon = computed(() => {
   return icons[categoryName.value] || Package
 })
 
-const getCategoryTextClass = computed(() => {
-  const classes: Record<string, string> = {
-    'Alimentaire': 'text-emerald-600',
-    'Scolarité': 'text-blue-600',
-    'Santé & Bébé': 'text-pink-600',
-    'Santé': 'text-pink-600',
-    'Fêtes & Occasions': 'text-amber-600',
-    'Fêtes': 'text-amber-600',
-  }
-  return classes[categoryName.value] || 'text-gray-600'
-})
-
 const addToCart = () => {
   cartStore.addItem({
     id: `cart-${props.product.id}-${Date.now()}`,
@@ -144,6 +134,6 @@ const addToCart = () => {
     thumbnail: props.product.thumbnail || props.product.images?.[0],
     category: categoryName.value
   })
-  toast.add({ title: 'Ajouté au panier', description: props.product.title, icon: 'i-heroicons-check-circle', color: 'green', timeout: 2500 })
+  toast.add({ title: 'Ajouté au bordereau logistique', description: props.product.title, icon: 'i-heroicons-check-circle', color: 'black', timeout: 2500 })
 }
 </script>

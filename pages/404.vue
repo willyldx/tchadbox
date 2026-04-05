@@ -20,7 +20,7 @@
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <NuxtLink
           to="/"
-          class="btn-gold"
+          class="px-8 py-4 bg-gray-900 border border-gray-900 text-white font-bold rounded-xl hover:bg-gray-800 transition-all shadow-md"
         >
           <span>
             <HomeIcon class="w-5 h-5" />

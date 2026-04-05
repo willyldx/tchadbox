@@ -1,247 +1,263 @@
 <template>
-  <div>
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="min-h-screen bg-gray-50/50 pt-32 pb-24">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8">
       <!-- Breadcrumb -->
-      <nav class="flex items-center gap-2 text-sm mb-6">
-        <NuxtLink to="/compte" class="text-[var(--color-text-muted)] hover:text-[var(--color-accent-dark)]">Mon compte</NuxtLink>
-        <ChevronRightIcon class="w-4 h-4 text-[var(--color-text-muted)]" />
-        <NuxtLink to="/compte/commandes" class="text-[var(--color-text-muted)] hover:text-[var(--color-accent-dark)]">Mes commandes</NuxtLink>
-        <ChevronRightIcon class="w-4 h-4 text-[var(--color-text-muted)]" />
-        <span class="text-[var(--color-text)] font-medium">{{ order?.displayId || 'Chargement...' }}</span>
+      <nav class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-400 mb-8">
+        <NuxtLink to="/compte" class="hover:text-gray-900 transition-colors">Conciergerie</NuxtLink>
+        <ChevronRightIcon class="w-3 h-3 text-gray-300" />
+        <NuxtLink to="/compte/commandes" class="hover:text-gray-900 transition-colors">Historique</NuxtLink>
+        <ChevronRightIcon class="w-3 h-3 text-gray-300" />
+        <span class="text-gray-900">{{ order?.displayId || 'Recherche...' }}</span>
       </nav>
 
       <!-- Loading State -->
-      <div v-if="isLoading" class="space-y-6">
-        <div class="bg-white rounded-2xl border border-[var(--color-border)] p-8 animate-pulse">
-          <div class="h-6 bg-gray-200 rounded w-48 mb-4"></div>
-          <div class="h-4 bg-gray-200 rounded w-32"></div>
+      <div v-if="isLoading" class="space-y-8">
+        <div class="bg-white rounded-[2rem] border border-gray-100 p-10 animate-pulse shadow-sm">
+          <div class="h-8 bg-gray-100 rounded-md w-64 mb-6"></div>
+          <div class="h-4 bg-gray-50 rounded-md w-40"></div>
         </div>
       </div>
 
       <!-- Error State -->
-      <div v-else-if="error" class="bg-white rounded-2xl border border-red-100 p-12 text-center">
-        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <AlertCircleIcon class="w-8 h-8 text-red-500" />
+      <div v-else-if="error" class="bg-white rounded-[2rem] border border-red-100 shadow-sm p-16 text-center max-w-2xl mx-auto">
+        <div class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+          <AlertCircleIcon class="w-10 h-10 text-red-500" />
         </div>
-        <h3 class="font-semibold text-[var(--color-text)] mb-2">Commande introuvable</h3>
-        <p class="text-[var(--color-text-muted)] mb-4">{{ error }}</p>
+        <h3 class="font-black text-2xl text-gray-900 mb-3 tracking-tight">Dossier introuvable</h3>
+        <p class="text-gray-500 font-medium mb-8">{{ error }}</p>
         <NuxtLink
           to="/compte/commandes"
-          class="inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 font-medium"
+          class="inline-flex items-center justify-center gap-3 px-8 py-4 bg-gray-900 text-white font-bold rounded-xl hover:bg-gray-800 transition-all shadow-md"
         >
-          <ArrowLeftIcon class="w-4 h-4" />
-          Retour aux commandes
+          <ArrowLeftIcon class="w-4 h-4 text-gray-400" />
+          Retour au registre
         </NuxtLink>
       </div>
 
       <!-- Order Content -->
-      <div v-else-if="order" class="space-y-6">
-        <!-- Header -->
-        <div class="bg-white rounded-2xl border border-[var(--color-border)] p-6">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div v-else-if="order" class="space-y-8">
+        <!-- Premium Header -->
+        <div class="bg-white rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] p-8 sm:p-10">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-              <div class="flex items-center gap-3 mb-2">
-                <h1 class="text-2xl font-bold text-[var(--color-text)]">{{ order.displayId }}</h1>
+              <div class="flex flex-wrap items-center gap-4 mb-3">
+                <h1 class="text-3xl font-black text-gray-900 tracking-tight">{{ order.displayId }}</h1>
                 <span
-                  class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium"
+                  class="inline-flex items-center px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border"
                   :class="getStatusClass(order.fulfillmentStatus)"
                 >
-                  <span class="w-2 h-2 rounded-full" :class="getStatusDotClass(order.fulfillmentStatus)"></span>
                   {{ getStatusLabel(order.fulfillmentStatus) }}
                 </span>
               </div>
-              <p class="text-[var(--color-text-muted)]">
-                Commandé le {{ formatDate(order.createdAt) }}
+              <p class="text-gray-500 font-medium font-mono text-sm tracking-wide">
+                Enregistré le {{ formatDate(order.createdAt) }}
               </p>
             </div>
-            <div class="flex gap-3">
+            <div class="flex gap-4">
               <button
                 @click="downloadInvoice"
-                class="flex items-center gap-2 px-4 py-2 border border-[var(--color-border)] rounded-xl text-[var(--color-text-secondary)] hover:bg-gray-50 transition-colors"
+                class="flex items-center justify-center gap-3 px-6 py-4 border border-gray-200 rounded-xl font-bold text-gray-900 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm active:scale-95"
               >
-                <DownloadIcon class="w-4 h-4" />
-                Facture
+                <DownloadIcon class="w-4 h-4 text-[var(--color-accent)]" />
+                Reçu
               </button>
               <button
                 @click="contactSupport"
-                class="flex items-center gap-2 px-4 py-2 border border-[var(--color-border)] rounded-xl text-[var(--color-text-secondary)] hover:bg-gray-50 transition-colors"
+                class="flex items-center justify-center gap-3 px-6 py-4 bg-gray-900 text-white font-bold rounded-xl hover:bg-gray-800 transition-all shadow-md active:scale-95"
               >
-                <MessageCircleIcon class="w-4 h-4" />
-                Aide
+                <MessageCircleIcon class="w-4 h-4 text-gray-400" />
+                Assistance
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Tracking Timeline -->
-        <div class="bg-white rounded-2xl border border-[var(--color-border)] overflow-hidden">
-          <div class="p-6 border-b border-[var(--color-border)]">
-            <h2 class="text-lg font-semibold text-[var(--color-text)]">Suivi de commande</h2>
+        <!-- Tracking Timeline (Luxury Style) -->
+        <div class="bg-white rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] overflow-hidden">
+          <div class="p-8 sm:p-10 border-b border-gray-50 bg-gray-50/50">
+            <h2 class="text-xl font-black text-gray-900 tracking-tight">Progression logistique</h2>
           </div>
           
-          <div class="p-6">
+          <div class="p-8 sm:p-10">
             <!-- Progress Bar -->
-            <div class="relative mb-8">
-              <div class="flex items-center justify-between">
+            <div class="relative mb-16 px-4 sm:px-8">
+              <div class="flex items-center justify-between relative z-10">
                 <div
                   v-for="(step, index) in trackingSteps"
                   :key="step.id"
-                  class="flex flex-col items-center relative z-10"
+                  class="flex flex-col items-center relative group"
                 >
                   <div
-                    class="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+                    class="w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 border-4 border-white"
                     :class="step.completed 
-                      ? 'bg-gradient-to-br from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-500/25' 
-                      : 'bg-gray-100 text-[var(--color-text-muted)]'"
+                      ? 'bg-gray-900 text-white shadow-xl scale-110' 
+                      : 'bg-gray-100 text-gray-400'"
                   >
-                    <component :is="step.icon" class="w-5 h-5" />
+                    <component :is="step.icon" class="w-6 h-6" :class="{ 'text-[var(--color-accent)]': step.completed }" />
                   </div>
-                  <p class="text-xs font-medium mt-2 text-center" :class="step.completed ? 'text-[var(--color-text)]' : 'text-[var(--color-text-muted)]'">
+                  <p class="text-[10px] uppercase tracking-widest font-black mt-4 text-center transition-colors" :class="step.completed ? 'text-gray-900' : 'text-gray-400'">
                     {{ step.label }}
                   </p>
-                  <p v-if="step.date" class="text-xs text-[var(--color-text-muted)]">{{ step.date }}</p>
+                  <p v-if="step.date" class="text-xs font-medium text-gray-500 mt-1">{{ step.date }}</p>
                 </div>
               </div>
               
               <!-- Progress Line -->
-              <div class="absolute top-5 left-0 right-0 h-0.5 bg-gray-100 -z-0 mx-16">
+              <div class="absolute top-7 left-12 right-12 h-1 bg-gray-100 rounded-full z-0">
                 <div 
-                  class="h-full bg-gradient-to-r from-amber-500 to-amber-400 transition-all duration-500"
+                  class="h-full bg-gray-900 rounded-full transition-all duration-1000 ease-out relative overflow-hidden"
                   :style="{ width: progressWidth + '%' }"
-                ></div>
+                >
+                   <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+                </div>
               </div>
             </div>
 
             <!-- Detailed Timeline -->
-            <div class="space-y-4">
+            <div class="space-y-0 relative pl-4 max-w-2xl mx-auto">
+               <div class="absolute left-[35px] top-4 bottom-4 w-0.5 bg-gray-100 z-0"></div>
               <div
-                v-for="event in timeline"
+                v-for="(event, index) in timeline"
                 :key="event.id"
-                class="flex gap-4"
+                class="flex gap-8 relative z-10"
               >
-                <div class="flex flex-col items-center">
+                <div class="flex flex-col items-center shrink-0">
                   <div
-                    class="w-3 h-3 rounded-full"
-                    :class="event.completed ? 'bg-amber-500' : 'bg-gray-200'"
-                  ></div>
-                  <div class="w-0.5 flex-1 bg-gray-100"></div>
+                    class="w-6 h-6 rounded-full border-4 border-white flex items-center justify-center mt-1 outline outline-1 outline-gray-100"
+                    :class="event.completed ? 'bg-gray-900' : 'bg-gray-200'"
+                  >
+                     <div v-if="event.completed && index === timeline.length - 1" class="w-1.5 h-1.5 bg-[var(--color-accent)] rounded-full animate-ping"></div>
+                  </div>
                 </div>
-                <div class="pb-6">
-                  <p class="font-medium text-[var(--color-text)]">{{ event.title }}</p>
-                  <p v-if="event.description" class="text-sm text-[var(--color-text-muted)]">{{ event.description }}</p>
-                  <p class="text-xs text-[var(--color-text-muted)] mt-1">{{ event.date }}</p>
+                <div class="pb-10 pt-1">
+                  <p class="font-black text-gray-900 text-lg tracking-tight">{{ event.title }}</p>
+                  <p v-if="event.description" class="text-sm font-medium text-gray-500 mt-2 leading-relaxed">{{ event.description }}</p>
+                  <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mt-3">{{ event.date }}</p>
                 </div>
               </div>
             </div>
 
-            <!-- Delivery Photo -->
-            <div v-if="order.deliveryPhoto" class="mt-6 p-4 bg-green-50 rounded-xl">
-              <p class="text-sm font-medium text-green-800 mb-3 flex items-center gap-2">
-                <CameraIcon class="w-4 h-4" />
-                Photo de livraison
+            <!-- Delivery Photo Proof -->
+            <div v-if="order.deliveryPhoto" class="mt-8 p-6 bg-gray-50 rounded-[2rem] border border-gray-100 max-w-2xl mx-auto">
+              <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4 flex items-center gap-3">
+                <CameraIcon class="w-4 h-4 text-gray-900" /> Preuve visuelle de livraison
               </p>
-              <img 
-                :src="order.deliveryPhoto" 
-                alt="Photo de livraison" 
-                class="w-full max-w-md rounded-lg border border-green-200"
-              />
+              <div class="rounded-xl overflow-hidden border border-gray-200 shadow-sm relative group">
+                 <div class="absolute inset-0 bg-gray-900/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                 <img 
+                   :src="order.deliveryPhoto" 
+                   alt="Photo certifiée de livraison" 
+                   class="w-full object-cover"
+                 />
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Order Items -->
-        <div class="bg-white rounded-2xl border border-[var(--color-border)] overflow-hidden">
-          <div class="p-6 border-b border-[var(--color-border)]">
-            <h2 class="text-lg font-semibold text-[var(--color-text)]">
-              Articles ({{ order.items.length }})
+        <!-- Order Items Manifest -->
+        <div class="bg-white rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] overflow-hidden">
+          <div class="p-8 border-b border-gray-50 flex items-center justify-between">
+            <h2 class="text-xl font-black text-gray-900 tracking-tight">
+              Bordereau ({{ order.items.length }})
             </h2>
           </div>
           
-          <div class="divide-y divide-[var(--color-border)]">
+          <div class="divide-y divide-gray-50">
             <div
               v-for="item in order.items"
               :key="item.id"
-              class="flex items-center gap-4 p-6"
+              class="flex flex-col sm:flex-row sm:items-center gap-6 p-8 hover:bg-gray-50/50 transition-colors"
             >
-              <div class="w-20 h-20 bg-gray-100 rounded-xl flex items-center justify-center shrink-0">
+              <div class="w-24 h-24 bg-white border border-gray-100 shadow-sm rounded-2xl flex items-center justify-center shrink-0 p-2">
                 <img
                   v-if="item.thumbnail"
                   :src="item.thumbnail"
                   :alt="item.title"
-                  class="w-16 h-16 object-contain"
+                  class="w-full h-full object-contain mix-blend-multiply"
                 />
-                <PackageIcon v-else class="w-8 h-8 text-[var(--color-text-muted)]" />
+                <PackageIcon v-else class="w-10 h-10 text-gray-200" />
               </div>
               <div class="flex-1 min-w-0">
-                <p class="font-medium text-[var(--color-text)]">{{ item.title }}</p>
-                <p class="text-sm text-[var(--color-text-muted)]">Quantité: {{ item.quantity }}</p>
+                <p class="font-black text-gray-900 text-lg tracking-tight">{{ item.title }}</p>
+                <div class="flex items-center gap-3 mt-2">
+                   <span class="text-xs font-bold uppercase tracking-widest text-gray-400 bg-gray-100 px-3 py-1 rounded-lg">Qté : {{ item.quantity }}</span>
+                </div>
               </div>
-              <p class="font-semibold text-[var(--color-text)]">{{ formatPrice(item.total) }}</p>
+              <div class="text-left sm:text-right">
+                 <p class="font-black text-2xl text-gray-900 tracking-tight">{{ formatPrice(item.total) }}</p>
+                 <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mt-1">Net</p>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Order Summary & Addresses -->
-        <div class="grid md:grid-cols-2 gap-6">
+        <!-- Order Summary & Addresses (Side by side) -->
+        <div class="grid lg:grid-cols-2 gap-8">
           <!-- Shipping Address -->
-          <div class="bg-white rounded-2xl border border-[var(--color-border)] overflow-hidden">
-            <div class="p-6 border-b border-[var(--color-border)]">
-              <h2 class="text-lg font-semibold text-[var(--color-text)]">Adresse de livraison</h2>
+          <div class="bg-white rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] overflow-hidden flex flex-col">
+            <div class="p-8 border-b border-gray-50">
+              <h2 class="text-xl font-black text-gray-900 tracking-tight">Coordonnées logistiques</h2>
             </div>
-            <div class="p-6">
-              <div class="flex items-start gap-3">
-                <MapPinIcon class="w-5 h-5 text-amber-500 mt-0.5 shrink-0" />
+            <div class="p-8 flex-1 bg-gray-50/30">
+              <div class="flex items-start gap-5">
+                <div class="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center shrink-0">
+                  <MapPinIcon class="w-5 h-5 text-gray-900" />
+                </div>
                 <div>
-                  <p class="font-medium text-[var(--color-text)]">
+                  <p class="font-black text-lg text-gray-900 mb-2">
                     {{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}
                   </p>
-                  <p class="text-[var(--color-text-secondary)] mt-1">
+                  <p class="text-sm font-medium text-gray-600 leading-relaxed mb-4">
                     {{ order.shippingAddress.address1 }}<br />
                     <span v-if="order.shippingAddress.address2">{{ order.shippingAddress.address2 }}<br /></span>
-                    {{ order.shippingAddress.city }}, {{ order.shippingAddress.country }}
+                    <span class="text-gray-900 font-bold">{{ order.shippingAddress.city }}, {{ order.shippingAddress.country }}</span>
                   </p>
-                  <p v-if="order.shippingAddress.phone" class="text-[var(--color-text-muted)] mt-2 flex items-center gap-2">
-                    <PhoneIcon class="w-4 h-4" />
-                    {{ order.shippingAddress.phone }}
-                  </p>
+                  <div v-if="order.shippingAddress.phone" class="inline-flex items-center gap-3 bg-white border border-gray-100 shadow-sm px-4 py-2.5 rounded-xl">
+                    <PhoneIcon class="w-4 h-4 text-gray-400" />
+                    <span class="text-sm font-bold font-mono text-gray-900 tracking-widest">{{ order.shippingAddress.phone }}</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Order Summary -->
-          <div class="bg-white rounded-2xl border border-[var(--color-border)] overflow-hidden">
-            <div class="p-6 border-b border-[var(--color-border)]">
-              <h2 class="text-lg font-semibold text-[var(--color-text)]">Récapitulatif</h2>
+          <!-- Order Summary Financials -->
+          <div class="bg-gray-900 text-white rounded-[2rem] shadow-xl overflow-hidden flex flex-col relative">
+             <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-gray-800 to-transparent opacity-50 pointer-events-none rounded-bl-full"></div>
+            <div class="p-8 border-b border-gray-800 relative z-10">
+              <h2 class="text-xl font-black tracking-tight flex items-center gap-3">
+                 <CreditCard class="w-5 h-5 text-[var(--color-accent)]" /> Bilan financier
+              </h2>
             </div>
-            <div class="p-6 space-y-3">
-              <div class="flex justify-between text-[var(--color-text-secondary)]">
-                <span>Sous-total</span>
-                <span>{{ formatPrice(order.subtotal) }}</span>
-              </div>
-              <div class="flex justify-between text-[var(--color-text-secondary)]">
-                <span>Livraison</span>
-                <span>{{ formatPrice(order.shippingTotal) }}</span>
-              </div>
-              <div class="pt-3 border-t border-[var(--color-border)] flex justify-between">
-                <span class="font-semibold text-[var(--color-text)]">Total</span>
-                <div class="text-right">
-                  <p class="font-bold text-lg text-[var(--color-text)]">{{ formatPrice(order.total) }}</p>
-                  <p class="text-xs text-[var(--color-text-muted)]">≈ {{ formatFCFA(order.total) }}</p>
-                </div>
+            <div class="p-8 space-y-4 relative z-10 flex-1 flex flex-col justify-between">
+              <div class="space-y-4 font-medium text-gray-400">
+                 <div class="flex justify-between items-center bg-gray-800/50 p-4 rounded-xl">
+                   <span>Frais de marchandises</span>
+                   <span class="text-white">{{ formatPrice(order.subtotal) }}</span>
+                 </div>
+                 <div class="flex justify-between items-center bg-gray-800/50 p-4 rounded-xl">
+                   <span>Logistique N'Djamena</span>
+                   <span class="text-white">{{ formatPrice(order.shippingTotal) }}</span>
+                 </div>
               </div>
               
-              <!-- Payment Status -->
-              <div class="pt-4 mt-4 border-t border-[var(--color-border)]">
-                <div class="flex items-center gap-2">
-                  <CheckCircleIcon 
-                    v-if="order.paymentStatus === 'captured'" 
-                    class="w-5 h-5 text-green-500" 
-                  />
-                  <ClockIcon v-else class="w-5 h-5 text-amber-500" />
-                  <span class="text-sm" :class="order.paymentStatus === 'captured' ? 'text-green-700' : 'text-amber-700'">
-                    {{ order.paymentStatus === 'captured' ? 'Paiement confirmé' : 'Paiement en attente' }}
-                  </span>
+              <div class="pt-6 mt-4 border-t border-gray-800 flex justify-between items-end">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full flex items-center justify-center bg-white/10" :class="order.paymentStatus === 'captured' ? 'text-[var(--color-accent)]' : 'text-orange-400'">
+                    <CheckCircleIcon v-if="order.paymentStatus === 'captured'" class="w-5 h-5" />
+                    <ClockIcon v-else class="w-5 h-5" />
+                  </div>
+                  <div>
+                     <span class="text-xs font-bold uppercase tracking-widest text-gray-500 block">Statut</span>
+                     <span class="text-sm font-bold" :class="order.paymentStatus === 'captured' ? 'text-[var(--color-accent)]' : 'text-orange-400'">
+                       {{ order.paymentStatus === 'captured' ? 'Fonds sécurisés' : 'En attente' }}
+                     </span>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Montant total</p>
+                  <p class="font-black text-4xl tracking-tighter text-white">{{ formatPrice(order.total) }}</p>
+                  <p class="text-xs font-bold text-[var(--color-accent)] uppercase tracking-widest mt-2">≈ {{ formatFCFA(order.total) }}</p>
                 </div>
               </div>
             </div>
@@ -249,20 +265,20 @@
         </div>
 
         <!-- Actions -->
-        <div class="flex flex-col sm:flex-row gap-4">
+        <div class="flex flex-col sm:flex-row gap-4 pt-6">
           <NuxtLink
             to="/catalogue"
-            class="flex-1 btn-gold flex items-center justify-center gap-2"
+            class="flex-1 bg-gray-900 border border-gray-900 text-white flex items-center justify-center gap-3 px-8 py-5 font-bold rounded-2xl hover:bg-gray-800 transition-all shadow-lg active:scale-[0.98]"
           >
-            <RefreshCwIcon class="w-5 h-5" />
-            Commander à nouveau
+            <RefreshCwIcon class="w-5 h-5 text-gray-400" />
+            Nouveau Colis
           </NuxtLink>
           <NuxtLink
             to="/compte/commandes"
-            class="flex-1 flex items-center justify-center gap-2 px-6 py-3 border border-[var(--color-border)] text-[var(--color-text-secondary)] font-semibold rounded-xl hover:bg-gray-50 transition-colors"
+            class="flex-1 flex items-center justify-center gap-3 px-8 py-5 border border-gray-200 bg-white text-gray-900 font-bold rounded-2xl hover:bg-gray-50 transition-all shadow-sm active:scale-[0.98]"
           >
-            <ArrowLeftIcon class="w-5 h-5" />
-            Retour aux commandes
+            <ArrowLeftIcon class="w-5 h-5 text-gray-400" />
+            Retour à l'historique
           </NuxtLink>
         </div>
       </div>
@@ -313,31 +329,31 @@ const trackingSteps = computed(() => {
   return [
     { 
       id: 'ordered', 
-      label: 'Commandé', 
+      label: 'Ouverture', 
       icon: ShoppingCart, 
       completed: true,
       date: order.value ? formatShortDate(order.value.createdAt) : '',
     },
     { 
       id: 'paid', 
-      label: 'Payé', 
+      label: 'Fonds', 
       icon: CreditCard, 
       completed: order.value?.paymentStatus === 'captured',
       date: order.value?.paymentStatus === 'captured' ? formatShortDate(order.value.createdAt) : '',
     },
     { 
       id: 'shipped', 
-      label: 'Expédié', 
+      label: 'Logistique', 
       icon: Truck, 
       completed: currentIndex >= 1,
-      date: currentIndex >= 1 ? 'En cours' : '',
+      date: currentIndex >= 1 ? 'Actionnée' : '',
     },
     { 
       id: 'delivered', 
-      label: 'Livré', 
+      label: 'Clos', 
       icon: Home, 
       completed: status === 'delivered',
-      date: status === 'delivered' ? 'Reçu' : '',
+      date: status === 'delivered' ? 'Livré' : '',
     },
   ]
 })
@@ -353,8 +369,8 @@ const timeline = computed(() => {
   const events = [
     {
       id: '1',
-      title: 'Commande confirmée',
-      description: 'Votre commande a été reçue et confirmée',
+      title: 'Création du dossier',
+      description: 'Vos instructions d\'expédition ont été réceptionnées.',
       date: formatDateTime(order.value.createdAt),
       completed: true,
     },
@@ -363,8 +379,8 @@ const timeline = computed(() => {
   if (order.value.paymentStatus === 'captured') {
     events.push({
       id: '2',
-      title: 'Paiement reçu',
-      description: 'Le paiement a été traité avec succès',
+      title: 'Sécurisation financière',
+      description: 'L\'encaissement est validé par l\'institution bancaire.',
       date: formatDateTime(order.value.createdAt),
       completed: true,
     })
@@ -373,9 +389,9 @@ const timeline = computed(() => {
   if (['fulfilled', 'shipped', 'delivered'].includes(order.value.fulfillmentStatus)) {
     events.push({
       id: '3',
-      title: 'Colis expédié',
-      description: 'Votre colis est en route depuis Paris',
-      date: 'En cours',
+      title: 'Traitement au hub de Paris',
+      description: 'Les marchandises sont en cours de conditionnement sécurisé.',
+      date: 'Étape validée',
       completed: true,
     })
   }
@@ -383,9 +399,9 @@ const timeline = computed(() => {
   if (order.value.fulfillmentStatus === 'shipped') {
     events.push({
       id: '4',
-      title: 'En transit',
-      description: 'Le colis est en route vers N\'Djamena',
-      date: 'En cours',
+      title: 'Acheminement aérien',
+      description: 'Logistique en transit sécurisé vers la plateforme finale.',
+      date: 'En cours...',
       completed: true,
     })
   }
@@ -393,8 +409,8 @@ const timeline = computed(() => {
   if (order.value.fulfillmentStatus === 'delivered') {
     events.push({
       id: '5',
-      title: 'Livré',
-      description: 'Le colis a été remis au destinataire',
+      title: 'Remise au destinataire',
+      description: 'Le protocole de livraison a été complété.',
       date: formatDateTime(order.value.updatedAt),
       completed: true,
     })
@@ -405,7 +421,7 @@ const timeline = computed(() => {
 
 // SEO
 useSeoMeta({
-  title: () => order.value ? `Commande ${order.value.displayId} - TchadBox` : 'Commande - TchadBox',
+  title: () => order.value ? `Dossier ${order.value.displayId} - TchadBox` : 'Dossier Logistique - TchadBox',
 })
 
 const { userOrderDetail } = useBackendApi()
@@ -418,14 +434,14 @@ onMounted(async () => {
 
 async function fetchOrder() {
   if (!authStore.user) {
-    error.value = 'Vous devez être connecté'
+    error.value = 'Habilitation requise : session expirée'
     isLoading.value = false
     return
   }
 
   const orderId = route.params.id as string
   if (!orderId) {
-    error.value = 'Identifiant de commande manquant'
+    error.value = 'Référence de dossier corrompue'
     isLoading.value = false
     return
   }
@@ -435,16 +451,16 @@ async function fetchOrder() {
     if (result.order) {
       order.value = normalizeOrder(result.order)
     } else {
-      error.value = 'Commande introuvable'
+      error.value = 'Dossier introuvable dans nos archives'
     }
   } catch (e: any) {
     console.error('Order fetch error:', e)
     if (e.statusCode === 403) {
-      error.value = 'Vous n\'avez pas accès à cette commande'
+      error.value = 'Accès au dossier formellement restreint'
     } else if (e.statusCode === 404) {
-      error.value = 'Commande introuvable'
+      error.value = 'Dossier introuvable dans nos archives'
     } else {
-      error.value = 'Erreur lors du chargement de la commande'
+      error.value = 'Incident de communication avec le serveur'
     }
   } finally {
     isLoading.value = false
@@ -453,7 +469,7 @@ async function fetchOrder() {
 
 function formatDate(date: string): string {
   return new Date(date).toLocaleDateString('fr-FR', {
-    day: 'numeric',
+    day: '2-digit',
     month: 'long',
     year: 'numeric',
   })
@@ -461,14 +477,14 @@ function formatDate(date: string): string {
 
 function formatShortDate(date: string): string {
   return new Date(date).toLocaleDateString('fr-FR', {
-    day: 'numeric',
+    day: '2-digit',
     month: 'short',
   })
 }
 
 function formatDateTime(date: string): string {
   return new Date(date).toLocaleDateString('fr-FR', {
-    day: 'numeric',
+    day: '2-digit',
     month: 'short',
     hour: '2-digit',
     minute: '2-digit',
@@ -489,44 +505,31 @@ function formatFCFA(amount: number): string {
 
 function getStatusLabel(status: FulfillmentStatus): string {
   const labels: Record<FulfillmentStatus, string> = {
-    not_fulfilled: 'En préparation',
-    partially_fulfilled: 'Partiellement expédié',
-    fulfilled: 'Expédié',
-    shipped: 'En transit',
-    delivered: 'Livré',
+    not_fulfilled: 'Ouvert',
+    partially_fulfilled: 'Partiel',
+    fulfilled: 'Préparé',
+    shipped: 'En Logistique',
+    delivered: 'Clos',
   }
   return labels[status] || status
 }
 
 function getStatusClass(status: FulfillmentStatus): string {
   const classes: Record<FulfillmentStatus, string> = {
-    not_fulfilled: 'bg-gray-100 text-[var(--color-text-secondary)]',
-    partially_fulfilled: 'bg-blue-100 text-blue-700',
-    fulfilled: 'bg-blue-100 text-blue-700',
-    shipped: 'bg-amber-100 text-amber-700',
-    delivered: 'bg-green-100 text-green-700',
+    not_fulfilled: 'bg-white text-gray-900 border-gray-200',
+    partially_fulfilled: 'bg-indigo-50 text-indigo-600 border-indigo-200',
+    fulfilled: 'bg-indigo-50 text-indigo-600 border-indigo-200',
+    shipped: 'bg-orange-50 text-orange-600 border-orange-200',
+    delivered: 'bg-green-50 text-green-700 border-green-200',
   }
-  return classes[status] || 'bg-gray-100 text-[var(--color-text-secondary)]'
-}
-
-function getStatusDotClass(status: FulfillmentStatus): string {
-  const classes: Record<FulfillmentStatus, string> = {
-    not_fulfilled: 'bg-gray-500',
-    partially_fulfilled: 'bg-blue-500',
-    fulfilled: 'bg-blue-500',
-    shipped: 'bg-amber-500',
-    delivered: 'bg-green-500',
-  }
-  return classes[status] || 'bg-gray-500'
+  return classes[status] || 'bg-white text-gray-900 border-gray-200'
 }
 
 function downloadInvoice() {
-  // Would generate/download PDF invoice
-  alert('Téléchargement de la facture...')
+  alert('La facture cryptée sera téléchargée prochainement.')
 }
 
 function contactSupport() {
-  // Would open support chat/form
   navigateTo('/contact')
 }
 </script>

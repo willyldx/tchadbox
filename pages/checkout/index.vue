@@ -2,23 +2,23 @@
   <div class="min-h-screen flex flex-col lg:flex-row bg-white relative">
     
     <!-- LEFT COLUMN: Form Area -->
-    <div class="flex-1 flex flex-col w-full lg:w-[55%] xl:w-[60%] px-4 sm:px-12 lg:px-24 xl:px-32 pt-8 pb-24 lg:py-16 order-2 lg:order-1 border-r border-gray-100 z-10 bg-white">
+    <div class="flex-1 flex flex-col w-full lg:w-[55%] xl:w-[60%] px-6 sm:px-12 lg:px-24 xl:px-32 pt-8 pb-24 lg:py-16 order-2 lg:order-1 border-r border-gray-100 z-10 bg-white">
       
       <!-- Header (Mobile & Desktop) -->
-      <header class="mb-8 lg:mb-12">
+      <header class="mb-10 lg:mb-14">
         <NuxtLink to="/" class="flex items-center gap-3 w-max">
           <img src="/logo.png" alt="TchadBox" class="h-10 w-auto" />
         </NuxtLink>
         
         <!-- Breadcrumbs / Steps -->
-        <nav class="mt-8 flex items-center text-sm font-medium">
-          <button @click="cartStore.isOpen = true; navigateTo('/')" class="text-[var(--color-text-muted)] hover:text-[var(--color-primary)] transition-colors">Panier</button>
-          <ChevronRightIcon class="w-4 h-4 mx-2 text-gray-300" />
-          <span :class="currentStep === 0 ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-muted)]'">Informations</span>
-          <ChevronRightIcon class="w-4 h-4 mx-2 text-gray-300" />
-          <span :class="currentStep === 1 ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-muted)]'">Paiement</span>
-          <ChevronRightIcon class="w-4 h-4 mx-2 text-gray-300" />
-          <span :class="currentStep === 2 ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-muted)]'">Vérification</span>
+        <nav class="mt-8 flex items-center text-xs font-bold uppercase tracking-widest">
+          <button @click="cartStore.isOpen = true; navigateTo('/')" class="text-gray-400 hover:text-gray-900 transition-colors">Panier</button>
+          <ChevronRightIcon class="w-3 h-3 mx-3 text-gray-300" />
+          <span :class="currentStep === 0 ? 'text-gray-900' : 'text-gray-400'">Client</span>
+          <ChevronRightIcon class="w-3 h-3 mx-3 text-gray-300" />
+          <span :class="currentStep === 1 ? 'text-gray-900' : 'text-gray-400'">Paiement</span>
+          <ChevronRightIcon class="w-3 h-3 mx-3 text-gray-300" />
+          <span :class="currentStep === 2 ? 'text-gray-900' : 'text-gray-400'">Confirmation</span>
         </nav>
       </header>
 
@@ -27,10 +27,10 @@
         
         <!-- Step 1: Information -->
         <div v-show="currentStep === 0" class="animate-fade-in">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-semibold text-[var(--color-text)]">Vos informations</h2>
-            <NuxtLink v-if="!authStore.isAuthenticated" to="/auth/login?redirect=/checkout" class="text-sm text-[var(--color-primary)] hover:underline font-medium">
-              Déjà client ? Se connecter
+          <div class="flex items-end justify-between border-b border-gray-100 pb-4 mb-8">
+            <h2 class="text-2xl font-black text-gray-900 tracking-tight">Vos coordonnées</h2>
+            <NuxtLink v-if="!authStore.isAuthenticated" to="/auth/login?redirect=/checkout" class="text-xs font-bold text-gray-500 hover:text-gray-900 uppercase tracking-wide transition-colors">
+              Déjà client ?
             </NuxtLink>
           </div>
           
@@ -48,7 +48,7 @@
             
             <div class="relative">
               <input v-model="form.email" type="email" id="email" class="peer checkout-input" placeholder=" " required />
-              <label for="email" class="checkout-label">Adresse e-mail</label>
+              <label for="email" class="checkout-label">Adresse e-mail sécurisée</label>
             </div>
             
             <div class="relative">
@@ -57,28 +57,31 @@
             </div>
           </div>
 
-          <h2 class="text-2xl font-semibold text-[var(--color-text)] mt-12 mb-6">Expédition au Tchad</h2>
+          <h2 class="text-2xl font-black text-gray-900 tracking-tight mt-16 border-b border-gray-100 pb-4 mb-8">Destinataire au Tchad</h2>
           
           <div class="space-y-4">
-            <label class="flex items-center gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-              <input v-model="sameAsCustomer" type="checkbox" class="w-5 h-5 text-amber-500 border-gray-300 rounded focus:ring-transparent" />
-              <span class="text-sm font-medium text-[var(--color-text)]">Je suis le destinataire</span>
+            <label class="flex items-center gap-4 p-5 bg-gray-50 border border-gray-100 rounded-[1rem] cursor-pointer hover:bg-gray-100 transition-colors group">
+              <input v-model="sameAsCustomer" type="checkbox" class="w-5 h-5 text-gray-900 bg-white border-gray-300 rounded focus:ring-gray-900 focus:ring-2" />
+              <div class="flex flex-col">
+                 <span class="text-sm font-bold text-gray-900">Je suis le destinataire</span>
+                 <span class="text-xs text-gray-500 font-medium">Je réceptionnerai le colis à N'Djamena.</span>
+              </div>
             </label>
 
-            <div v-show="!sameAsCustomer" class="grid sm:grid-cols-2 gap-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100 animate-fade-in">
+            <div v-show="!sameAsCustomer" class="grid sm:grid-cols-2 gap-4 animate-fade-in mt-4">
               <div class="relative">
-                <input v-model="form.recipientName" type="text" id="rn" class="peer checkout-input bg-white" placeholder=" " />
-                <label for="rn" class="checkout-label">Nom du destinataire</label>
+                <input v-model="form.recipientName" type="text" id="rn" class="peer checkout-input bg-gray-50 border-transparent focus:bg-white" placeholder=" " />
+                <label for="rn" class="checkout-label bg-transparent">Nom du bénéficiaire</label>
               </div>
               <div class="relative">
-                <input v-model="form.recipientPhone" type="tel" id="rp" class="peer checkout-input bg-white" placeholder=" " />
-                <label for="rp" class="checkout-label">Tél. du destinataire</label>
+                <input v-model="form.recipientPhone" type="tel" id="rp" class="peer checkout-input bg-gray-50 border-transparent focus:bg-white" placeholder=" " />
+                <label for="rp" class="checkout-label bg-transparent">Portable du bénéficiaire</label>
               </div>
             </div>
 
-            <div class="relative">
+            <div class="relative mt-4">
               <input v-model="form.address.address1" type="text" id="addr" class="peer checkout-input" placeholder=" " required />
-              <label for="addr" class="checkout-label">Adresse de livraison (Quartier, rue, repère...)</label>
+              <label for="addr" class="checkout-label">Adresse de livraison détaillée (Quartier, repère...)</label>
             </div>
 
             <div class="grid sm:grid-cols-2 gap-4">
@@ -88,46 +91,48 @@
                   <option value="Moundou">Moundou</option>
                   <option value="Sarh">Sarh</option>
                 </select>
-                <label for="city" class="checkout-label">Ville</label>
+                <label for="city" class="checkout-label">Ville de logistique</label>
                 <ChevronDownIcon class="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
               </div>
               <div class="relative">
-                <input value="Tchad" disabled class="checkout-input bg-gray-50 text-gray-500" />
-                <label class="checkout-label">Pays</label>
+                <input value="Tchad" disabled class="checkout-input bg-gray-50/50 text-gray-400 border-transparent font-medium" />
+                <label class="checkout-label opacity-0">Pays</label>
               </div>
             </div>
             
             <div class="relative">
               <textarea v-model="form.deliveryInstructions" id="instr" rows="2" class="peer checkout-input resize-none" placeholder=" "></textarea>
-              <label for="instr" class="checkout-label">Instructions (optionnel)</label>
+              <label for="instr" class="checkout-label">Instructions à nos livreurs (optionnel)</label>
             </div>
           </div>
           
-          <button @click="nextStep" :disabled="!canProceed" class="btn-gold w-full py-4 mt-8 rounded-xl shadow-[0_10px_30px_rgba(245,158,11,0.2)] disabled:opacity-50 disabled:cursor-not-allowed">
-            Continuer vers le paiement
+          <button @click="nextStep" :disabled="!canProceed" class="w-full flex items-center justify-center gap-3 py-5 mt-12 bg-gray-900 text-white font-bold rounded-xl hover:bg-gray-800 transition-all shadow-lg active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed">
+            Passer au mode de paiement <ArrowRightIcon class="w-4 h-4" />
           </button>
         </div>
 
         <!-- Step 2: Payment -->
         <div v-show="currentStep === 1" class="animate-fade-in">
-          <div class="flex items-center gap-3 text-sm text-[var(--color-primary)] font-medium mb-8 cursor-pointer hover:underline w-max" @click="currentStep = 0">
-            <ChevronLeftIcon class="w-4 h-4" /> Retour aux coordonnées
+          <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-400 mb-10 cursor-pointer hover:text-gray-900 transition-colors w-max" @click="currentStep = 0">
+            <ArrowLeftIcon class="w-4 h-4" /> Retour aux coordonnées
           </div>
           
-          <h2 class="text-2xl font-semibold text-[var(--color-text)] mb-2">Paiement</h2>
-          <p class="text-sm text-gray-500 mb-6 flex items-center gap-1.5"><LockIcon class="w-4 h-4 text-gray-400" /> Toutes les transactions sont sécurisées et cryptées.</p>
+          <h2 class="text-2xl font-black text-gray-900 tracking-tight mb-2">Paiement</h2>
+          <p class="text-sm font-medium text-gray-500 mb-8 flex items-center gap-2">
+            <ShieldCheckIcon class="w-4 h-4 text-[var(--color-accent)]" /> Traitement chiffré de bout en bout.
+          </p>
 
-          <div class="border border-gray-200 rounded-2xl overflow-hidden bg-white">
+          <div class="border border-gray-200 rounded-[1rem] overflow-hidden bg-white shadow-sm">
             <label 
               v-for="(method, index) in paymentMethods" 
               :key="method.id"
-              class="flex flex-col border-b last:border-b-0 border-gray-200 cursor-pointer transition-colors"
-              :class="selectedPayment === method.id ? 'bg-amber-50/30' : 'hover:bg-gray-50'"
+              class="flex flex-col border-b last:border-b-0 border-gray-100 cursor-pointer transition-colors"
+              :class="selectedPayment === method.id ? 'bg-gray-50' : 'hover:bg-gray-50/50'"
             >
-              <div class="flex items-center p-5 gap-4">
-                <input v-model="selectedPayment" type="radio" :value="method.id" class="w-5 h-5 text-amber-500 border-gray-300 focus:ring-amber-500/20" />
+              <div class="flex items-center p-6 gap-5">
+                <input v-model="selectedPayment" type="radio" :value="method.id" class="w-5 h-5 text-gray-900 border-gray-300 focus:ring-gray-900 focus:ring-2" />
                 <div class="flex-1 flex justify-between items-center">
-                  <span class="font-medium text-[var(--color-text)]">{{ method.label }}</span>
+                  <span class="font-bold text-gray-900">{{ method.label }}</span>
                   <component v-if="method.id === 'card'" :is="CreditCard" class="w-6 h-6 text-gray-400" />
                   <component v-else-if="method.id === 'mobile_money' || method.id === 'tchad_mobile_money'" :is="Smartphone" class="w-6 h-6 text-gray-400" />
                   <component v-else :is="Banknote" class="w-6 h-6 text-gray-400" />
@@ -135,149 +140,144 @@
               </div>
               
               <!-- Active Method Content -->
-              <div v-show="selectedPayment === method.id" class="px-5 pb-5 pt-1 pl-[52px]">
-                <p class="text-sm text-gray-500">{{ method.description }}</p>
+              <div v-show="selectedPayment === method.id" class="px-6 pb-6 pt-0 ml-[44px]">
+                <p class="text-sm font-medium text-gray-500">{{ method.description }}</p>
                 
                 <!-- Specialized Mobile Money Tchad Panel -->
-                <div v-if="method.id === 'tchad_mobile_money'" class="mt-4 bg-white border border-amber-200 rounded-xl p-4 shadow-sm relative overflow-hidden">
-                  <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
-                  <h4 class="font-semibold text-[var(--color-text)] text-sm mb-2 text-amber-900">Procédure Manuelle Tchad</h4>
-                  <p class="text-sm text-gray-600 mb-3 leading-relaxed">
-                    1. Envoyer exactement <b class="text-black">{{ cartStore.totalXAF }} FCFA</b> au :<br/>
-                    <span class="inline-block mt-1 font-mono bg-amber-100 text-amber-800 px-2 rounded tracking-wide">+235 85 96 25 92 (Airtel)</span>
+                <div v-if="method.id === 'tchad_mobile_money'" class="mt-5 bg-white border border-gray-200 rounded-xl p-5 shadow-sm relative overflow-hidden">
+                  <div class="absolute top-0 left-0 w-1.5 h-full bg-[var(--color-accent)]"></div>
+                  <h4 class="font-black text-gray-900 text-sm mb-3 tracking-tight">Protocole Manuel (FCFA)</h4>
+                  <p class="text-sm font-medium text-gray-600 mb-4 leading-relaxed">
+                    1. Effectuez un transfert exact de <b class="text-black bg-[var(--color-accent)]/10 px-1 rounded">{{ cartStore.totalXAF }} FCFA</b> au numéro :<br/>
+                    <span class="inline-block mt-2 font-mono font-bold text-lg bg-gray-100 text-gray-900 px-3 py-1 rounded-lg tracking-widest">+235 85 96 25 92</span> <span class="text-xs text-gray-400 ml-2">(Airtel Tchad)</span>
                   </p>
                   <div class="relative mt-2">
-                    <input v-model="transferPhone" type="tel" id="tpl" class="peer checkout-input !bg-gray-50" placeholder=" " />
-                    <label for="tpl" class="checkout-label">Votre n° de téléphone (qui a fait le transfert)</label>
+                    <input v-model="transferPhone" type="tel" id="tpl" class="peer checkout-input !bg-gray-50 border-transparent focus:border-gray-300" placeholder=" " />
+                    <label for="tpl" class="checkout-label bg-transparent">Téléphone ayant émis le transfert</label>
                   </div>
                 </div>
                 
-                <div v-else class="mt-4 bg-gray-50 rounded-xl p-6 flex flex-col items-center justify-center text-center">
-                  <component :is="method.icon" class="w-8 h-8 text-gray-400 mb-3 opacity-50" />
-                  <p class="text-sm text-gray-500 max-w-sm">Après avoir cliqué sur "Vérifier la commande", vous serez redirigé en toute sécurité vers Paystack pour finaliser le paiement.</p>
+                <div v-else class="mt-5 bg-gray-50 rounded-xl p-6 flex flex-col items-center justify-center text-center border border-gray-100">
+                  <component :is="method.icon" class="w-8 h-8 text-gray-300 mb-3" />
+                  <p class="text-xs font-bold uppercase tracking-widest text-gray-400 max-w-sm leading-relaxed">
+                    Vous serez redirigé vers l'interface ultra-sécurisée de Paystack pour garantir l'intégrité de vos données bancaires.
+                  </p>
                 </div>
               </div>
             </label>
           </div>
 
-          <div v-if="paymentError" class="mt-4 bg-red-50 text-red-700 p-4 rounded-xl flex items-start gap-3 text-sm">
-            <InfoIcon class="w-5 h-5 shrink-0" />
-            <span>{{ paymentError }}</span>
+          <div v-if="paymentError" class="mt-6 bg-red-50/50 border border-red-100 text-red-600 p-4 rounded-xl flex items-start gap-4 text-sm font-medium">
+             <div class="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center shrink-0 mt-0.5">
+               <InfoIcon class="w-4 h-4 text-red-500" />
+             </div>
+             <span class="pt-0.5">{{ paymentError }}</span>
           </div>
 
-          <button @click="nextStep" :disabled="!canProceed" class="btn-gold w-full py-4 mt-8 rounded-xl shadow-[0_10px_30px_rgba(245,158,11,0.2)] disabled:opacity-50 disabled:cursor-not-allowed">
-            Vérifier la commande
+          <button @click="nextStep" :disabled="!canProceed" class="w-full flex items-center justify-center gap-3 py-5 mt-10 bg-gray-900 text-white font-bold rounded-xl hover:bg-gray-800 transition-all shadow-lg active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed">
+            Vérifier avant paiement
           </button>
         </div>
 
         <!-- Step 3: Confirmation -->
         <div v-show="currentStep === 2" class="animate-fade-in">
-           <div class="flex items-center gap-3 text-sm text-[var(--color-primary)] font-medium mb-8 cursor-pointer hover:underline w-max" @click="currentStep = 1">
-            <ChevronLeftIcon class="w-4 h-4" /> Retour aux moyens de paiement
+           <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-400 mb-10 cursor-pointer hover:text-gray-900 transition-colors w-max" @click="currentStep = 1">
+            <ArrowLeftIcon class="w-4 h-4" /> Retour au paiement
           </div>
           
-          <h2 class="text-2xl font-semibold text-[var(--color-text)] mb-6">Résumé final</h2>
+          <h2 class="text-2xl font-black text-gray-900 tracking-tight mb-8">Vérification finale</h2>
 
-          <div class="border border-gray-200 rounded-2xl p-0 overflow-hidden mb-8 text-sm">
-            <div class="flex items-center justify-between p-4 border-b border-gray-100">
-              <span class="text-gray-500 w-24">Contact</span>
-              <span class="font-medium text-[var(--color-text)] flex-1">{{ form.email }}</span>
-              <button @click="currentStep = 0" class="text-[var(--color-primary)] hover:underline font-medium">Modifier</button>
+          <div class="border border-gray-200 rounded-[1rem] p-0 overflow-hidden mb-10 text-sm font-medium shadow-sm bg-white">
+            <div class="flex justify-between p-5 border-b border-gray-100 items-start">
+              <span class="text-gray-400 font-bold uppercase tracking-wider text-xs w-28 pt-0.5">Contact</span>
+              <span class="text-gray-900 flex-1 break-all">{{ form.email }}</span>
+              <button @click="currentStep = 0" class="text-gray-400 hover:text-gray-900 font-bold underline decoration-2 decoration-gray-200 hover:decoration-gray-900 underline-offset-4 transition-all">Éditer</button>
             </div>
-             <div class="flex items-center justify-between p-4 border-b border-gray-100">
-              <span class="text-gray-500 w-24">Expédier à</span>
-              <span class="font-medium text-[var(--color-text)] flex-1 truncate pr-4">{{ form.address.address1 }}, {{ form.address.city }}, Tchad</span>
-              <button @click="currentStep = 0" class="text-[var(--color-primary)] hover:underline font-medium">Modifier</button>
+             <div class="flex justify-between p-5 border-b border-gray-100 items-start">
+              <span class="text-gray-400 font-bold uppercase tracking-wider text-xs w-28 pt-0.5">Destinataire</span>
+              <span class="text-gray-900 flex-1 max-w-[200px] sm:max-w-none">{{ form.address.address1 }}, {{ form.address.city }}, Tchad</span>
+              <button @click="currentStep = 0" class="text-gray-400 hover:text-gray-900 font-bold underline decoration-2 decoration-gray-200 hover:decoration-gray-900 underline-offset-4 transition-all">Éditer</button>
             </div>
-             <div class="flex items-center justify-between p-4">
-              <span class="text-gray-500 w-24">Méthode</span>
-              <span class="font-medium text-[var(--color-text)] flex-1">{{ paymentMethods.find(m => m.id === selectedPayment)?.label }}</span>
-              <button @click="currentStep = 1" class="text-[var(--color-primary)] hover:underline font-medium">Modifier</button>
+             <div class="flex justify-between p-5 items-start">
+              <span class="text-gray-400 font-bold uppercase tracking-wider text-xs w-28 pt-0.5">Méthode</span>
+              <span class="text-gray-900 flex-1">{{ paymentMethods.find(m => m.id === selectedPayment)?.label }}</span>
+              <button @click="currentStep = 1" class="text-gray-400 hover:text-gray-900 font-bold underline decoration-2 decoration-gray-200 hover:decoration-gray-900 underline-offset-4 transition-all">Éditer</button>
             </div>
           </div>
 
           <!-- Conditions -->
-          <label class="flex items-start gap-3 p-4 bg-gray-50 border border-gray-100 rounded-xl cursor-pointer">
-            <input v-model="acceptTerms" type="checkbox" required class="w-5 h-5 mt-0.5 text-amber-500 border-gray-300 rounded focus:ring-amber-500/20" />
-            <span class="text-sm text-[var(--color-text-secondary)] leading-relaxed">
-              En procédant au paiement, j'accepte les <NuxtLink to="/conditions" class="text-amber-600 hover:underline">conditions générales de vente</NuxtLink> et je confirme que les informations fournies sont exactes.
+          <label class="flex items-start gap-4 p-5 bg-gray-50 border border-gray-100 rounded-[1rem] cursor-pointer hover:bg-gray-100 transition-colors">
+            <input v-model="acceptTerms" type="checkbox" required class="w-5 h-5 mt-0.5 text-gray-900 bg-white border-gray-300 rounded focus:ring-gray-900 focus:ring-2" />
+            <span class="text-sm font-medium text-gray-600 leading-relaxed">
+              J'exige que l'équipe logistique livre cette commande en parfait état, et j'accepte formellement les <NuxtLink to="/conditions" class="text-gray-900 font-bold underline">conditions générales de vente</NuxtLink>.
             </span>
           </label>
 
-          <button @click="submitOrder" :disabled="!acceptTerms || isSubmitting" class="btn-primary w-full py-4 mt-8 rounded-xl relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed">
-            <div class="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:animate-shimmer" />
-            <div class="flex items-center justify-center gap-2 relative z-10">
-              <LoaderIcon v-if="isSubmitting" class="w-5 h-5 animate-spin" />
-              <LockIcon v-else class="w-5 h-5" />
-              <span class="font-bold text-lg">{{ isSubmitting ? 'Traitement en cours...' : `Payer ${cartStore.formattedTotal}` }}</span>
-            </div>
+          <button @click="submitOrder" :disabled="!acceptTerms || isSubmitting" class="w-full flex items-center justify-center gap-3 py-5 mt-8 bg-gray-900 text-white font-bold rounded-xl hover:bg-gray-800 transition-all shadow-lg active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden relative group">
+            <div class="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:animate-shimmer" />
+            <LoaderIcon v-if="isSubmitting" class="w-5 h-5 animate-spin relative z-10" />
+            <LockIcon v-else class="w-5 h-5 text-gray-400 relative z-10" />
+            <span class="text-lg relative z-10">{{ isSubmitting ? 'Chiffrement en cours...' : `Confirmer et Payer ${cartStore.formattedTotal}` }}</span>
           </button>
         </div>
 
       </main>
 
       <!-- Footer Policy Links -->
-      <footer class="mt-auto pt-8 border-t border-gray-100 text-xs font-medium text-[var(--color-text-muted)] flex flex-wrap gap-4">
-        <NuxtLink to="/conditions" class="hover:text-[var(--color-text)] transition-colors">Politique de remboursement</NuxtLink>
-        <NuxtLink to="/conditions" class="hover:text-[var(--color-text)] transition-colors">Politique de livraison</NuxtLink>
-        <NuxtLink to="/confidentialite" class="hover:text-[var(--color-text)] transition-colors">Politique de confidentialité</NuxtLink>
-        <NuxtLink to="/mentions-legales" class="hover:text-[var(--color-text)] transition-colors">Mentions légales</NuxtLink>
+      <footer class="mt-20 pt-8 border-t border-gray-100 text-xs font-bold uppercase tracking-wider text-gray-400 flex flex-wrap gap-6 justify-center lg:justify-start">
+        <NuxtLink to="/conditions" class="hover:text-gray-900 transition-colors">CGV</NuxtLink>
+        <NuxtLink to="/conditions#remboursement" class="hover:text-gray-900 transition-colors">Retours</NuxtLink>
+        <NuxtLink to="/confidentialite" class="hover:text-gray-900 transition-colors">Confidentialité</NuxtLink>
+        <NuxtLink to="/mentions-legales" class="hover:text-gray-900 transition-colors">Légal</NuxtLink>
       </footer>
     </div>
 
     <!-- RIGHT COLUMN: Order Summary (Sticky Sidebar) -->
-    <div class="w-full lg:w-[45%] xl:w-[40%] bg-[#f5f5f3] border-b lg:border-b-0 lg:border-l border-gray-200 px-4 sm:px-12 lg:px-16 xl:px-24 py-8 lg:py-16 order-1 lg:order-2">
-      <!-- Mobile Toggle for Order Summary (Optional, but usually visible to start) -->
+    <div class="w-full lg:w-[45%] xl:w-[40%] bg-gray-50 border-b lg:border-b-0 lg:border-l border-gray-100 px-6 sm:px-12 lg:px-16 xl:px-24 py-12 lg:py-16 order-1 lg:order-2">
+      <!-- Order Summary -->
       <div class="lg:sticky lg:top-12">
+        <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-8 border-b border-gray-200 pb-4">Résumé des achats</h2>
+        
         <!-- Products List -->
-        <div class="space-y-4 mb-6 max-h-[40vh] lg:max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
-          <div v-for="item in cartStore.items" :key="item.id" class="flex items-center gap-4">
+        <div class="space-y-5 mb-8 max-h-[40vh] lg:max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
+          <div v-for="item in cartStore.items" :key="item.id" class="flex items-center gap-5">
             <div class="relative shrink-0">
-               <div class="w-16 h-16 bg-white border border-gray-200 rounded-xl flex items-center justify-center overflow-hidden shadow-sm">
+               <div class="w-16 h-16 bg-white border border-gray-100 rounded-2xl flex items-center justify-center overflow-hidden shadow-sm">
                   <NuxtImg v-if="item.thumbnail" :src="resolveThumb(item.thumbnail)" :alt="item.title" class="w-full h-full object-cover mix-blend-multiply" />
-                  <PackageIcon v-else class="w-6 h-6 text-gray-300" />
+                  <PackageIcon v-else class="w-6 h-6 text-gray-200" />
                </div>
-               <div class="absolute -top-2 -right-2 w-5 h-5 bg-gray-500/90 backdrop-blur text-white text-[11px] font-bold rounded-full flex items-center justify-center shadow-sm">
+               <div class="absolute -top-2 -right-2 w-6 h-6 bg-gray-900 text-white text-[11px] font-bold rounded-full flex items-center justify-center shadow border-2 border-gray-50">
                  {{ item.quantity }}
                </div>
             </div>
             <div class="flex-1 min-w-0">
-              <p class="font-medium text-[var(--color-text)] text-sm truncate">{{ item.title }}</p>
-              <p v-if="item.variantTitle" class="text-xs text-[var(--color-text-muted)] mt-0.5">{{ item.variantTitle }}</p>
+              <p class="font-bold text-gray-900 text-sm truncate">{{ item.title }}</p>
+              <p v-if="item.variantTitle" class="text-xs font-bold uppercase tracking-wide text-gray-400 mt-1">{{ item.variantTitle }}</p>
             </div>
-            <div class="text-sm font-medium text-[var(--color-text)] shrink-0">
+            <div class="text-sm font-black text-gray-900 shrink-0">
               {{ cartStore.formatPrice(item.price * item.quantity) }}
             </div>
           </div>
         </div>
 
-        <!-- Discount Code (Visual Only for now) -->
-        <div class="flex gap-2 mb-6 pt-6 border-t border-gray-200/80">
-          <input type="text" placeholder="Code de réduction" class="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none transition-all placeholder-gray-400" />
-          <button class="px-5 py-3 bg-gray-200 text-gray-500 text-sm font-medium rounded-xl hover:bg-gray-300 transition-colors">Appliquer</button>
-        </div>
-
         <!-- Totals -->
-        <div class="space-y-3 pb-6 border-b border-gray-200/80">
-          <div class="flex justify-between text-sm">
-            <span class="text-[var(--color-text-secondary)]">Sous-total</span>
-            <span class="font-medium text-[var(--color-text)]">{{ cartStore.subtotalFormatted }}</span>
+        <div class="space-y-4 pb-8 border-b border-gray-200">
+          <div class="flex justify-between text-sm font-medium">
+            <span class="text-gray-500">Sous-total</span>
+            <span class="text-gray-900">{{ cartStore.subtotalFormatted }}</span>
           </div>
-          <div class="flex justify-between text-sm">
-            <span class="text-[var(--color-text-secondary)] flex items-center gap-1.5">Expédition <TruckIcon class="w-3.5 h-3.5 text-gray-400"/></span>
-            <span class="font-medium text-[var(--color-text)]">{{ cartStore.shippingFormatted }}</span>
+          <div class="flex justify-between text-sm font-medium">
+            <span class="text-gray-500 flex items-center gap-2"><TruckIcon class="w-4 h-4 text-gray-400"/>Fret & Douane</span>
+            <span class="text-gray-900">{{ cartStore.shippingFormatted }}</span>
           </div>
         </div>
 
-        <div class="flex items-center justify-between pt-6">
-          <span class="text-lg text-[var(--color-text)]">Total</span>
-          <div class="text-right flex items-end gap-3 lg:flex-col lg:items-end lg:gap-0">
-            <span class="text-xs text-gray-500 font-medium tracking-wide">EUR</span>
-            <span class="text-3xl font-black text-[var(--color-text)] -tracking-wider">{{ cartStore.totalFormatted }}</span>
+        <div class="flex items-center justify-between pt-8">
+          <span class="text-sm font-bold uppercase tracking-wider text-gray-400 mt-1">Net à Payer</span>
+          <div class="text-right flex flex-col items-end">
+            <span class="text-4xl font-black text-gray-900 tracking-tight">{{ cartStore.totalFormatted }}</span>
+            <span class="text-sm font-bold text-[var(--color-accent)] mt-2">≈ {{ cartStore.totalFCFA }} FCFA</span>
           </div>
-        </div>
-        <div class="text-right mt-1">
-          <span class="text-sm text-[var(--color-text-muted)] font-medium">≈ {{ cartStore.totalFCFA }}</span>
         </div>
       </div>
     </div>
@@ -310,8 +310,8 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: 'Paiement - TchadBox',
-  description: 'Finalisez votre commande TchadBox.',
+  title: 'Passage en caisse sécurisé | TchadBox',
+  description: 'Tunnel de paiement hautement crypté TchadBox.',
 })
 
 const router = useRouter()
@@ -413,26 +413,26 @@ const paymentError = ref<string | null>(null)
 const paymentMethods = [
   {
     id: 'card',
-    label: 'Carte bancaire',
-    description: 'Visa, Mastercard — sécurisé via Paystack',
+    label: 'Carte de crédit / débit',
+    description: 'Visa, Mastercard — passerelle interbancaire cryptée',
     icon: CreditCard,
   },
   {
     id: 'mobile_money',
-    label: 'Mobile Money',
-    description: 'MTN, Orange Money, Wave',
+    label: 'Mobile Money (Côte d\'Ivoire, Sénégal...)',
+    description: 'MTN, Orange, Wave...',
     icon: Smartphone,
   },
   {
     id: 'bank_transfer',
-    label: 'Virement bancaire',
-    description: 'Transfert direct depuis votre banque',
+    label: 'Virement Institutionnel',
+    description: 'Fonds sécurisés par les banques centrales',
     icon: Banknote,
   },
   {
     id: 'tchad_mobile_money',
-    label: 'Mobile Money Tchad',
-    description: 'Airtel Money ou Moov Africa (manuel)',
+    label: 'Paiement Tchad (Mobile Money Local)',
+    description: 'Procédure spéciale pour Airtel Money & Moov',
     icon: Smartphone,
   },
 ]
@@ -467,17 +467,6 @@ const canProceed = computed(() => {
   return true
 })
 
-// Methods
-function getStepClass(index: number): string {
-  if (index < currentStep.value) {
-    return 'bg-amber-500 text-white'
-  }
-  if (index === currentStep.value) {
-    return 'bg-amber-500 text-white'
-  }
-  return 'bg-gray-100 text-[var(--color-text-muted)]'
-}
-
 async function submitOrder() {
   if (!acceptTerms.value || isSubmitting.value) return
 
@@ -490,8 +479,6 @@ async function submitOrder() {
       : form.recipientName
     const recipientPhone = sameAsCustomer.value ? form.phone : form.recipientPhone
 
-    // 1. Créer la commande via l'API backend (gère invités + référence unique)
-    // Calculer le montant FCFA pour les commandes Mobile Money
     const isMobileMoney = selectedPayment.value === 'tchad_mobile_money'
     const paymentAmountFcfa = isMobileMoney ? cartStore.totalXAF : undefined
 
@@ -524,7 +511,6 @@ async function submitOrder() {
       })),
     })
 
-    // 2. Si Mobile Money Tchad, rediriger directement vers la confirmation avec instructions
     if (selectedPayment.value === 'tchad_mobile_money') {
       const totalFCFA = cartStore.totalFCFA
       isOrderCompleted.value = true
@@ -533,7 +519,6 @@ async function submitOrder() {
       return
     }
 
-    // 3. Ouvrir Paystack avec la référence renvoyée par l'API (pour les autres méthodes)
     const amountInXof = eurToXof(cartStore.total)
     await initializePayment({
       email: form.email,
@@ -553,42 +538,41 @@ async function submitOrder() {
         try {
           const verification = await verifyPayment(response.reference)
           if (verification.success) {
-            // L'état de l'ordre est mis à jour en base de données par le webhook Laravel
             isOrderCompleted.value = true
             cartStore.clearCart()
             navigateTo(`/checkout/confirmation?order=${reference}`)
           } else {
-            paymentError.value = verification.error || 'La vérification du paiement a échoué.'
+            paymentError.value = verification.error || 'La vérification du paiement a échoué. Nos équipes de sécurité ont été alertées.'
           }
         } catch (err) {
           console.error('Payment verification error:', err)
           paymentError.value =
-            'Erreur lors de la vérification. Contactez le support avec la référence: ' + reference
+            'Suspicion d\'erreur lors de la validation. Communiquez cette référence au support : ' + reference
         } finally {
           isSubmitting.value = false
         }
       },
       onClose: () => {
         isSubmitting.value = false
-        paymentError.value = 'Paiement annulé. Votre commande est en attente de paiement.'
+        paymentError.value = 'Opération interrompue. Votre session est fermée pour des raisons de sécurité.'
       },
     })
   } catch (error: any) {
     console.error('Order failed:', error)
-    paymentError.value = error.data?.message || error.message || 'Une erreur est survenue. Veuillez réessayer.'
+    paymentError.value = error.data?.message || error.message || 'La connexion à notre chambre forte a échoué. Réessayez.'
     isSubmitting.value = false
   }
 }
 </script>
 
 <style scoped>
-/* Stripe/Shopify style floating inputs */
+/* Ultra Premium Stripe-like Inputs */
 .checkout-input {
-  @apply block w-full px-4 pt-6 pb-2 text-sm text-[var(--color-text)] bg-white border border-gray-200 rounded-xl appearance-none focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500 transition-all font-medium;
+  @apply block w-full px-5 pt-7 pb-2.5 text-sm font-bold text-gray-900 bg-white border border-gray-200 rounded-[1rem] appearance-none focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all;
 }
 
 .checkout-label {
-  @apply absolute text-gray-500 text-sm duration-200 transform -translate-y-3 scale-[0.85] top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-[0.85] peer-focus:-translate-y-3 pointer-events-none;
+  @apply absolute text-gray-400 font-medium text-sm duration-200 transform -translate-y-3.5 scale-[0.8] top-4 z-10 origin-[0] left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:text-gray-500 peer-focus:scale-[0.8] peer-focus:-translate-y-3.5 peer-focus:text-gray-900 pointer-events-none;
 }
 
 /* Custom Scrollbar for Cart sidebar */
@@ -604,5 +588,14 @@ async function submitOrder() {
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #d1d5db;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.animate-shimmer {
+  animation: shimmer 1.5s infinite;
 }
 </style>

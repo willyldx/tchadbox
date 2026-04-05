@@ -366,7 +366,7 @@
       <p class="text-[var(--color-text-muted)] mb-6">Ce produit n'existe pas ou a été supprimé.</p>
       <NuxtLink
         to="/catalogue"
-        class="btn-gold"
+        class="px-8 py-4 bg-gray-900 border border-gray-900 text-white font-bold rounded-2xl hover:bg-gray-800 transition-all shadow-md mt-6"
       >
         Voir le catalogue
       </NuxtLink>

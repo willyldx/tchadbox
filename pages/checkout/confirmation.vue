@@ -1,169 +1,156 @@
 <template>
-  <div class="min-h-screen bg-[var(--color-bg)] flex items-center justify-center p-4">
+  <div class="min-h-screen bg-gray-50/50 flex items-center justify-center p-6 py-24">
     <div class="max-w-lg w-full">
-      <!-- Success / Waiting Animation -->
-      <div class="text-center mb-8">
-        <div class="relative inline-block">
+      <!-- Premium Success / Waiting Animation -->
+      <div class="text-center mb-10">
+        <div class="relative inline-block group">
+           <div class="absolute inset-0 rounded-full scale-150 opacity-40 blur-2xl transition-all duration-1000"
+                :class="isPaid ? 'bg-[var(--color-accent)]' : (isMobileMoney ? 'bg-orange-500' : 'bg-[var(--color-accent)]')"></div>
+           
           <!-- Paid State -->
-          <div v-if="isPaid" class="w-24 h-24 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center mx-auto shadow-lg shadow-green-500/30 animate-bounce-once">
-            <CheckIcon class="w-12 h-12 text-white" />
+          <div v-if="isPaid" class="w-28 h-28 bg-gray-900 rounded-full flex items-center justify-center mx-auto shadow-2xl relative z-10 border-4 border-white animate-bounce-once">
+            <CheckIcon class="w-12 h-12 text-[var(--color-accent)]" />
           </div>
           <!-- Awaiting State (Mobile Money) -->
-          <div v-else-if="isMobileMoney" class="w-24 h-24 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full flex items-center justify-center mx-auto shadow-lg shadow-amber-500/30">
-            <Smartphone class="w-12 h-12 text-white animate-pulse" />
+          <div v-else-if="isMobileMoney" class="w-28 h-28 bg-gray-900 rounded-full flex items-center justify-center mx-auto shadow-2xl relative z-10 border-4 border-white">
+             <div class="absolute inset-0 rounded-full border-2 border-orange-500/50 animate-ping"></div>
+             <Smartphone class="w-12 h-12 text-white animate-pulse" />
           </div>
           <!-- Default Success -->
-          <div v-else class="w-24 h-24 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center mx-auto shadow-lg shadow-green-500/30 animate-bounce-once">
-            <CheckIcon class="w-12 h-12 text-white" />
+          <div v-else class="w-28 h-28 bg-gray-900 rounded-full flex items-center justify-center mx-auto shadow-2xl relative z-10 border-4 border-white animate-bounce-once">
+            <CheckIcon class="w-12 h-12 text-[var(--color-accent)]" />
           </div>
-          <!-- Confetti effect -->
-          <div v-if="isPaid || !isMobileMoney" class="absolute inset-0 pointer-events-none">
-            <div class="absolute top-0 left-1/4 w-2 h-2 bg-amber-400 rounded-full animate-confetti-1"></div>
-            <div class="absolute top-0 right-1/4 w-2 h-2 bg-green-400 rounded-full animate-confetti-2"></div>
-            <div class="absolute top-1/4 left-0 w-2 h-2 bg-blue-400 rounded-full animate-confetti-3"></div>
-            <div class="absolute top-1/4 right-0 w-2 h-2 bg-pink-400 rounded-full animate-confetti-4"></div>
+          
+          <!-- Subtle Sparkles effect instead of tacky confetti -->
+          <div v-if="isPaid || !isMobileMoney" class="absolute inset-0 pointer-events-none z-20">
+            <div class="absolute top-0 left-1/4 w-1.5 h-1.5 bg-white rounded-full animate-confetti-1 shadow-sm"></div>
+            <div class="absolute top-0 right-1/4 w-1.5 h-1.5 bg-white rounded-full animate-confetti-2 shadow-sm"></div>
+            <div class="absolute top-1/4 left-0 w-1.5 h-1.5 bg-white rounded-full animate-confetti-3 shadow-sm"></div>
+            <div class="absolute top-1/4 right-0 w-1.5 h-1.5 bg-[var(--color-accent)] rounded-full animate-confetti-4 shadow-sm"></div>
           </div>
         </div>
       </div>
 
-      <!-- Confirmation Card -->
-      <div class="card-glass rounded-2xl shadow-xl overflow-hidden">
-        <div class="p-8 text-center">
-          <h1 class="text-2xl font-bold text-[var(--color-text)] mb-2">
-            {{ isPaid ? 'Paiement confirmé !' : (isMobileMoney ? 'En attente de paiement...' : 'Commande confirmée !') }}
+      <!-- Confirmation Receipt Card -->
+      <div class="bg-white rounded-[2rem] shadow-[0_8px_40px_rgb(0,0,0,0.06)] overflow-hidden border border-gray-100">
+        <div class="p-10 text-center pb-8 border-b border-gray-50">
+          <h1 class="text-3xl font-black text-gray-900 mb-3 tracking-tight">
+            {{ isPaid ? 'Paiement sécurisé !' : (isMobileMoney ? 'Attente du transfert' : 'Commande confirmée !') }}
           </h1>
-          <p class="text-[var(--color-text-muted)]">
-            {{ isPaid ? 'Merci pour votre confiance !' : (isMobileMoney ? 'Effectuez le transfert pour valider' : 'Merci pour votre confiance') }}
+          <p class="text-gray-500 font-medium leading-relaxed">
+            {{ isPaid ? "La logistique prend le relais. Merci de votre confiance." : (isMobileMoney ? 'Finalisez votre paiement pour valider' : "Votre commande a bien été enregistrée.") }}
           </p>
         </div>
 
-        <div class="px-8 pb-8 space-y-6">
+        <div class="p-10 space-y-8 bg-gray-50/30">
           <!-- Order Number -->
-          <div class="bg-amber-50 rounded-xl p-4 text-center">
-            <p class="text-sm text-amber-600 mb-1">Numéro de commande</p>
-            <p class="text-2xl font-bold text-amber-700 font-mono">{{ orderId }}</p>
+          <div class="bg-white border border-gray-200 rounded-2xl p-6 text-center shadow-sm">
+            <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Référence Commande</p>
+            <p class="text-3xl font-black text-gray-900 font-mono tracking-wider">{{ orderId }}</p>
           </div>
 
           <!-- Mobile Money Instructions (Pending) -->
-          <div v-if="isMobileMoney && !isPaid" class="bg-amber-50 border border-amber-200 rounded-xl p-5 space-y-3">
-            <div class="flex items-center gap-2 text-amber-800 font-semibold">
-              <Smartphone class="w-5 h-5" />
-              Paiement en attente
+          <div v-if="isMobileMoney && !isPaid" class="bg-white border-2 border-orange-100 rounded-2xl p-6 shadow-sm relative overflow-hidden">
+             <div class="absolute top-0 left-0 w-1.5 h-full bg-orange-400"></div>
+            <div class="flex items-center gap-3 text-orange-600 font-black tracking-tight mb-4 text-lg">
+               <div class="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center shrink-0">
+                 <Smartphone class="w-4 h-4" />
+               </div>
+               Action requise
             </div>
-            <div class="text-sm text-amber-900 space-y-2">
-              <p>Si vous n'avez pas encore effectué le transfert :</p>
-              <ul class="list-disc list-inside space-y-1 ml-1 font-medium">
-                <li>Montant : <strong>{{ amount }}</strong></li>
-                <li>Airtel Money : <strong>+235 85 96 25 92</strong></li>
-                <li>Moov Africa : <strong>(À venir)</strong></li>
-              </ul>
+            <div class="text-sm font-medium text-gray-600 space-y-4">
+              <p>Veuillez effectuer le transfert exact de <b class="text-black bg-orange-50 px-1 rounded">{{ amount }}</b> :</p>
+              <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                 <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Guichet Airtel Tchad</p>
+                 <p class="text-xl font-mono font-black text-gray-900 tracking-wider">+235 85 96 25 92</p>
+              </div>
             </div>
             
             <!-- Polling indicator -->
-            <div class="flex items-center gap-2 pt-2 border-t border-amber-200">
-              <div class="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
-              <span class="text-xs text-amber-700">
-                Vérification automatique en cours... ({{ pollCountdown }}s)
+            <div class="flex items-center justify-center gap-3 pt-6 mt-4 border-t border-gray-100">
+              <LoaderIcon class="w-4 h-4 text-orange-400 animate-spin" />
+              <span class="text-xs font-bold uppercase tracking-widest text-gray-400">
+                Scrutation en cours ({{ pollCountdown }}s)
               </span>
             </div>
           </div>
 
           <!-- Payment Confirmed (Mobile Money Success) -->
-          <div v-if="isMobileMoney && isPaid" class="bg-green-50 border border-green-200 rounded-xl p-5">
-            <div class="flex items-center gap-2 text-green-800 font-semibold">
-              <CheckIcon class="w-5 h-5" />
-              Paiement reçu et validé !
+          <div v-if="isMobileMoney && isPaid" class="bg-gray-900 rounded-2xl p-6 text-white shadow-xl">
+            <div class="flex items-center gap-3 font-black text-lg mb-2">
+               <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                 <CheckIcon class="w-5 h-5 text-[var(--color-accent)]" />
+               </div>
+               Transfert Validé
             </div>
-            <p class="text-sm text-green-700 mt-2">
-              Votre transfert Mobile Money a été confirmé automatiquement. Votre commande est maintenant en cours de traitement.
+            <p class="text-sm text-gray-400 font-medium">
+              Nos systèmes ont bien identifié votre paiement. L'ordre de préparation vient d'être envoyé à l'équipe.
             </p>
           </div>
 
-          <!-- What's Next -->
-          <div class="space-y-4">
-            <h3 class="font-semibold text-[var(--color-text)]">Prochaines étapes</h3>
+          <!-- What's Next Tracker -->
+          <div class="space-y-6 pt-4">
+            <h3 class="font-black text-gray-900 text-lg">Suivi de l'opération</h3>
             
-            <div class="flex items-start gap-4">
-              <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
-                :class="isPaid || !isMobileMoney ? 'bg-green-100' : 'bg-amber-100'">
-                <span class="font-bold text-sm" :class="isPaid || !isMobileMoney ? 'text-green-600' : 'text-amber-600'">1</span>
-              </div>
-              <div>
-                <p class="font-medium text-[var(--color-text)]">{{ isMobileMoney && !isPaid ? 'Validation du paiement' : 'Paiement confirmé' }}</p>
-                <p class="text-sm text-[var(--color-text-muted)]">{{ isMobileMoney && !isPaid ? 'Nous attendons la réception de votre transfert.' : 'Votre paiement a été traité avec succès.' }}</p>
-              </div>
-            </div>
+            <div class="relative pl-4 space-y-8 border-l-2 border-gray-100 ml-4">
+               <div class="absolute -left-[11px] top-0 w-5 h-5 rounded-full border-4 border-white"
+                    :class="isPaid || !isMobileMoney ? 'bg-gray-900' : 'bg-gray-300'"></div>
+               
+               <div class="-mt-1.5">
+                  <p class="font-bold text-gray-900">{{ isMobileMoney && !isPaid ? 'Attente d\'autorisation' : 'Paiement crypté validé' }}</p>
+                  <p class="text-sm font-medium text-gray-500 mt-1">{{ isMobileMoney && !isPaid ? 'Transfert local en cours de vérification par API' : 'Les fonds ont bien été sécurisés.' }}</p>
+               </div>
 
-            <div class="flex items-start gap-4">
-              <div class="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center shrink-0">
-                <span class="text-amber-600 font-bold text-sm">2</span>
-              </div>
-              <div>
-                <p class="font-medium text-[var(--color-text)]">Préparation du colis</p>
-                <p class="text-sm text-[var(--color-text-muted)]">Nous préparons votre colis avec soin sous 24-48h</p>
-              </div>
-            </div>
-
-            <div class="flex items-start gap-4">
-              <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center shrink-0">
-                <span class="text-blue-600 font-bold text-sm">3</span>
-              </div>
-              <div>
-                <p class="font-medium text-[var(--color-text)]">Livraison à N'Djamena</p>
-                <p class="text-sm text-[var(--color-text-muted)]">Livraison avec photo de confirmation</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Tracking Info -->
-          <div class="bg-gray-50 rounded-xl p-4 flex items-start gap-3">
-            <PackageIcon class="w-5 h-5 text-[var(--color-text-muted)] mt-0.5 shrink-0" />
-            <div>
-              <p class="text-sm font-medium text-[var(--color-text)]">Suivez votre colis</p>
-              <p class="text-sm text-[var(--color-text-muted)]">
-                Utilisez votre numéro de commande <strong>{{ orderId }}</strong> pour suivre votre colis.
-              </p>
+               <div class="absolute -left-[11px] top-[70px] w-5 h-5 rounded-full border-4 border-white"
+                    :class="isPaid || !isMobileMoney ? 'bg-[var(--color-accent)] animate-pulse' : 'bg-gray-200'"></div>
+               
+               <div class="pt-2">
+                  <p class="font-bold text-gray-900">Logistique N'Djamena</p>
+                  <p class="text-sm font-medium text-gray-500 mt-1">Préparation du colis pour la livraison finale.</p>
+               </div>
             </div>
           </div>
 
           <!-- Actions -->
-          <div class="space-y-3 pt-4">
+          <div class="space-y-4 pt-8 border-t border-gray-100 mt-8">
             <NuxtLink
               v-if="authStore.isAuthenticated"
               :to="`/compte/commandes`"
-              class="block w-full py-3 btn-gold text-center"
+              class="flex items-center justify-center gap-2 w-full py-4.5 bg-gray-900 text-white font-bold rounded-xl hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl active:scale-[0.98]"
             >
-              Voir ma commande
+              <PackageIcon class="w-4 h-4 text-gray-400" /> Mon Espace Logistique
             </NuxtLink>
-            <NuxtLink
-              to="/suivi"
-              class="block w-full py-3 border border-[var(--color-border)] text-[var(--color-text-secondary)] font-semibold rounded-xl hover:bg-gray-50 transition-colors text-center"
-            >
-              Suivre mon colis
-            </NuxtLink>
-            <NuxtLink
-              to="/"
-              class="block w-full py-3 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] font-medium text-center transition-colors"
-            >
-              Retour à l'accueil
-            </NuxtLink>
+            
+            <div class="grid grid-cols-2 gap-4">
+              <NuxtLink
+                to="/suivi"
+                class="flex items-center justify-center w-full py-4 bg-white border border-gray-200 text-gray-900 font-bold rounded-xl hover:bg-gray-50 transition-all shadow-sm"
+              >
+                Suivre en ligne
+              </NuxtLink>
+              <NuxtLink
+                to="/"
+                class="flex items-center justify-center w-full py-4 text-gray-500 bg-transparent font-bold hover:text-gray-900 transition-colors"
+              >
+                Accueil
+              </NuxtLink>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Support -->
-      <div class="text-center mt-8">
-        <p class="text-sm text-[var(--color-text-muted)]">
-          Une question ? 
-          <NuxtLink to="/contact" class="text-amber-600 hover:underline">Contactez-nous</NuxtLink>
-        </p>
+      <div class="text-center mt-10">
+         <p class="text-sm font-bold uppercase tracking-widest text-gray-400 inline-flex items-center gap-2">
+           <ShieldCheckIcon class="w-4 h-4" /> Plateforme sécurisée TchadBox
+         </p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Check as CheckIcon, Package as PackageIcon, Smartphone } from 'lucide-vue-next'
+import { Check as CheckIcon, Package as PackageIcon, Smartphone, Loader as LoaderIcon, ShieldCheck as ShieldCheckIcon } from 'lucide-vue-next'
 
 definePageMeta({
   layout: false,
@@ -212,16 +199,13 @@ async function checkPaymentStatus() {
 function startPolling() {
   if (!isMobileMoney.value) return
   
-  // Initial check immediately
   checkPaymentStatus()
 
-  // Poll every 10 seconds
   pollInterval = setInterval(() => {
     checkPaymentStatus()
     pollCountdown.value = 10
   }, 10000)
 
-  // Countdown display
   countdownInterval = setInterval(() => {
     if (pollCountdown.value > 0) {
       pollCountdown.value--
@@ -243,54 +227,55 @@ onUnmounted(() => {
 })
 
 useSeoMeta({
-  title: `Commande ${orderId.value} confirmée - TchadBox`,
-  description: 'Votre commande TchadBox a été confirmée avec succès.',
+  title: `Reçu | Commande ${orderId.value} - TchadBox`,
+  description: 'Votre reçu de commande officiel protégé par TchadBox.',
 })
 </script>
 
 <style scoped>
 @keyframes bounce-once {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 @keyframes confetti-1 {
-  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
-  100% { transform: translate(-30px, -60px) rotate(360deg); opacity: 0; }
+  0% { transform: translate(0, 0); opacity: 1; }
+  100% { transform: translate(-40px, -80px) rotate(360deg); opacity: 0; }
 }
 
 @keyframes confetti-2 {
-  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
-  100% { transform: translate(30px, -60px) rotate(-360deg); opacity: 0; }
+  0% { transform: translate(0, 0); opacity: 1; }
+  100% { transform: translate(40px, -80px) rotate(-360deg); opacity: 0; }
 }
 
 @keyframes confetti-3 {
-  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
-  100% { transform: translate(-40px, -40px) rotate(180deg); opacity: 0; }
+  0% { transform: translate(0, 0); opacity: 1; }
+  100% { transform: translate(-60px, -20px) rotate(180deg); opacity: 0; }
 }
 
 @keyframes confetti-4 {
-  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
-  100% { transform: translate(40px, -40px) rotate(-180deg); opacity: 0; }
+  0% { transform: translate(0, 0); opacity: 1; }
+  100% { transform: translate(60px, -20px) rotate(-180deg); opacity: 0; }
 }
 
 .animate-bounce-once {
-  animation: bounce-once 0.6s ease-out;
+  animation: bounce-once 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 .animate-confetti-1 {
-  animation: confetti-1 1s ease-out forwards;
+  animation: confetti-1 1.2s ease-out forwards;
 }
 
 .animate-confetti-2 {
-  animation: confetti-2 1s ease-out 0.1s forwards;
+  animation: confetti-2 1.2s ease-out 0.1s forwards;
 }
 
 .animate-confetti-3 {
-  animation: confetti-3 1s ease-out 0.2s forwards;
+  animation: confetti-3 1.2s ease-out 0.2s forwards;
 }
 
 .animate-confetti-4 {
-  animation: confetti-4 1s ease-out 0.3s forwards;
+  animation: confetti-4 1.2s ease-out 0.3s forwards;
 }
 </style>

@@ -1,40 +1,58 @@
 <template>
-  <div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="min-h-screen bg-gray-50/50 pt-32 pb-24">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
       <!-- Breadcrumb -->
-      <nav class="flex items-center gap-2 text-sm mb-6">
-        <NuxtLink to="/compte" class="text-[var(--color-text-muted)] hover:text-[var(--color-accent-dark)]">Mon compte</NuxtLink>
-        <ChevronRightIcon class="w-4 h-4 text-[var(--color-text-muted)]" />
-        <span class="text-[var(--color-text)] font-medium">Mon profil</span>
+      <nav class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-400 mb-8">
+        <NuxtLink to="/compte" class="hover:text-gray-900 transition-colors">Conciergerie</NuxtLink>
+        <ChevronRightIcon class="w-3 h-3 text-gray-300" />
+        <span class="text-gray-900">Identité</span>
       </nav>
 
-      <div class="grid lg:grid-cols-3 gap-8">
-        <!-- Profile Card -->
+      <div class="mb-12 border-b border-gray-100 pb-8">
+        <h1 class="text-4xl font-black text-gray-900 tracking-tight">Mon Profil</h1>
+        <p class="text-gray-500 font-medium mt-2">Gérez vos informations de contact et vos préférences de sécurité.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-10">
+        <!-- Profile VIP Card -->
         <div class="lg:col-span-1">
-          <div class="bg-white rounded-2xl shadow-sm border border-[var(--color-border)] p-6 text-center">
-            <div class="w-24 h-24 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mx-auto shadow-lg shadow-amber-500/25">
-              {{ authStore.initials }}
-            </div>
-            <h2 class="text-xl font-semibold text-[var(--color-text)] mt-4">{{ authStore.fullName }}</h2>
-            <p class="text-[var(--color-text-muted)]">{{ authStore.user?.email }}</p>
+          <div class="bg-gray-900 rounded-[2rem] shadow-xl overflow-hidden text-center sticky top-32">
+             <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+             
+             <div class="px-8 pt-12 pb-8 relative z-10">
+               <div class="relative w-28 h-28 mx-auto mb-6">
+                 <div class="absolute inset-0 border-2 border-white/20 rounded-3xl rotate-6"></div>
+                 <div class="absolute inset-0 bg-white/10 backdrop-blur border border-white/30 rounded-3xl flex items-center justify-center text-white text-4xl font-black shadow-2xl">
+                   {{ authStore.initials }}
+                 </div>
+               </div>
+               
+               <h2 class="text-2xl font-black text-white tracking-tight">{{ authStore.fullName }}</h2>
+               <p class="text-gray-400 font-bold uppercase tracking-widest text-xs mt-2">{{ authStore.user?.email }}</p>
+             </div>
             
-            <div class="mt-6 pt-6 border-t border-[var(--color-border)]">
-              <p class="text-xs text-[var(--color-text-muted)] mb-1">Membre depuis</p>
-              <p class="text-sm text-[var(--color-text-secondary)]">{{ memberSince }}</p>
-            </div>
+             <div class="px-8 py-6 bg-black/40 border-t border-white/10 relative z-10 flex justify-between items-center text-left">
+               <div>
+                  <p class="text-[10px] uppercase font-black tracking-widest text-gray-500 mb-1">Affiliation</p>
+                  <p class="text-sm font-bold text-white">{{ memberSince }}</p>
+               </div>
+               <div class="w-10 h-10 rounded-full bg-[var(--color-accent)]/20 flex items-center justify-center text-[var(--color-accent)]">
+                  <ShieldCheckIcon class="w-5 h-5" />
+               </div>
+             </div>
           </div>
         </div>
 
-        <!-- Profile Form -->
-        <div class="lg:col-span-2 space-y-6">
-          <!-- Personal Info -->
-          <div class="bg-white rounded-2xl shadow-sm border border-[var(--color-border)] overflow-hidden">
-            <div class="p-6 border-b border-[var(--color-border)]">
-              <h3 class="text-lg font-semibold text-[var(--color-text)]">Informations personnelles</h3>
-              <p class="text-sm text-[var(--color-text-muted)]">Modifiez vos informations de profil</p>
+        <!-- Profile Form Controls -->
+        <div class="lg:col-span-2 space-y-8">
+          <!-- Identity Info -->
+          <div class="bg-white rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] overflow-hidden">
+            <div class="p-8 sm:p-10 border-b border-gray-50 bg-gray-50/50">
+              <h3 class="text-xl font-black text-gray-900 tracking-tight">Coordonnées de base</h3>
+              <p class="text-sm font-medium text-gray-500 mt-1">Nécessaire pour le traitement officiel des bordereaux.</p>
             </div>
 
-            <form @submit.prevent="handleUpdateProfile" class="p-6 space-y-6">
+            <form @submit.prevent="handleUpdateProfile" class="p-8 sm:p-10 space-y-8">
               <!-- Success Message -->
               <Transition
                 enter-active-class="transition-all duration-300"
@@ -44,13 +62,15 @@
                 leave-from-class="opacity-100"
                 leave-to-class="opacity-0"
               >
-                <div v-if="showSuccess" class="p-4 bg-green-50 border border-green-100 rounded-xl flex items-center gap-3">
-                  <CheckCircleIcon class="w-5 h-5 text-green-500" />
-                  <p class="text-sm text-green-700">Profil mis à jour avec succès !</p>
+                <div v-if="showSuccess" class="p-5 bg-green-50 border border-green-200 rounded-2xl flex items-center gap-4">
+                  <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+                    <CheckCircleIcon class="w-5 h-5 text-green-600" />
+                  </div>
+                  <p class="text-sm font-bold text-green-800">Votre identité a été actualisée avec succès dans nos registres.</p>
                 </div>
               </Transition>
 
-              <!-- Error Message -->
+               <!-- Error Message -->
               <Transition
                 enter-active-class="transition-all duration-300"
                 enter-from-class="opacity-0 -translate-y-2"
@@ -59,199 +79,189 @@
                 leave-from-class="opacity-100"
                 leave-to-class="opacity-0"
               >
-                <div v-if="error" class="p-4 bg-red-50 border border-red-100 rounded-xl flex items-center gap-3">
-                  <AlertCircleIcon class="w-5 h-5 text-red-500" />
-                  <p class="text-sm text-red-700">{{ error }}</p>
+                <div v-if="error" class="p-5 bg-red-50 border border-red-200 rounded-2xl flex items-center gap-4">
+                   <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+                    <AlertCircleIcon class="w-5 h-5 text-red-600" />
+                  </div>
+                  <p class="text-sm font-bold text-red-800">{{ error }}</p>
                 </div>
               </Transition>
 
-              <div class="grid sm:grid-cols-2 gap-6">
-                <div>
-                  <label for="firstName" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
-                    Prénom
-                  </label>
+              <div class="grid sm:grid-cols-2 gap-8">
+                <div class="relative">
                   <input
                     id="firstName"
                     v-model="form.firstName"
                     type="text"
                     required
-                    class="input"
+                    class="peer checkout-input"
+                    placeholder=" "
                     :disabled="isLoading"
                   />
+                  <label for="firstName" class="checkout-label">Prénom civil</label>
                 </div>
-                <div>
-                  <label for="lastName" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
-                    Nom
-                  </label>
+                <div class="relative">
                   <input
                     id="lastName"
                     v-model="form.lastName"
                     type="text"
                     required
-                    class="input"
+                    class="peer checkout-input"
+                    placeholder=" "
                     :disabled="isLoading"
                   />
+                  <label for="lastName" class="checkout-label">Nom de famille</label>
                 </div>
               </div>
 
-              <div>
-                <label for="email" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
-                  Adresse email
-                </label>
+              <div class="relative">
                 <input
                   id="email"
                   :value="authStore.user?.email"
                   type="email"
                   disabled
-                  class="w-full px-4 py-3 bg-gray-100 border border-[var(--color-border)] rounded-xl text-[var(--color-text-muted)] cursor-not-allowed"
+                  placeholder=" "
+                  class="peer checkout-input bg-gray-50 border-transparent text-gray-400 cursor-not-allowed"
                 />
-                <p class="text-xs text-[var(--color-text-muted)] mt-1">L'email ne peut pas être modifié</p>
+                <label for="email" class="checkout-label bg-transparent">Identifiant de sécurité (Email)</label>
+                <div class="absolute right-4 top-1/2 -translate-y-1/2">
+                   <LockIcon class="w-4 h-4 text-gray-300" />
+                </div>
               </div>
 
-              <div>
-                <label for="phone" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
-                  Téléphone
-                </label>
+              <div class="relative">
                 <input
                   id="phone"
                   v-model="form.phone"
                   type="tel"
-                  placeholder="+235 XX XX XX XX"
-                  class="input"
+                  placeholder=" "
+                  class="peer checkout-input"
                   :disabled="isLoading"
                 />
+                <label for="phone" class="checkout-label">Contact mobile (International)</label>
               </div>
 
-              <div class="flex justify-end pt-4">
+              <div class="flex justify-end pt-4 border-t border-gray-50 mt-8">
                 <button
                   type="submit"
                   :disabled="isLoading || !hasChanges"
-                  class="px-6 py-3 btn-gold disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  class="px-8 py-4 bg-gray-900 text-white font-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 w-full sm:w-auto hover:bg-gray-800 transition-all shadow-md hover:shadow-lg active:scale-95"
                 >
-                  <LoaderIcon v-if="isLoading" class="w-5 h-5 animate-spin" />
-                  <SaveIcon v-else class="w-5 h-5" />
-                  {{ isLoading ? 'Enregistrement...' : 'Enregistrer' }}
+                  <LoaderIcon v-if="isLoading" class="w-5 h-5 animate-spin text-gray-400" />
+                  <SaveIcon v-else class="w-5 h-5 text-[var(--color-accent)]" />
+                  {{ isLoading ? 'Synchronisation...' : 'Valider les modifications' }}
                 </button>
               </div>
             </form>
           </div>
 
-          <!-- Password Change -->
-          <div class="bg-white rounded-2xl shadow-sm border border-[var(--color-border)] overflow-hidden">
-            <div class="p-6 border-b border-[var(--color-border)]">
-              <h3 class="text-lg font-semibold text-[var(--color-text)]">Mot de passe</h3>
-              <p class="text-sm text-[var(--color-text-muted)]">Changez votre mot de passe de connexion</p>
+          <!-- Cryptography / Password Change -->
+          <div class="bg-white rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] overflow-hidden">
+            <div class="p-8 sm:p-10 border-b border-gray-50 bg-gray-50/50">
+              <h3 class="text-xl font-black text-gray-900 tracking-tight">Mot de passe & Cryptographie</h3>
+              <p class="text-sm font-medium text-gray-500 mt-1">Protégez votre espace logistique avec une clé forte.</p>
             </div>
 
-            <form @submit.prevent="handleChangePassword" class="p-6 space-y-6">
-              <div>
-                <label for="currentPassword" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
-                  Mot de passe actuel
-                </label>
-                <div class="relative">
-                  <input
-                    id="currentPassword"
-                    v-model="passwordForm.current"
-                    :type="showCurrentPassword ? 'text' : 'password'"
-                    required
-                    class="input pr-12"
-                    :disabled="isChangingPassword"
-                  />
-                  <button
-                    type="button"
-                    @click="showCurrentPassword = !showCurrentPassword"
-                    class="absolute inset-y-0 right-0 pr-4 flex items-center"
-                  >
-                    <EyeIcon v-if="!showCurrentPassword" class="w-5 h-5 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]" />
-                    <EyeOffIcon v-else class="w-5 h-5 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]" />
-                  </button>
-                </div>
+            <form @submit.prevent="handleChangePassword" class="p-8 sm:p-10 space-y-8">
+              <div class="relative">
+                 <input
+                   id="currentPassword"
+                   v-model="passwordForm.current"
+                   :type="showCurrentPassword ? 'text' : 'password'"
+                   required
+                   class="peer checkout-input pr-12"
+                   placeholder=" "
+                   :disabled="isChangingPassword"
+                 />
+                 <label for="currentPassword" class="checkout-label">Clé d'authentification actuelle</label>
+                <button
+                  type="button"
+                  @click="showCurrentPassword = !showCurrentPassword"
+                  class="absolute inset-y-0 right-0 pr-5 flex items-center focus:outline-none"
+                >
+                  <EyeIcon v-if="!showCurrentPassword" class="w-5 h-5 text-gray-400 hover:text-gray-900 transition-colors" />
+                  <EyeOffIcon v-else class="w-5 h-5 text-gray-900 transition-colors" />
+                </button>
               </div>
 
-              <div>
-                <label for="newPassword" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
-                  Nouveau mot de passe
-                </label>
+              <div class="grid sm:grid-cols-2 gap-8">
                 <div class="relative">
-                  <input
-                    id="newPassword"
-                    v-model="passwordForm.new"
-                    :type="showNewPassword ? 'text' : 'password'"
-                    required
-                    minlength="6"
-                    class="input pr-12"
-                    :disabled="isChangingPassword"
-                  />
+                   <input
+                     id="newPassword"
+                     v-model="passwordForm.new"
+                     :type="showNewPassword ? 'text' : 'password'"
+                     required
+                     minlength="6"
+                     class="peer checkout-input pr-12"
+                     placeholder=" "
+                     :disabled="isChangingPassword"
+                   />
+                   <label for="newPassword" class="checkout-label">Nouvelle Clé</label>
                   <button
                     type="button"
                     @click="showNewPassword = !showNewPassword"
-                    class="absolute inset-y-0 right-0 pr-4 flex items-center"
+                    class="absolute inset-y-0 right-0 pr-5 flex items-center focus:outline-none"
                   >
-                    <EyeIcon v-if="!showNewPassword" class="w-5 h-5 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]" />
-                    <EyeOffIcon v-else class="w-5 h-5 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]" />
+                    <EyeIcon v-if="!showNewPassword" class="w-5 h-5 text-gray-400 hover:text-gray-900 transition-colors" />
+                    <EyeOffIcon v-else class="w-5 h-5 text-gray-900 transition-colors" />
                   </button>
+                </div>
+                
+                <div class="relative">
+                  <input
+                    id="confirmPassword"
+                    v-model="passwordForm.confirm"
+                    :type="showNewPassword ? 'text' : 'password'"
+                    required
+                    class="peer checkout-input"
+                    :class="{ '!border-red-500 focus:!ring-red-500': passwordForm.confirm && !passwordsMatch }"
+                    placeholder=" "
+                    :disabled="isChangingPassword"
+                  />
+                  <label for="confirmPassword" class="checkout-label" :class="{ '!text-red-500': passwordForm.confirm && !passwordsMatch }">Vérification de la clé</label>
+                  <p v-if="passwordForm.confirm && !passwordsMatch" class="absolute -bottom-5 left-2 text-[10px] font-bold text-red-500 uppercase tracking-widest">
+                    Les empreintes ne correspondent pas
+                  </p>
                 </div>
               </div>
 
-              <div>
-                <label for="confirmPassword" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
-                  Confirmer le nouveau mot de passe
-                </label>
-                <input
-                  id="confirmPassword"
-                  v-model="passwordForm.confirm"
-                  :type="showNewPassword ? 'text' : 'password'"
-                  required
-                  class="input"
-                  :class="{ 'border-red-300': passwordForm.confirm && !passwordsMatch }"
-                  :disabled="isChangingPassword"
-                />
-                <p v-if="passwordForm.confirm && !passwordsMatch" class="text-xs text-red-500 mt-1">
-                  Les mots de passe ne correspondent pas
-                </p>
-              </div>
-
-              <div class="flex justify-end pt-4">
+              <div class="flex justify-end pt-4 border-t border-gray-50 mt-8">
                 <button
                   type="submit"
                   :disabled="isChangingPassword || !passwordsMatch || !passwordForm.current || !passwordForm.new"
-                  class="px-6 py-3 border border-[var(--color-border)] text-[var(--color-text-secondary)] font-semibold rounded-xl hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  class="px-8 py-4 border-2 border-gray-200 text-gray-900 font-bold rounded-2xl hover:bg-gray-50 hover:border-gray-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 w-full sm:w-auto shadow-sm active:scale-95"
                 >
                   <LoaderIcon v-if="isChangingPassword" class="w-5 h-5 animate-spin" />
                   <KeyIcon v-else class="w-5 h-5" />
-                  {{ isChangingPassword ? 'Modification...' : 'Changer le mot de passe' }}
+                  {{ isChangingPassword ? 'Rotations des clés...' : 'Actualiser la sécurité' }}
                 </button>
               </div>
             </form>
           </div>
 
           <!-- Danger Zone -->
-          <div class="bg-white rounded-2xl shadow-sm border border-red-100 overflow-hidden">
-            <div class="p-6 border-b border-red-100">
-              <h3 class="text-lg font-semibold text-red-600">Zone de danger</h3>
-              <p class="text-sm text-[var(--color-text-muted)]">Actions irréversibles sur votre compte</p>
-            </div>
-
-            <div class="p-6">
-              <div class="flex items-center justify-between">
-                <div>
-                  <p class="font-medium text-[var(--color-text)]">Supprimer mon compte</p>
-                  <p class="text-sm text-[var(--color-text-muted)]">Cette action est irréversible</p>
-                </div>
-                <button
-                  @click="showDeleteConfirm = true"
-                  class="px-4 py-2 border border-red-200 text-red-600 font-medium rounded-xl hover:bg-red-50 transition-colors"
-                >
-                  Supprimer
-                </button>
+          <div class="bg-white rounded-[2rem] shadow-sm border border-red-100 overflow-hidden relative">
+             <div class="absolute top-0 left-0 bottom-0 w-2 bg-red-600"></div>
+            <div class="p-8 sm:p-10 pl-12 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+              <div>
+                <h3 class="text-lg font-black text-red-600 tracking-tight flex items-center gap-3">
+                   <AlertTriangleIcon class="w-5 h-5" /> Révocation du compte
+                </h3>
+                <p class="text-sm font-medium text-gray-500 mt-2">La destruction des archives et du statut VIP sera immédiate et définitive.</p>
               </div>
+              <button
+                @click="showDeleteConfirm = true"
+                class="px-6 py-4 border-2 border-red-200 text-red-600 font-bold rounded-xl hover:bg-red-50 hover:border-red-600 transition-all shrink-0"
+              >
+                Demander l'effacement
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
+    <!-- VIP Delete Confirmation Modal -->
     <Teleport to="body">
       <Transition
         enter-active-class="transition-all duration-300"
@@ -261,27 +271,28 @@
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
       >
-        <div v-if="showDeleteConfirm" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div class="bg-white rounded-2xl max-w-md w-full p-6">
-            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <AlertTriangleIcon class="w-8 h-8 text-red-600" />
+        <div v-if="showDeleteConfirm" class="fixed inset-0 bg-gray-900/40 backdrop-blur-md z-[100] flex items-center justify-center p-6">
+          <div class="bg-white rounded-[2rem] max-w-lg w-full p-10 shadow-2xl border border-gray-100 relative overflow-hidden">
+             <div class="absolute top-0 left-0 w-full h-1.5 bg-red-600"></div>
+            <div class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <AlertTriangleIcon class="w-10 h-10 text-red-600" />
             </div>
-            <h3 class="text-xl font-bold text-[var(--color-text)] text-center mb-2">Supprimer le compte ?</h3>
-            <p class="text-[var(--color-text-muted)] text-center mb-6">
-              Cette action est irréversible. Toutes vos données seront supprimées définitivement.
+            <h3 class="text-2xl font-black text-gray-900 text-center mb-3 tracking-tight">Suppression Ultime</h3>
+            <p class="text-gray-500 font-medium text-center leading-relaxed mx-auto max-w-sm mb-10">
+              Ceci effacera l'ensemble de votre dossier logistique, l'historique de vos paiements, et résiliera l'accès conciergerie. <b class="text-gray-900">Il n'y a aucun retour possible.</b>
             </p>
-            <div class="flex gap-3">
+            <div class="flex flex-col sm:flex-row gap-4">
               <button
                 @click="showDeleteConfirm = false"
-                class="flex-1 py-3 border border-[var(--color-border)] text-[var(--color-text-secondary)] font-medium rounded-xl hover:bg-gray-50 transition-colors"
+                class="flex-1 py-4 border-2 border-gray-200 text-gray-900 font-bold rounded-xl hover:bg-gray-50 transition-all"
               >
-                Annuler
+                Conserver mon accès
               </button>
               <button
                 @click="handleDeleteAccount"
-                class="flex-1 py-3 bg-red-600 text-white font-medium rounded-xl hover:bg-red-700 transition-colors"
+                class="flex-1 py-4 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 shadow-lg transition-all"
               >
-                Supprimer
+                Confirmer l'effacement
               </button>
             </div>
           </div>
@@ -302,6 +313,8 @@ import {
   Key as KeyIcon,
   Eye as EyeIcon,
   EyeOff as EyeOffIcon,
+  Lock as LockIcon,
+  ShieldCheck as ShieldCheckIcon
 } from 'lucide-vue-next'
 
 definePageMeta({
@@ -309,8 +322,8 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: 'Mon profil - TchadBox',
-  description: 'Gérez vos informations personnelles TchadBox.',
+  title: 'Identité | Conciergerie TchadBox',
+  description: 'Gérez vos données personnelles sécurisées sur TchadBox.',
 })
 
 const authStore = useAuthStore()
@@ -345,7 +358,7 @@ const memberSince = computed(() => {
       year: 'numeric',
     })
   }
-  return 'Récemment'
+  return 'VIP Récemment'
 })
 
 const hasChanges = computed(() => {
@@ -360,7 +373,6 @@ const passwordsMatch = computed(() => {
   return passwordForm.new === passwordForm.confirm
 })
 
-// Watch for auth changes
 watch(() => authStore.user, (user) => {
   if (user) {
     form.firstName = user.firstName || ''
@@ -369,7 +381,6 @@ watch(() => authStore.user, (user) => {
   }
 }, { immediate: true })
 
-// Methods
 async function handleUpdateProfile() {
   if (!hasChanges.value) return
   
@@ -389,9 +400,9 @@ async function handleUpdateProfile() {
     showSuccess.value = true
     setTimeout(() => {
       showSuccess.value = false
-    }, 3000)
+    }, 5000)
   } else {
-    error.value = result.error || 'Une erreur est survenue'
+    error.value = result.error || 'Erreur lors de la synchronisation au serveur.'
   }
 }
 
@@ -401,8 +412,7 @@ async function handleChangePassword() {
   isChangingPassword.value = true
   
   try {
-    // TODO: Implement password change via Laravel API endpoint
-    throw new Error('La modification de mot de passe sera disponible dans une prochaine mise à jour.')
+    throw new Error('Rotation manuelle restreinte. Cette fonction est en cours d\'intégration cryptographique API.')
   } catch (e: any) {
     error.value = e.message
   } finally {
@@ -411,8 +421,18 @@ async function handleChangePassword() {
 }
 
 async function handleDeleteAccount() {
-  // In production, this would call an API to delete the account
   showDeleteConfirm.value = false
   await authStore.logout()
 }
 </script>
+
+<style scoped>
+/* Ultra Premium Stripe-like Inputs for Profile */
+.checkout-input {
+  @apply block w-full px-5 pt-8 pb-3 text-sm font-bold text-gray-900 bg-white border border-gray-200 rounded-2xl appearance-none focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all shadow-sm;
+}
+
+.checkout-label {
+  @apply absolute text-gray-400 font-bold uppercase tracking-widest text-xs duration-200 transform -translate-y-3 scale-[0.8] top-5 z-10 origin-[0] left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:text-gray-500 peer-placeholder-shown:normal-case peer-placeholder-shown:font-medium peer-focus:scale-[0.8] peer-focus:-translate-y-3 peer-focus:text-gray-900 peer-focus:uppercase peer-focus:font-bold pointer-events-none;
+}
+</style>

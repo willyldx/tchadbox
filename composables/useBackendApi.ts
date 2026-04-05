@@ -60,6 +60,14 @@ export function useBackendApi() {
         `/api/order-status/${encodeURIComponent(reference)}`
       ),
 
+    // ── Public ─────────────────────────────────────────────
+    /** POST /api/contact — public */
+    contactSupport: (body: any) =>
+      $fetch<{ success: boolean; message: string }>('/api/contact', {
+        method: 'POST',
+        body,
+      }),
+
     /** GET /api/orders/mine — requires auth */
     userOrders: () =>
       fetchWithAuth<{ data: any[] }>('api/orders/mine'),

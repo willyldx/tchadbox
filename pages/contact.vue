@@ -165,12 +165,24 @@ const hours = [
 
 const submitForm = async () => {
   isSubmitting.value = true
-  // Mock delay pour le design frontend (backend logic sera rajoutée plus tard)
-  await new Promise(r => setTimeout(r, 1500))
-  // Using native browser alert for now if UX UNotification is not globally configured, or keep UI toast if it exists
-  toast.add({ title: 'Message envoyé', description: 'Notre équipe logistique vous répondra très rapidement.', icon: 'i-heroicons-paper-airplane', color: 'emerald' })
-  form.value = { name: '', email: '', subject: '', message: '' }
-  isSubmitting.value = false
+  
+  try {
+    const { contactSupport } = useBackendApi()
+    await contactSupport({
+      name: form.value.name,
+      email: form.value.email,
+      subject: form.value.subject,
+      message: form.value.message
+    })
+    
+    toast.add({ title: 'Message envoyé', description: 'Notre équipe logistique vous répondra sous 24h ouvrées.', icon: 'i-heroicons-paper-airplane', color: 'black' })
+    form.value = { name: '', email: '', subject: '', message: '' }
+  } catch (error) {
+    console.error('Contact error:', error)
+    toast.add({ title: 'Erreur', description: 'Impossible d\'envoyer le message. Veuillez réessayer ou nous contacter par téléphone.', icon: 'i-heroicons-exclamation-circle', color: 'red' })
+  } finally {
+    isSubmitting.value = false
+  }
 }
 
 useHead({ 

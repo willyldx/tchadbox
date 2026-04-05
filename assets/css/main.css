@@ -255,29 +255,6 @@
     gap: 0.5rem;
   }
 
-  .btn-gold {
-    @apply relative inline-flex items-center justify-center font-bold overflow-hidden;
-    padding: 0.75rem 2rem;
-    background: var(--color-accent-light) !important;
-    color: var(--color-primary-dark) !important;
-    border-radius: 12px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .btn-gold:hover {
-    background: #F7CA00;
-    box-shadow: var(--shadow-md);
-  }
-
-  .btn-gold span {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
   .btn-outline {
     @apply inline-flex items-center justify-center font-semibold;
     padding: 0.75rem 2rem;
@@ -825,9 +802,7 @@ body {
 
 /* Touch-friendly tap targets (44px minimum) */
 @media (max-width: 768px) {
-
-  .btn-gold,
-  .btn-outline,
+  .btn-primary,
   .btn-ghost {
     min-height: 48px;
     font-size: 1rem;
