@@ -1,150 +1,105 @@
 <template>
-  <div>
-    <!-- Hero -->
-    <section class="relative py-20 overflow-hidden text-center">
-      <div class="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-dark)]" />
-      <div class="orb orb-amber w-80 h-80 -top-20 -right-20 opacity-10" />
+  <div class="bg-white min-h-screen pt-32 pb-24">
+    <!-- Clean Minimalist Header -->
+    <section class="max-w-4xl mx-auto px-6 mb-16 text-center">
+      <nav class="flex items-center justify-center gap-2 text-sm font-medium text-gray-500 mb-8">
+        <NuxtLink to="/" class="hover:text-gray-900 transition-colors">Accueil</NuxtLink>
+        <ChevronRightIcon class="w-4 h-4" />
+        <span class="text-gray-900">Juridique</span>
+      </nav>
       
-      <div class="container-main relative z-10">
-        <nav class="flex items-center justify-center gap-2 text-sm mb-6">
-          <NuxtLink to="/" class="text-white/60 hover:text-white transition-colors">Accueil</NuxtLink>
-          <ChevronRightIcon class="w-4 h-4 text-white/40" />
-          <span class="text-white font-medium">Conditions Générales de Vente</span>
-        </nav>
-        <h1 
-          v-motion :initial="{ opacity: 0, y: 20 }" :enter="{ opacity: 1, y: 0, transition: { delay: 100 } }"
-          class="heading-section text-white mb-4"
-        >
-          Conditions Générales de <span class="text-gradient-gold">Vente</span>
-        </h1>
-        <p 
-          v-motion :initial="{ opacity: 0, y: 20 }" :enter="{ opacity: 1, y: 0, transition: { delay: 200 } }"
-          class="text-white/60"
-        >Dernière mise à jour : {{ currentDate }}</p>
-      </div>
+      <h1 class="text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-6">
+        Conditions Générales de Vente
+      </h1>
+      <p class="text-lg text-gray-500 font-medium">
+        Dernière mise à jour : {{ currentDate }}
+      </p>
     </section>
 
     <!-- Content -->
-    <div class="container-main py-12 max-w-4xl">
-      <div class="card p-8 md:p-12">
-        <div class="prose prose-stone max-w-none">
+    <div class="container-main max-w-4xl mx-auto px-6">
+      <div class="bg-white border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2rem] p-8 md:p-16">
+        <div class="prose prose-lg max-w-none prose-headings:font-black prose-headings:text-gray-900 prose-heading:tracking-tight prose-p:text-gray-600 prose-p:leading-relaxed prose-a:text-[var(--color-accent)] hover:prose-a:text-[var(--color-accent-hover)] prose-strong:text-gray-900 prose-ul:font-medium prose-ul:text-gray-600">
+          
           <h2>Article 1 — Objet</h2>
           <p>
-            Les présentes Conditions Générales de Vente (ci-après « CGV ») définissent les droits et obligations 
-            de la société TchadBox (ci-après « le Prestataire ») et de toute personne physique ou morale 
-            (ci-après « le Client ») passant commande sur la plateforme tchadbox.com.
+            Les présentes Conditions Générales de Vente (ci-après « CGV ») définissent les droits et obligations 
+            de la société TchadBox (ci-après « le Prestataire ») et de toute personne physique ou morale 
+            (ci-après « le Client ») passant commande sur la plateforme sécurisée tchadbox.com.
           </p>
           <p>
-            TchadBox est une plateforme de commerce en ligne spécialisée dans l’acheminement 
-            de biens essentiels depuis l’Europe vers le Tchad, destinée à la diaspora tchadienne 
-            souhaitant soutenir ses proches sur place.
+            TchadBox est une plateforme de commerce en ligne haut de gamme spécialisée dans la vente et l’acheminement 
+            de biens essentiels et qualitatifs depuis l’international vers le Tchad, destinée principalement à la diaspora 
+            souhaitant garantir le meilleur à ses proches sur place.
           </p>
 
           <h2>Article 2 — Produits et Services</h2>
           <p>
-            Les produits proposés sont ceux référencés sur le site tchadbox.com au moment de la 
-            consultation. Chaque produit fait l’objet d’une fiche descriptive détaillée établie 
-            par le Prestataire.
+            Les produits proposés sont ceux expressément référencés sur le site tchadbox.com au moment de la 
+            consultation. Chaque produit fait l’objet d’une fiche descriptive détaillée.
           </p>
           <p>
-            Les photographies illustrant les produits sont les plus représentatives possibles. 
-            Toutefois, de légères variations peuvent exister entre l’image et le produit final livré.
+            TchadBox s'engage à expédier des produits strictement neufs, originaux et correspondants aux meilleurs standards. Les photographies illustrant les produits sont de haute fidélité. Toutefois, de légères variations de packaging peuvent exister selon les arrivages à N'Djamena.
           </p>
 
-          <h2>Article 3 — Tarification</h2>
+          <h2>Article 3 — Tarification Transparente</h2>
           <p>
-            L’ensemble des prix sont libellés en Euros (€) avec une indication en Francs CFA (FCFA) 
-            à titre informatif. Les montants affichés sont toutes taxes comprises (TTC) et incluent 
-            la TVA en vigueur au jour de la commande.
+            L’ensemble des prix sont libellés en Euros (€) avec une indication de conversion en temps réel dans d'autres devises (FCFA, USD, CAD, GBP) à titre informatif. Les montants affichés sont définitifs, toutes taxes comprises (TTC).
           </p>
           <p>
-            Les frais de livraison sont communiqués de manière transparente avant la validation 
-            définitive de la commande. Le Prestataire se réserve le droit d’ajuster ses tarifs à tout moment.
+            <strong>Garantie Zéro Surprise :</strong> Les prix du catalogue incluent d'office l'assurance, le dédouanement et l'acheminement local. Le destinataire final au Tchad n'aura absolument aucune somme à débourser à la réception du colis.
           </p>
 
           <h2>Article 4 — Processus de Commande</h2>
           <p>
-            Le Client sélectionne les produits souhaités et les ajoute à son panier. 
-            Il conserve la possibilité de modifier sa sélection à tout moment avant la validation.
-          </p>
-          <p>
-            La validation définitive de la commande vaut acceptation pleine et entière des présentes CGV. 
-            Un email de confirmation est automatiquement envoyé au Client.
+            La validation définitive de la commande via notre portail vaut acceptation pleine et entière des présentes CGV. 
+            Un email de confirmation comportant les détails de préparation est automatiquement envoyé au Client. Un numéro de suivi unique est attribué pour tracer la progression logistique.
           </p>
 
-          <h2>Article 5 — Modalités de Paiement</h2>
-          <p>Le Client peut régler sa commande par les moyens suivants :</p>
+          <h2>Article 5 — Modalités de Paiement Sécurisé</h2>
+          <p>Le Client peut régler sa commande par des moyens hautement sécurisés :</p>
           <ul>
-            <li>Carte bancaire (Visa, Mastercard)</li>
-            <li>Mobile Money (Orange Money, MTN Money, Wave)</li>
+            <li>Cartes bancaires internationales (Visa, Mastercard)</li>
+            <li>Mobile Money (Services compatibles en Afrique et hors du continent)</li>
           </ul>
           <p>
-            L’intégralité des transactions est sécurisée par notre partenaire certifié Paystack. 
-            Aucune information bancaire n’est stockée sur les serveurs de TchadBox.
+            L’intégralité des transactions est certifiée, cryptée (SSL 256-bit) et opérée par notre partenaire financier Paystack. 
+            Aucune information bancaire en clair n’est stockée sur les serveurs de TchadBox.
           </p>
 
-          <h2>Article 6 — Livraison</h2>
+          <h2>Article 6 — Logistique et Livraison</h2>
           <p>
-            Les livraisons sont assurées à N'Djamena, Tchad. Le délai standard de livraison 
-            est de 3 à 5 jours ouvrés à compter de la confirmation du paiement.
+            Les livraisons en main propre sont assurées prioritairement à N'Djamena (Tchad). Le délai logistique standard (préparation, expédition, douane et livraison) est de <strong>3 à 5 jours ouvrés</strong> à compter de la confirmation du paiement.
           </p>
           <p>
-            Une photo certifiée de la remise du colis est systématiquement adressée au Client 
-            comme preuve de livraison au destinataire.
-          </p>
-          <p>
-            En cas d'absence du destinataire, notre livreur effectuera une nouvelle tentative. 
-            Après trois tentatives infructueuses, le colis sera conservé en attente 
-            et le Client sera contacté pour convenir d’un créneau de livraison.
+            <strong>La Preuve TchadBox :</strong> Une photographie certifiant la remise du colis au destinataire final est systématiquement prise par nos agents sur place (sous réserve de consentement) et téléversée dans l'espace client de l'expéditeur, conférant une preuve d'exécution totale du contrat de vente.
           </p>
 
           <h2>Article 7 — Droit de Rétractation</h2>
           <p>
-            Compte tenu de la nature spécifique du service (livraison internationale de biens 
-            de consommation), le droit de rétractation ne peut s’exercer une fois le colis expédié.
+            Compte tenu de la nature internationale de la logistique, de la gestion des douanes et du fret aérien express, le droit de rétractation ne peut s’exercer une fois que la commande a été expédiée et traitée aux douanes.
           </p>
           <p>
-            Avant expédition, le Client dispose de la faculté d’annuler sa commande. 
-            Le remboursement intégral sera effectué sous 14 jours ouvrés.
+            Toutefois, avant l'expédition physique (statut "En Préparation"), le Client dispose de la faculté d’annuler sa commande sans frais depuis le service client. Le remboursement intégral est émis sous 48 à 72 heures ouvrées.
           </p>
 
-          <h2>Article 8 — Réclamations et Litiges</h2>
+          <h2>Article 8 — Réclamations</h2>
           <p>
-            Toute réclamation doit être adressée dans un délai de 48 heures suivant la livraison 
-            à l’adresse suivante : contact@tchadbox.com.
+            Toute réclamation doit être adressée dans un délai stricts de 48 heures suivant la preuve de remise du colis, via notre support prioritaire : <strong>contact@tchadbox.com</strong>.
           </p>
           <p>
-            En cas de produit endommagé ou non conforme à la description, le Client est invité 
-            à fournir des justificatifs photographiques afin de faciliter le traitement de sa demande.
+            Si le produit s'avère endommagé pendant le fret, TchadBox s'engage à enquêter immédiatement sur simple présentation de preuves photographiques de la part du client ou du destinataire.
           </p>
 
-          <h2>Article 9 — Limitation de Responsabilité</h2>
+          <h2>Article 9 — Confidentialité</h2>
           <p>
-            Le Prestataire ne saurait être tenu responsable des dommages résultant d’une utilisation 
-            inappropriée du produit, d’un cas de force majeure, ou d’un retard de livraison 
-            imputable à des circonstances indépendantes de sa volonté.
+            Les données personnelles (dont l'identité et les coordonnées du destinataire au Tchad) sont traitées avec le plus haut niveau de confidentialité, et ne sont transmises qu'à notre cellule logistique locale dans le seul but de réussir l'acheminement physique du colis.
           </p>
 
-          <h2>Article 10 — Protection des Données Personnelles</h2>
+          <h2>Article 10 — Droit Applicable</h2>
           <p>
-            Les données personnelles collectées dans le cadre de votre commande sont traitées 
-            conformément à notre 
-            <NuxtLink to="/confidentialite" class="text-amber-600">Politique de Confidentialité</NuxtLink> 
-            et au Règlement Général sur la Protection des Données (RGPD).
+            Les présentes CGV sont soumises au droit du commerce européen et français. En cas de litige, notre service client privilégiera toujours une résolution amiable rapide.
           </p>
-
-          <h2>Article 11 — Droit Applicable et Juridiction</h2>
-          <p>
-            Les présentes CGV sont soumises au droit français. En cas de litige, et après tentative 
-            de résolution amiable, les tribunaux français seront seuls compétents.
-          </p>
-
-          <h2>Article 12 — Nous Contacter</h2>
-          <p>Pour toute question relative aux présentes CGV, notre équipe est à votre disposition :</p>
-          <ul>
-            <li>Email : contact@tchadbox.com</li>
-            <li>Formulaire : <NuxtLink to="/contact" class="text-amber-600">Page de contact</NuxtLink></li>
-          </ul>
         </div>
       </div>
     </div>
@@ -155,8 +110,8 @@
 import { ChevronRight as ChevronRightIcon } from 'lucide-vue-next'
 
 useSeoMeta({
-  title: 'Conditions Générales de Vente - TchadBox',
-  description: 'Consultez les conditions générales de vente de TchadBox.',
+  title: 'Conditions Générales de Vente | TchadBox',
+  description: 'Consultez les conditions générales de vente (CGV) de TchadBox. Une transparence totale sur la livraison vers N\'Djamena.',
 })
 
 const currentDate = computed(() => {
@@ -167,3 +122,7 @@ const currentDate = computed(() => {
   })
 })
 </script>
+
+<style scoped>
+/* Any required strict clean styling */
+</style>
