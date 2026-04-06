@@ -194,6 +194,20 @@
               >
                 Acheter instantanément
               </button>
+
+              <!-- Share Button -->
+              <button
+                @click="generateShareLink"
+                :disabled="isGeneratingLink"
+                class="w-full h-12 flex items-center justify-center gap-3 rounded-2xl border border-gray-200 bg-white text-gray-700 font-semibold hover:border-gray-400 hover:text-gray-900 transition-all text-sm disabled:opacity-60"
+              >
+                <Share2Icon class="w-4 h-4" />
+                <span v-if="isGeneratingLink">Génération du lien...</span>
+                <span v-else-if="linkCopied" class="text-emerald-600 font-bold flex items-center gap-2">
+                  <CheckIcon class="w-4 h-4" /> Lien copié !
+                </span>
+                <span v-else>Partager ce produit</span>
+              </button>
             </div>
 
             <!-- Mobile Action Spacer -->
@@ -419,6 +433,7 @@ import {
   Package as PackageIcon,
   Star as StarIcon,
   X as XIcon,
+  Share2 as Share2Icon,
 } from 'lucide-vue-next'
 import type { Product, ProductVariant } from '~/types'
 
@@ -437,6 +452,8 @@ const quantity = ref(1)
 const activeTab = ref('description')
 const showZoom = ref(false)
 const isScrolledPastCTA = ref(false)
+const isGeneratingLink = ref(false)
+const linkCopied = ref(false)
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
@@ -595,5 +612,39 @@ async function addToCart() {
 function buyNow() {
   addToCart()
   navigateTo('/checkout')
+}
+
+async function generateShareLink() {
+  if (!product.value || isGeneratingLink.value) return
+
+  isGeneratingLink.value = true
+  try {
+    const config = useRuntimeConfig()
+    const apiBase = config.public.apiUrl
+
+    const response = await $fetch<{ short_url: string }>(`${apiBase}/links`, {
+      method: 'POST',
+      body: { product_id: parseInt(product.value.id) },
+    })
+
+    // Copie dans le presse-papier
+    if (navigator.clipboard) {
+      await navigator.clipboard.writeText(response.short_url)
+    } else {
+      const el = document.createElement('textarea')
+      el.value = response.short_url
+      document.body.appendChild(el)
+      el.select()
+      document.execCommand('copy')
+      document.body.removeChild(el)
+    }
+
+    linkCopied.value = true
+    setTimeout(() => { linkCopied.value = false }, 3000)
+  } catch (e) {
+    console.error('Erreur lors de la génération du lien court:', e)
+  } finally {
+    isGeneratingLink.value = false
+  }
 }
 </script>
