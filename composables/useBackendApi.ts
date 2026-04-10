@@ -63,7 +63,7 @@ export function useBackendApi() {
     // ── Public ─────────────────────────────────────────────
     /** POST /api/contact — public */
     contactSupport: (body: any) =>
-      $fetch<{ success: boolean; message: string }>('/api/contact', {
+      fetchWithAuth<{ success: boolean; message: string }>('api/contact', {
         method: 'POST',
         body,
       }),
