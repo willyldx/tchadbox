@@ -59,7 +59,7 @@
 <script setup lang="ts">
 import { UserPlus, Mail, ArrowLeft } from 'lucide-vue-next'
 
-definePageMeta({ layout: false })
+definePageMeta({ layout: false, middleware: ['guest'] })
 
 useSeoMeta({
   title: 'Créer un compte - TchadBox',

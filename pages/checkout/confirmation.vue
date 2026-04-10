@@ -154,6 +154,7 @@ import { Check as CheckIcon, Package as PackageIcon, Smartphone, Loader as Loade
 
 definePageMeta({
   layout: false,
+  middleware: ['auth']
 })
 
 const route = useRoute()

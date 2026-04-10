@@ -254,7 +254,7 @@ import {
   ShieldCheck, LogIn
 } from 'lucide-vue-next'
 
-definePageMeta({ layout: false })
+definePageMeta({ layout: false, middleware: ['guest'] })
 
 useSeoMeta({
   title: 'Connexion - TchadBox',
