@@ -1,9 +1,9 @@
 <template>
-  <div class="min-h-screen flex flex-col pb-16 lg:pb-0">
+  <div class="min-h-screen flex flex-col pb-16 lg:pb-0 bg-[radial-gradient(circle_at_top,rgba(13,148,136,0.08),transparent_40%)]">
     <!-- Announcement Bar -->
-    <div 
+    <div
       class="text-white py-2.5 transition-all duration-500"
-      :class="isScrolled ? 'bg-[var(--color-primary)]/80 backdrop-blur-md' : 'bg-[var(--color-primary)]'"
+      :class="isScrolled ? 'bg-[var(--color-primary)]/90 backdrop-blur-md' : 'bg-[var(--color-primary)]'"
     >
       <div class="container-main">
         <div class="flex items-center gap-4 text-sm whitespace-nowrap overflow-hidden">
@@ -13,7 +13,7 @@
               <span>Livraison certifiée à N'Djamena sous 3 à 5 jours — Preuve photo incluse</span>
             </div>
             <span class="text-[var(--color-accent)]">•</span>
-            <span>Paiement 100% sécurisé</span>
+              <span>Paiement 100% sécurisé</span>
             <span class="text-[var(--color-accent)]">•</span>
             <div class="flex items-center gap-2">
               <Truck class="w-4 h-4 text-[var(--color-accent)]" />
@@ -60,13 +60,13 @@
               <input 
                 type="text"
                 placeholder="Rechercher un produit, une marque, une catégorie..."
-                class="w-full h-11 pl-4 pr-12 rounded-lg border-2 border-[var(--color-primary)]/10 focus:border-[var(--color-accent)] outline-none transition-all text-sm bg-gray-50/50 focus:bg-white"
+                class="w-full h-11 pl-4 pr-12 rounded-xl border border-slate-200 focus:border-[var(--color-accent)] outline-none transition-all text-sm bg-white/90 focus:bg-white shadow-sm backdrop-blur-md"
                 @click="isSearchOpen = true"
                 readonly
               />
               <button 
                 @click="isSearchOpen = true"
-                class="absolute right-0 top-0 h-full px-4 bg-[var(--color-accent)] text-[var(--color-primary)] rounded-r-lg hover:bg-[var(--color-accent-dark)] transition-colors"
+                class="absolute right-0 top-0 h-full px-4 bg-[var(--color-primary)] text-white rounded-r-xl hover:bg-[var(--color-primary-light)] transition-colors"
               >
                 <Search class="w-5 h-5" />
               </button>
@@ -117,14 +117,14 @@
               </div>
 
               <NuxtLink to="/catalogue" class="nav-link text-sm font-medium flex items-center gap-2">
-                <Package class="w-4 h-4" /> Promos & Nouveautés
+                <Package class="w-4 h-4" /> Catalogue
               </NuxtLink>
             </nav>
 
             <!-- Favorites -->
             <NuxtLink
               to="/favoris"
-              class="hidden md:flex relative p-2.5 rounded-xl hover:bg-gray-100 transition-colors group"
+              class="hidden md:flex relative p-2.5 rounded-xl hover:bg-gray-100 transition-colors group border border-transparent hover:border-slate-200"
             >
               <Heart class="w-5 h-5 text-gray-600 group-hover:text-red-500 transition-colors" />
               <ClientOnly>
@@ -139,7 +139,7 @@
 
             <!-- Help Dropdown -->
             <div class="hidden md:block relative" ref="helpMenuRef" @mouseenter="isHelpMenuOpen = true" @mouseleave="isHelpMenuOpen = false">
-              <button class="flex items-center gap-1.5 px-3 py-2 rounded-xl hover:bg-gray-100 transition-colors text-gray-700 font-medium text-sm">
+              <button class="flex items-center gap-1.5 px-3 py-2 rounded-xl hover:bg-gray-100 transition-colors text-gray-700 font-medium text-sm border border-transparent hover:border-slate-200">
                 <HelpCircle class="w-5 h-5 text-gray-500" />
                 <span>Aide</span>
                 <ChevronDown class="w-4 h-4 text-gray-400" :class="{ 'rotate-180': isHelpMenuOpen }" />
@@ -182,7 +182,7 @@
             <!-- User Menu Dropdown -->
             <div class="hidden md:block relative" ref="userMenuRef" @mouseenter="isUserMenuOpen = true" @mouseleave="isUserMenuOpen = false">
               <ClientOnly>
-                <button class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-100 transition-colors text-gray-700 font-medium text-sm">
+                <button class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-100 transition-colors text-gray-700 font-medium text-sm border border-transparent hover:border-slate-200">
                   <template v-if="authStore.isAuthenticated">
                     <div class="w-7 h-7 bg-[var(--color-accent)] rounded-md flex items-center justify-center text-white text-xs font-bold shadow-sm">
                       {{ authStore.initials }}
@@ -247,16 +247,24 @@
               <CurrencySelector />
             </ClientOnly>
 
-            <!-- Cart -->
-            <button 
-              @click="cartStore.toggleCart"
-              class="relative p-2.5 rounded-xl hover:bg-amber-50 transition-colors group"
+            <button
+              @click="toggleTheme"
+              class="hidden md:flex p-2.5 rounded-xl border border-transparent hover:border-slate-200 hover:bg-slate-100 transition-colors"
+              :title="isDarkLuxury ? 'Passer en mode clair' : 'Passer en mode dark-luxury'"
             >
-              <ShoppingBag class="w-5 h-5 text-gray-600 group-hover:text-[var(--color-accent-dark)] transition-colors" />
+              <component :is="isDarkLuxury ? Sun : MoonStar" class="w-5 h-5 text-gray-600" />
+            </button>
+
+            <!-- Cart -->
+              <button
+                @click="cartStore.toggleCart"
+                class="relative p-2.5 rounded-xl hover:bg-slate-100 transition-colors group border border-transparent hover:border-slate-200"
+              >
+                <ShoppingBag class="w-5 h-5 text-gray-600 group-hover:text-[var(--color-primary)] transition-colors" />
               <ClientOnly>
                 <span 
                   v-if="cartStore.itemCount > 0"
-                  class="absolute -top-1 -right-1 w-5 h-5 bg-[var(--color-accent)] text-white text-xs font-bold rounded-full flex items-center justify-center animate-scale-in"
+                  class="absolute -top-1 -right-1 w-5 h-5 bg-[var(--color-primary)] text-white text-xs font-bold rounded-full flex items-center justify-center animate-scale-in"
                 >
                   {{ cartStore.itemCount }}
                 </span>
@@ -286,46 +294,46 @@
     </main>
 
     <!-- Pre-Footer Trust Section -->
-    <div class="bg-amber-50 mt-20 border-t border-amber-100">
+    <div class="bg-gradient-to-b from-slate-50 to-white mt-20 border-t border-slate-200">
       <div class="container-main py-12">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-amber-200">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-200">
           <div class="flex flex-col items-center px-4 pt-4 md:pt-0">
-            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-amber-500 shadow-sm mb-4">
+            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[var(--color-accent-dark)] shadow-sm mb-4">
               <Truck class="w-6 h-6" />
             </div>
-            <h4 class="font-bold text-amber-900 mb-2">Livraison Rapide</h4>
-            <p class="text-sm text-amber-700/80">Sous 3 à 5 jours ouvrés à N'Djamena, directement chez vous.</p>
+            <h4 class="font-bold text-slate-900 mb-2">Livraison Rapide</h4>
+            <p class="text-sm text-slate-600">Sous 3 à 5 jours ouvrés à N'Djamena, directement chez vous.</p>
           </div>
           <div class="flex flex-col items-center px-4 pt-8 md:pt-0">
-            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-amber-500 shadow-sm mb-4">
+            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[var(--color-accent-dark)] shadow-sm mb-4">
               <Shield class="w-6 h-6" />
             </div>
-            <h4 class="font-bold text-amber-900 mb-2">Paiement Sécurisé</h4>
-            <p class="text-sm text-amber-700/80">Transactions encryptées. Nous acceptons Cartes et Mobile Money.</p>
+            <h4 class="font-bold text-slate-900 mb-2">Paiement Sécurisé</h4>
+            <p class="text-sm text-slate-600">Transactions chiffrées. Nous acceptons Cartes et Mobile Money.</p>
           </div>
           <div class="flex flex-col items-center px-4 pt-8 md:pt-0">
-            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-amber-500 shadow-sm mb-4">
+            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[var(--color-accent-dark)] shadow-sm mb-4">
               <Camera class="w-6 h-6" />
             </div>
-            <h4 class="font-bold text-amber-900 mb-2">Preuve de Livraison</h4>
-            <p class="text-sm text-amber-700/80">Photo de remise envoyée pour garantir la réception de vos proches.</p>
+            <h4 class="font-bold text-slate-900 mb-2">Preuve de Livraison</h4>
+            <p class="text-sm text-slate-600">Photo de remise envoyée pour garantir la réception de vos proches.</p>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-[#0b1120] text-white pt-10">
+    <footer class="bg-[linear-gradient(180deg,#0b1220_0%,#0f172a_55%,#111827_100%)] text-white pt-12">
       <div class="container-main pb-12">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
           <!-- Brand (Visible on Mobile & Desktop) -->
-          <div>
+          <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
             <img src="/logo.png" alt="TchadBox" class="h-10 md:h-14 w-auto mb-6" />
             <p class="text-slate-400 text-sm leading-relaxed mb-6">
               Le lien de confiance de la diaspora tchadienne. Envoyez l'essentiel à vos proches avec l'excellence garantie.
             </p>
             <div class="flex gap-3">
-              <a v-for="s in socials" :key="s.name" :href="s.url" class="w-10 h-10 rounded-xl bg-white/5 hover:bg-amber-500 hover:text-white flex items-center justify-center transition-all duration-300">
+              <a v-for="s in socials" :key="s.name" :href="s.url" class="w-10 h-10 rounded-xl bg-white/5 hover:bg-[var(--color-accent)] hover:text-white flex items-center justify-center transition-all duration-300">
                 <component :is="s.icon" class="w-5 h-5" />
               </a>
             </div>
@@ -380,7 +388,7 @@
       </div>
       
       <!-- Bottom Bar -->
-      <div class="border-t border-white/10 bg-black/20">
+      <div class="border-t border-white/10 bg-black/30">
         <div class="container-main py-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p class="text-slate-500 text-xs text-center md:text-left">© {{ new Date().getFullYear() }} TchadBox. Tous droits réservés.</p>
           <div class="flex items-center gap-4">
@@ -411,7 +419,7 @@ import {
   Home, Package, HelpCircle, MapPinned, MessageCircle,
   Facebook, Instagram, Twitter, Heart, User, ChevronDown,
   LayoutDashboard, UserCircle, LogOut, UserPlus,
-  LayoutList, Wheat, BookOpen, Hammer, ArrowRight
+  LayoutList, Wheat, BookOpen, Hammer, ArrowRight, MoonStar, Sun
 } from 'lucide-vue-next'
 import { useCartStore } from '~/stores/cart'
 import { useAuthStore } from '~/stores/auth'
@@ -432,6 +440,7 @@ const isScrolled = ref(false)
 const isUserMenuOpen = ref(false)
 const isHelpMenuOpen = ref(false)
 const isCategoryMenuOpen = ref(false)
+const isDarkLuxury = ref(false)
 const userMenuRef = ref<HTMLElement | null>(null)
 const helpMenuRef = ref<HTMLElement | null>(null)
 
@@ -464,6 +473,19 @@ async function handleLogout() {
   await authStore.logout()
 }
 
+function applyTheme() {
+  if (!import.meta.client) return
+  document.documentElement.classList.toggle('theme-luxury-dark', isDarkLuxury.value)
+}
+
+function toggleTheme() {
+  isDarkLuxury.value = !isDarkLuxury.value
+  if (import.meta.client) {
+    localStorage.setItem('theme-luxury-dark', String(isDarkLuxury.value))
+  }
+  applyTheme()
+}
+
 onMounted(() => {
   window.addEventListener('scroll', () => {
     isScrolled.value = window.scrollY > 20
@@ -474,6 +496,10 @@ onMounted(() => {
 
   // Fetch live exchange rates
   cartStore.fetchRates()
+
+  const savedTheme = localStorage.getItem('theme-luxury-dark')
+  isDarkLuxury.value = savedTheme === 'true'
+  applyTheme()
 })
 
 watch(() => route.path, () => {

@@ -1,7 +1,7 @@
 <template>
   <div class="bg-gray-50 min-h-screen pb-16">
     <!-- Slim Hero Header -->
-    <section class="bg-[var(--color-primary)] text-white pt-24 pb-12 px-4 relative overflow-hidden">
+    <section class="bg-[var(--color-primary)] text-white pt-24 pb-12 px-4 relative overflow-hidden reveal-up">
       <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4NiIgaGVpZ2h0PSI4NiIgPjxyZWN0IHdpZHRoPSI4NiIgaGVpZ2h0PSI4NiIgZmlsbD0ibm9uZSI+PC9yZWN0PjxjaXJjbGUgY3g9IjQzIiBjeT0iNDMiIHI9IjEiIGZpbGw9InJnYmEoMjU1LCAyNTUsIDI1NSwgMC4xKSI+PC9jaXJjbGU+PC9zdmc+')] opacity-30 pointer-events-none" />
       <div class="container-main relative z-10">
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -33,7 +33,7 @@
         <!-- Category Chips -->
         <div class="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 scrollbar-hide snap-x">
           <button @click="selectedCategory = ''" class="chip" :class="{ active: !selectedCategory }">
-            <span class="whitespace-nowrap">Toutes les actégories</span>
+            <span class="whitespace-nowrap">Toutes les catégories</span>
             <span class="chip-count">{{ products.length }}</span>
           </button>
           <button v-for="cat in categories" :key="cat.handle" @click="selectedCategory = cat.handle" class="chip snap-start" :class="{ active: selectedCategory === cat.handle }">
@@ -62,7 +62,7 @@
     </div>
 
     <!-- Main Content -->
-    <div class="container-main py-8">
+    <div class="container-main py-8 reveal-up">
       
       <!-- Top info line -->
       <div class="flex items-center justify-between mb-6">

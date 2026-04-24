@@ -9,54 +9,54 @@
 
 :root {
   /* Backgrounds — clean & professional retail */
-  --color-bg: #F8FAFC;
-  --color-bg-warm: #FFFFFF;
-  --color-bg-card: #FFFFFF;
-  --color-bg-elevated: #FFFFFF;
-  --color-bg-dark: #0B1120;
+  --color-bg: #f6f7f9;
+  --color-bg-warm: #ffffff;
+  --color-bg-card: #ffffff;
+  --color-bg-elevated: #ffffff;
+  --color-bg-dark: #0f172a;
 
   /* Primary — Crisp White & Minimalist Grays (High-End E-commerce) */
-  --color-primary: #000000;
-  --color-primary-light: #18181b;
-  --color-primary-dark: #000000;
+  --color-primary: #111827;
+  --color-primary-light: #1f2937;
+  --color-primary-dark: #030712;
 
   /* Accent — Emerald Green (Luxury E-commerce CTA, High-Conversion) */
-  --color-accent: #10b981;
-  --color-accent-light: #34d399;
-  --color-accent-dark: #059669;
-  --color-accent-hover: #047857;
+  --color-accent: #0d9488;
+  --color-accent-light: #2dd4bf;
+  --color-accent-dark: #0f766e;
+  --color-accent-hover: #115e59;
 
   /* Links & Success */
-  --color-link: #10b981;
-  --color-link-hover: #059669;
+  --color-link: #0f766e;
+  --color-link-hover: #115e59;
 
   /* Alerts / Terracotta */
   --color-terracotta: #B12704;
   --color-terracotta-light: #C40000;
 
   /* Success */
-  --color-success: #059669;
-  --color-success-light: #10B981;
+  --color-success: #0f766e;
+  --color-success-light: #14b8a6;
 
   /* Text */
-  --color-text: #0F172A;
-  --color-text-secondary: #475569;
-  --color-text-muted: #94A3B8;
+  --color-text: #0f172a;
+  --color-text-secondary: #334155;
+  --color-text-muted: #64748b;
 
   /* Borders & Shadows */
-  --color-border: #E2E8F0;
-  --color-border-hover: #CBD5E1;
+  --color-border: #dbe2ea;
+  --color-border-hover: #b8c4d3;
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
   --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
   --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.06);
-  --shadow-accent: 0 4px 10px rgba(16, 185, 129, 0.25);
-  --shadow-primary: 0 4px 10px rgba(0, 0, 0, 0.15);
-  --shadow-glow: 0 0 30px rgba(16, 185, 129, 0.15);
+  --shadow-accent: 0 8px 24px rgba(13, 148, 136, 0.24);
+  --shadow-primary: 0 8px 24px rgba(15, 23, 42, 0.18);
+  --shadow-glow: 0 0 28px rgba(13, 148, 136, 0.2);
 
   /* Typography — Inter (premium, clean) */
-  --font-display: "Inter", system-ui, -apple-system, sans-serif;
-  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+  --font-display: "Sora", "Manrope", system-ui, -apple-system, sans-serif;
+  --font-body: "Manrope", system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Animation */
@@ -65,18 +65,40 @@
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
   /* Nuxt UI override — force neutral as primary color token */
-  --ui-primary: #171717;
-  --ui-color-primary-50: #fafafa;
-  --ui-color-primary-100: #f5f5f5;
-  --ui-color-primary-200: #e5e5e5;
-  --ui-color-primary-300: #d4d4d4;
-  --ui-color-primary-400: #a3a3a3;
-  --ui-color-primary-500: #737373;
-  --ui-color-primary-600: #525252;
-  --ui-color-primary-700: #404040;
-  --ui-color-primary-800: #262626;
-  --ui-color-primary-900: #171717;
-  --ui-color-primary-950: #0a0a0a;
+  --ui-primary: #0f172a;
+  --ui-color-primary-50: #f8fafc;
+  --ui-color-primary-100: #f1f5f9;
+  --ui-color-primary-200: #e2e8f0;
+  --ui-color-primary-300: #cbd5e1;
+  --ui-color-primary-400: #94a3b8;
+  --ui-color-primary-500: #64748b;
+  --ui-color-primary-600: #475569;
+  --ui-color-primary-700: #334155;
+  --ui-color-primary-800: #1e293b;
+  --ui-color-primary-900: #0f172a;
+  --ui-color-primary-950: #020617;
+}
+
+:root.theme-luxury-dark {
+  --color-bg: #050816;
+  --color-bg-warm: #0b1220;
+  --color-bg-card: #111a2c;
+  --color-bg-elevated: #162238;
+  --color-bg-dark: #020617;
+  --color-primary: #e2e8f0;
+  --color-primary-light: #f8fafc;
+  --color-primary-dark: #cbd5e1;
+  --color-accent: #14b8a6;
+  --color-accent-light: #2dd4bf;
+  --color-accent-dark: #5eead4;
+  --color-accent-hover: #0d9488;
+  --color-link: #5eead4;
+  --color-link-hover: #99f6e4;
+  --color-text: #e2e8f0;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #94a3b8;
+  --color-border: #243247;
+  --color-border-hover: #334155;
 }
 
 /* ============================================
@@ -91,9 +113,19 @@
 
   body {
     font-family: var(--font-body);
-    background: var(--color-bg);
+    background:
+      radial-gradient(circle at 0% 0%, rgba(13, 148, 136, 0.08), transparent 35%),
+      radial-gradient(circle at 100% 0%, rgba(15, 23, 42, 0.06), transparent 40%),
+      var(--color-bg);
     color: var(--color-text);
     line-height: 1.6;
+  }
+
+  .theme-luxury-dark body {
+    background:
+      radial-gradient(circle at 0% 0%, rgba(20, 184, 166, 0.12), transparent 35%),
+      radial-gradient(circle at 100% 0%, rgba(14, 165, 233, 0.1), transparent 45%),
+      var(--color-bg);
   }
 
   h1,
@@ -202,13 +234,18 @@
     padding: 0.75rem 2rem;
     background: var(--color-accent) !important;
     color: white !important;
-    border-radius: 12px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 14px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: var(--shadow-sm);
   }
 
   .btn-primary::before {
-    display: none;
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-120%);
+    background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.28) 50%, transparent 80%);
+    transition: transform 0.5s ease;
   }
 
   .btn-primary:active {
@@ -218,6 +255,11 @@
   .btn-primary:hover {
     background: var(--color-accent-hover) !important;
     box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:hover::before {
+    transform: translateX(120%);
   }
 
   .btn-primary span {
@@ -233,7 +275,7 @@
     padding: 0.75rem 2rem;
     background: var(--color-primary);
     color: white;
-    border-radius: 12px;
+    border-radius: 14px;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: var(--shadow-sm);
   }
@@ -261,7 +303,7 @@
     background: #FFFFFF;
     color: #0F1111;
     border: 1px solid #D5D9D9;
-    border-radius: 100px;
+    border-radius: 14px;
     transition: all 0.2s;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   }
@@ -298,15 +340,15 @@
     @apply relative overflow-hidden;
     background: var(--color-bg-card);
     border: 1px solid #D5D9D9;
-    border-radius: 8px; /* Standard retail border radius */
-    box-shadow: none; /* Retail cards are flat */
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
     transition: all 0.2s;
   }
 
   .card:hover {
-    border-color: #A6A6A6;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    transform: none; /* Flat interaction */
+    border-color: var(--color-border-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
   }
 
   .card-product {
@@ -318,9 +360,9 @@
   }
 
   .card-product:hover {
-    border-color: #A6A6A6;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* slight float on hover for products */
-    transform: none;
+    border-color: var(--color-border-hover);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
   }
 
   .card-glass {
@@ -341,6 +383,13 @@
   .card-stat:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
+  }
+
+  .theme-luxury-dark .card,
+  .theme-luxury-dark .card-product,
+  .theme-luxury-dark .card-stat {
+    background: var(--color-bg-card);
+    border-color: var(--color-border);
   }
 }
 
@@ -521,6 +570,19 @@
 
   .magnetic {
     transition: transform 0.3s var(--ease-out-expo);
+  }
+
+  .reveal-up {
+    animation: fadeUp 0.6s var(--ease-out-expo) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

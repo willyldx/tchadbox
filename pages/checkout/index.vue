@@ -2,7 +2,7 @@
   <div class="min-h-screen flex flex-col lg:flex-row bg-white relative">
     
     <!-- LEFT COLUMN: Form Area -->
-    <div class="flex-1 flex flex-col w-full lg:w-[55%] xl:w-[60%] px-6 sm:px-12 lg:px-24 xl:px-32 pt-8 pb-24 lg:py-16 order-2 lg:order-1 border-r border-gray-100 z-10 bg-white">
+    <div class="flex-1 flex flex-col w-full lg:w-[55%] xl:w-[60%] px-6 sm:px-12 lg:px-24 xl:px-32 pt-8 pb-24 lg:py-16 order-2 lg:order-1 border-r border-gray-100 z-10 bg-white reveal-up">
       
       <!-- Header (Mobile & Desktop) -->
       <header class="mb-10 lg:mb-14">
@@ -233,7 +233,7 @@
     </div>
 
     <!-- RIGHT COLUMN: Order Summary (Sticky Sidebar) -->
-    <div class="w-full lg:w-[45%] xl:w-[40%] bg-gray-50 border-b lg:border-b-0 lg:border-l border-gray-100 px-6 sm:px-12 lg:px-16 xl:px-24 py-12 lg:py-16 order-1 lg:order-2">
+    <div class="w-full lg:w-[45%] xl:w-[40%] bg-[radial-gradient(circle_at_top,rgba(13,148,136,0.08),transparent_40%),#f8fafc] border-b lg:border-b-0 lg:border-l border-gray-100 px-6 sm:px-12 lg:px-16 xl:px-24 py-12 lg:py-16 order-1 lg:order-2">
       <!-- Order Summary -->
       <div class="lg:sticky lg:top-12">
         <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-8 border-b border-gray-200 pb-4">Résumé des achats</h2>

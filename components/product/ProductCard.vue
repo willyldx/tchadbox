@@ -1,9 +1,10 @@
 <template>
-  <article 
-    class="card-product group relative flex flex-col h-full bg-white rounded-[2rem] transition-all duration-500 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-2 overflow-hidden border border-gray-100"
+  <article
+    class="card-product group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.09)]"
   >
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-teal-500 via-cyan-500 to-slate-900 opacity-70"></div>
     <!-- Image Section -->
-    <NuxtLink :to="`/produit/${product.handle || product.id}`" class="block relative aspect-[4/3] sm:aspect-[4/3] overflow-hidden bg-gray-50/50 p-6 flex items-center justify-center">
+    <NuxtLink :to="`/produit/${product.handle || product.id}`" class="block relative aspect-[4/3] sm:aspect-[4/3] overflow-hidden bg-[radial-gradient(circle_at_20%_20%,rgba(13,148,136,0.12),transparent_45%),#f8fafc] p-6 flex items-center justify-center">
       <NuxtImg 
         v-if="product.thumbnail || product.images?.[0]"
         :src="product.thumbnail || product.images[0]"
@@ -20,25 +21,28 @@
 
     <!-- Quick Status Badges -->
     <div class="absolute top-4 left-4 flex flex-col gap-2 pointer-events-none">
-      <span 
+      <span
         v-if="product.category"
-        class="px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-xl bg-white backdrop-blur-md shadow-sm border border-gray-100 text-gray-900 pointer-events-auto"
+        class="pointer-events-auto rounded-xl border border-slate-200 bg-white/90 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-gray-900 shadow-sm backdrop-blur-md"
       >
         {{ categoryName }}
+      </span>
+      <span class="pointer-events-auto rounded-xl bg-emerald-50 px-3 py-1 text-[9px] font-black uppercase tracking-widest text-emerald-700 ring-1 ring-emerald-200">
+        En stock
       </span>
     </div>
 
     <!-- Quick Action: Wishlist -->
-    <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:bg-gray-900 hover:text-white hover:border-transparent transition-all duration-300 shadow-sm border border-gray-100 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 cursor-pointer z-10">
+    <button class="absolute top-4 right-4 z-10 flex h-10 w-10 translate-x-2 cursor-pointer items-center justify-center rounded-full border border-gray-100 bg-white text-gray-400 opacity-0 shadow-sm transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 hover:border-transparent hover:bg-gray-900 hover:text-white">
       <Heart class="w-4 h-4" />
     </button>
 
     <!-- Content Section -->
-    <div class="p-6 sm:p-8 flex flex-col flex-grow bg-white border-t border-gray-50/50">
+    <div class="flex flex-grow flex-col border-t border-gray-100 bg-white p-6 sm:p-8">
       <!-- Title & Subtitle -->
       <div class="mb-4">
         <NuxtLink :to="`/produit/${product.handle || product.id}`">
-          <h3 class="font-black text-gray-900 text-lg sm:text-xl line-clamp-2 leading-snug group-hover:underline decoration-2 underline-offset-4 min-h-[3rem] tracking-tight">
+          <h3 class="min-h-[3rem] line-clamp-2 text-lg font-black leading-snug tracking-tight text-gray-900 decoration-2 underline-offset-4 group-hover:underline sm:text-xl">
             {{ product.title }}
           </h3>
         </NuxtLink>
@@ -48,21 +52,21 @@
       </div>
 
       <!-- Rating (Static for trust, Monochrome Premium) -->
-      <div class="flex items-center gap-2 mb-6">
+      <div class="mb-6 flex items-center gap-2">
         <div class="flex gap-0.5">
-          <Star v-for="i in 5" :key="i" class="w-3 h-3 fill-gray-900 text-gray-900" />
+          <Star v-for="i in 5" :key="i" class="h-3 w-3 fill-amber-400 text-amber-400" />
         </div>
-        <span class="text-[10px] text-gray-900 font-black tracking-widest uppercase">4.9/5 Trust</span>
+        <span class="text-[10px] font-black uppercase tracking-widest text-slate-700">4.9/5 fiabilité</span>
       </div>
 
       <!-- Price & Stock -->
       <div class="mt-auto flex items-end justify-between gap-4">
         <div class="flex flex-col">
-          <span class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Valeur Nette</span>
-          <span class="text-2xl sm:text-3xl font-black text-gray-900 tracking-tighter leading-none">
+          <span class="mb-1 text-xs font-bold uppercase tracking-widest text-gray-400">Valeur nette</span>
+          <span class="text-2xl font-black leading-none tracking-tighter text-gray-900 sm:text-3xl">
             {{ cartStore.formatPrice(product.price) }}
           </span>
-          <span v-if="cartStore.currency !== 'XAF'" class="text-[10px] text-gray-500 font-bold mt-2 uppercase tracking-widest">
+          <span v-if="cartStore.currency !== 'XAF'" class="mt-2 text-[10px] font-bold uppercase tracking-widest text-gray-500">
             ≈ {{ priceFCFA }} FCFA
           </span>
         </div>
@@ -70,12 +74,11 @@
         <!-- Add to Cart: Minimalist Retail style -->
         <button 
           @click="addToCart"
-          class="flex items-center justify-center w-12 h-12 rounded-[1rem] border-2 border-gray-200 text-gray-900 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all duration-300 active:scale-95 group/btn shrink-0"
+          class="group/btn relative flex h-12 w-12 shrink-0 items-center justify-center rounded-[1rem] border-2 border-gray-200 text-gray-900 transition-all duration-300 hover:border-teal-700 hover:bg-teal-700 hover:text-white active:scale-95"
           title="Ajouter au bordereau"
         >
-           <!-- Subtle inner glow on hover -->
-          <div class="absolute inset-0 bg-white/20 rounded-[1rem] opacity-0 group-hover/btn:opacity-100 transition-opacity"></div>
-          <ShoppingBag class="w-5 h-5 relative z-10 transition-transform group-hover/btn:-translate-y-0.5" />
+          <div class="absolute inset-0 rounded-[1rem] bg-white/20 opacity-0 transition-opacity group-hover/btn:opacity-100"></div>
+          <ShoppingBag class="relative z-10 h-5 w-5 transition-transform group-hover/btn:-translate-y-0.5" />
         </button>
       </div>
     </div>

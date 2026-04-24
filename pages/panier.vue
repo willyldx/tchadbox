@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50/50 min-h-screen pt-32 pb-24">
+  <div class="bg-[radial-gradient(circle_at_top,rgba(13,148,136,0.08),transparent_45%),#f8fafc] min-h-screen pt-32 pb-24">
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
       <!-- Minimalist Header -->
       <div class="flex items-center gap-3 text-sm font-medium text-gray-500 mb-6">
@@ -8,7 +8,7 @@
         <span class="text-gray-900">Panier</span>
       </div>
       
-      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12 reveal-up">
         <h1 class="text-4xl md:text-5xl font-black text-gray-900 tracking-tight flex items-center gap-4">
           Mon Panier
           <span v-if="!cartStore.isEmpty" class="px-3 py-1 rounded-lg bg-gray-100 text-gray-900 text-sm font-bold align-middle">
@@ -35,7 +35,7 @@
       </div>
 
       <!-- Cart Content (Layout with Items and Sidebar) -->
-      <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+      <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-10 reveal-up">
         <!-- Main Cart Items -->
         <div class="lg:col-span-2 space-y-5">
           <TransitionGroup 

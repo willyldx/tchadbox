@@ -13,7 +13,7 @@
     </div>
 
     <!-- Product Content -->
-    <div v-else-if="product" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div v-else-if="product" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 reveal-up">
       <!-- Breadcrumb -->
       <nav class="flex items-center gap-2 text-sm mb-8 text-[var(--color-text-secondary)] font-medium">
         <NuxtLink to="/" class="hover:text-[var(--color-accent)] transition-colors">Accueil</NuxtLink>
@@ -34,7 +34,7 @@
         <!-- Product Images -->
         <div class="space-y-6">
           <!-- Main Image -->
-          <div class="relative aspect-[4/3] sm:aspect-square bg-gray-50/50 rounded-[2rem] overflow-hidden group border border-gray-100 ring-1 ring-slate-900/5">
+          <div class="relative aspect-[4/3] sm:aspect-square bg-[radial-gradient(circle_at_20%_20%,rgba(13,148,136,0.12),transparent_45%),#f8fafc] rounded-[2rem] overflow-hidden group border border-gray-100 ring-1 ring-slate-900/5">
             <img
               :src="selectedImage || product.thumbnail"
               :alt="product.title"
@@ -108,7 +108,7 @@
             </div>
 
             <!-- Price Block -->
-            <div class="p-6 bg-gray-50/50 rounded-3xl border border-gray-100 ring-1 ring-slate-900/5">
+            <div class="p-6 bg-[radial-gradient(circle_at_top_left,rgba(13,148,136,0.08),transparent_50%),#f8fafc] rounded-3xl border border-gray-100 ring-1 ring-slate-900/5">
               <div class="flex flex-col gap-1">
                 <div class="flex items-baseline gap-4">
                   <span class="text-4xl sm:text-5xl font-black text-[var(--color-primary)] tracking-tighter">{{ cartStore.formatPrice(currentPrice) }}</span>

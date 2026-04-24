@@ -1,214 +1,188 @@
 <template>
   <div class="bg-[var(--color-bg)]">
-    <!-- ==============================================
-         1. CINEMATIC HERO (EDGE-TO-EDGE)
-         ============================================== -->
-    <section class="relative h-[50vh] min-h-[400px] w-full flex items-center justify-center overflow-hidden">
-      <!-- Background slider -->
-      <div v-for="(slide, i) in heroSlides" :key="'bg-'+i" class="absolute inset-0 w-full h-full">
-        <Transition
-          enter-active-class="transition-opacity duration-700 ease-out"
-          enter-from-class="opacity-0"
-          enter-to-class="opacity-100"
-          leave-active-class="transition-opacity duration-700 ease-in"
-          leave-from-class="opacity-100"
-          leave-to-class="opacity-0"
-        >
-          <div v-show="currentSlide === i" class="absolute inset-0 w-full h-full bg-white">
-            <NuxtImg 
-              :src="slide.image" 
-              :alt="slide.title"
-              class="w-full h-full object-cover opacity-[0.85]"
-              format="webp"
+    <section class="relative min-h-[84vh] overflow-hidden">
+      <div class="absolute inset-0">
+        <div v-for="(slide, i) in heroSlides" :key="`bg-${i}`" class="absolute inset-0">
+          <Transition
+            enter-active-class="transition-opacity duration-700 ease-out"
+            enter-from-class="opacity-0"
+            enter-to-class="opacity-100"
+            leave-active-class="transition-opacity duration-700 ease-in"
+            leave-from-class="opacity-100"
+            leave-to-class="opacity-0"
+          >
+            <NuxtImg
+              v-show="currentSlide === i"
+              :src="slide.image"
+              :alt="slide.titleText"
+              class="h-full w-full object-cover"
               loading="eager"
+              format="webp"
             />
-            <!-- Ultra-luminous bright gradient overlay -->
-            <div class="absolute inset-0 bg-gradient-to-b from-white/80 via-white/60 to-[var(--color-bg)]"></div>
-          </div>
-        </Transition>
+          </Transition>
+        </div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(13,148,136,0.2),transparent_45%),radial-gradient(circle_at_90%_10%,rgba(15,23,42,0.45),transparent_40%),linear-gradient(to_bottom,rgba(2,6,23,0.55),rgba(2,6,23,0.65))]"></div>
       </div>
 
-      <!-- Center Content (Glassmorphism) -->
-      <div class="relative z-10 container-main flex flex-col items-center text-center mt-6">
-        <div 
-          class="max-w-4xl mx-auto flex flex-col items-center"
-        >
-          <!-- Premium Pill -->
-          <div class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/60 backdrop-blur-md border border-white/40 mb-6 shadow-sm">
-            <span class="w-2 h-2 rounded-full bg-green-500" />
-            <span class="text-sm font-bold tracking-wide text-[var(--color-primary)] uppercase letter-spacing-1">L'Excellence au Tchad</span>
-          </div>
-
-          <!-- Title -->
-          <div class="relative min-h-[100px] md:min-h-[120px] w-full flex justify-center items-center">
-            <TransitionGroup
-              enter-active-class="transition-all duration-500 ease-out"
-              enter-from-class="opacity-0 translate-y-4"
-              enter-to-class="opacity-100 translate-y-0"
-              leave-active-class="transition-all duration-300 ease-in absolute"
-              leave-from-class="opacity-100 translate-y-0"
-              leave-to-class="opacity-0 -translate-y-4"
-            >
-              <div v-for="(slide, i) in heroSlides" :key="'text-'+i" v-show="currentSlide === i" class="absolute w-full text-center">
-                <h1 class="text-4xl md:text-6xl font-black text-[var(--color-primary)] leading-tight tracking-tight drop-shadow-sm" v-html="slide.title"></h1>
-              </div>
-            </TransitionGroup>
-          </div>
-
-          <!-- Subtitle -->
-          <p class="text-sm sm:text-base md:text-xl text-[var(--color-text-secondary)] max-w-2xl mt-4 md:mt-2 mb-8 font-medium px-4 md:px-0">
-            Envoyez des produits de qualité à votre famille, partout au Tchad. Livraison premium certifiée par photo.
+      <div class="container-main relative z-10 flex min-h-[84vh] items-center">
+        <div class="max-w-3xl text-white">
+          <p class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] backdrop-blur">
+            <span class="h-2 w-2 rounded-full bg-emerald-300"></span>
+            Expérience premium diaspora
           </p>
-
-          <!-- Solid CTA -->
-          <div class="flex flex-col sm:flex-row gap-5">
-            <NuxtLink to="/catalogue" class="btn-primary flex items-center gap-2 text-lg px-8 py-4">
-              Explorer le Catalogue <ArrowRight class="w-5 h-5 ml-1" />
+          <h1 class="mt-6 text-4xl font-black leading-tight sm:text-5xl md:text-6xl">
+            {{ heroSlides[currentSlide].titleText }}
+          </h1>
+          <p class="mt-5 max-w-2xl text-base text-white/80 md:text-lg">
+            Commandez les meilleurs produits pour vos proches au Tchad avec un suivi clair, une livraison certifiée et une qualité constante.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-4">
+            <NuxtLink to="/catalogue" class="btn-primary !bg-white !text-slate-900 hover:!bg-slate-100">
+              Explorer le catalogue
+              <ArrowRight class="ml-2 h-4 w-4" />
+            </NuxtLink>
+            <NuxtLink to="/comment-ca-marche" class="inline-flex items-center rounded-xl border border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
+              Voir comment ça marche
             </NuxtLink>
           </div>
-        </div>
-
-        <!-- Pagination Dots -->
-        <div class="flex items-center gap-4 mt-12 md:mt-16">
-          <button 
-            v-for="(slide, i) in heroSlides" :key="'dot-'+i"
-            @click="goToSlide(i)"
-            class="relative h-2 rounded-full overflow-hidden transition-all duration-300 shadow-sm"
-            :class="currentSlide === i ? 'w-10 bg-[var(--color-primary)]' : 'w-2 bg-[var(--color-border)] hover:bg-[var(--color-primary)]/50'"
-            aria-label="Changer de diapositive"
-          />
-        </div>
-      </div>
-    </section>
-
-    <!-- ==============================================
-         2. BENTO GRID CATEGORIES (MODERN IOS STYLE) -> REPLACED WITH AI RECOMMENDATIONS
-         ============================================== -->
-    <section v-if="recommendedProducts.length > 0" class="py-24 relative z-20 -mt-10 bg-[var(--color-bg)] rounded-t-[3rem] shadow-[0_-20px_40px_rgba(0,0,0,0.05)]">
-      <div class="container-main">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-12">
-          <div class="max-w-2xl">
-            <h2 class="text-4xl md:text-5xl font-extrabold text-[var(--color-text)] tracking-tight">Recommandé <span class="text-gradient">Pour Vous</span></h2>
-            <p class="text-[var(--color-text-muted)] text-lg mt-4 font-light">Une sélection intelligente de produits basée sur vos récentes recherches sur TchadBox.</p>
+          <div class="mt-7 flex items-center gap-3">
+            <button
+              v-for="(slide, i) in heroSlides"
+              :key="`dot-${i}`"
+              :aria-label="`Aller au slide ${i + 1}`"
+              class="h-2 rounded-full transition-all duration-300"
+              :class="currentSlide === i ? 'w-10 bg-white' : 'w-2 bg-white/40 hover:bg-white/70'"
+              @click="goToSlide(i)"
+            />
           </div>
         </div>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <ProductCard v-for="(product, i) in recommendedProducts" :key="'rec-'+product.id" :product="product" :delay="i * 100" />
+      </div>
+
+      <div class="relative z-10 -mt-16 px-4 pb-8">
+        <div class="container-main grid grid-cols-1 gap-4 rounded-3xl border border-white/20 bg-white/95 p-5 shadow-2xl backdrop-blur md:grid-cols-3">
+          <div v-for="item in highlightStats" :key="item.label" class="rounded-2xl border border-slate-100 bg-white p-4">
+            <p class="text-2xl font-extrabold text-slate-900">{{ item.value }}</p>
+            <p class="mt-1 text-sm text-slate-600">{{ item.label }}</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ==============================================
-         3. FEATURED PRODUCTS (SKELETON ASSISTED)
-         ============================================== -->
-    <section v-if="loading || featuredProducts.length > 0" class="py-24 bg-[var(--color-bg-warm)] mt-12 mb-12">
+    <section class="py-20">
       <div class="container-main">
-        <div class="flex justify-between items-center mb-16">
-          <h2 class="text-4xl font-extrabold text-[var(--color-text)] tracking-tight">Tendance Actuelle</h2>
-          <NuxtLink to="/catalogue" class="hidden md:flex items-center gap-2 font-semibold text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-colors">
-            Voir notre catalogue <ArrowRight class="w-5 h-5" />
+        <div class="mb-10 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+          <div>
+            <p class="label">Univers clés</p>
+            <h2 class="heading-section mt-2">Trouver rapidement l’essentiel</h2>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <NuxtLink
+            v-for="cat in quickCategories"
+            :key="cat.title"
+            :to="cat.to"
+            class="group rounded-3xl border border-slate-200 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-lg"
+          >
+            <component :is="cat.icon" class="h-6 w-6 text-[var(--color-accent-dark)]" />
+            <h3 class="mt-4 text-lg font-bold text-slate-900">{{ cat.title }}</h3>
+            <p class="mt-2 text-sm text-slate-600">{{ cat.description }}</p>
           </NuxtLink>
         </div>
-        
-        <!-- Skeleton Grid visible during fetch -->
-        <div v-if="loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <ProductSkeleton v-for="i in 4" :key="'skel-'+i" />
+      </div>
+    </section>
+
+    <section v-if="recommendedProducts.length > 0" class="py-20 bg-white">
+      <div class="container-main">
+        <div class="mb-10">
+          <p class="label">Sélection intelligente</p>
+          <h2 class="heading-section mt-2">Recommandé pour vous</h2>
         </div>
-        
-        <!-- Actual Products -->
-        <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <ProductCard v-for="(product, i) in recommendedProducts" :key="`rec-${product.id}`" :product="product" :delay="i * 100" />
+        </div>
+      </div>
+    </section>
+
+    <section v-if="loading || featuredProducts.length > 0" class="py-20">
+      <div class="container-main">
+        <div class="mb-10 flex items-center justify-between">
+          <h2 class="heading-section">Top tendances</h2>
+          <NuxtLink to="/catalogue" class="hidden items-center gap-2 text-sm font-semibold text-slate-700 hover:text-[var(--color-accent-dark)] md:inline-flex">
+            Voir tout
+            <ArrowRight class="h-4 w-4" />
+          </NuxtLink>
+        </div>
+        <div v-if="loading" class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <ProductSkeleton v-for="i in 4" :key="`sk-${i}`" />
+        </div>
+        <div v-else class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <ProductCard v-for="(product, i) in featuredProducts" :key="product.id" :product="product" :delay="i * 100" />
         </div>
-        
-        <div class="mt-12 text-center md:hidden">
-            <NuxtLink to="/catalogue" class="btn-outline inline-flex">Voir notre catalogue</NuxtLink>
-        </div>
       </div>
     </section>
 
-    <!-- ==============================================
-         4. HOW IT WORKS (SEAMLESS TIMELINE)
-         ============================================== -->
-    <section class="py-32 bg-white relative overflow-hidden">
-      <!-- Decorative giant blur -->
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[var(--color-primary)] opacity-[0.03] blur-[100px] rounded-full pointer-events-none"></div>
-
-      <div class="container-main relative z-10">
-        <div class="text-center max-w-3xl mx-auto mb-20">
-          <h2 class="text-4xl md:text-5xl font-extrabold text-[var(--color-text)] tracking-tight mb-6">La promesse <span class="text-gradient">TchadBox</span></h2>
-          <p class="text-xl text-[var(--color-text-muted)] font-light">Un processus pensé pour une transparence totale, de votre panier jusqu'au sourire de vos bénéficiaires.</p>
+    <section class="bg-white py-24">
+      <div class="container-main">
+        <div class="mx-auto mb-16 max-w-3xl text-center">
+          <p class="label">Processus</p>
+          <h2 class="heading-section mt-2">Simple, transparent, rassurant</h2>
+          <p class="mt-4 text-[var(--color-text-muted)]">Chaque étape est pensée pour inspirer confiance à la diaspora et à leurs familles.</p>
         </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-4 relative">
-          <!-- Desktop minimal connecting line -->
-          <div class="hidden md:block absolute top-12 left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100 z-0"></div>
-          
-          <div 
-            v-for="(step, i) in steps" :key="i"
-            class="relative z-10 flex flex-col items-center text-center group"
-          >
-            <!-- Sleek Icon Box -->
-            <div class="w-24 h-24 mb-8 rounded-[2rem] bg-white border border-gray-100 shadow-[0_10px_30px_rgba(0,0,0,0.04)] flex items-center justify-center transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] group-hover:border-[var(--color-accent)]/30">
-              <component :is="step.icon" class="w-10 h-10 text-[var(--color-primary)] group-hover:text-[var(--color-accent)] transition-colors duration-500" />
-            </div>
-            
-            <h3 class="text-xl font-bold text-[var(--color-text)] mb-3">{{ step.title }}</h3>
-            <p class="text-[var(--color-text-muted)] font-light max-w-[220px]">{{ step.description }}</p>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-4">
+          <div v-for="step in steps" :key="step.title" class="rounded-3xl border border-slate-100 bg-slate-50 p-6">
+            <component :is="step.icon" class="h-8 w-8 text-[var(--color-accent-dark)]" />
+            <h3 class="mt-4 text-lg font-bold text-slate-900">{{ step.title }}</h3>
+            <p class="mt-2 text-sm text-slate-600">{{ step.description }}</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ==============================================
-         5. ULTIMATE CTA (NIGHT MODE CONTRAST)
-         ============================================== -->
-    <section class="py-24 px-4 bg-[var(--color-bg)]">
-      <div 
-        class="max-w-6xl mx-auto rounded-[3rem] bg-[var(--color-primary)] overflow-hidden relative shadow-2xl"
-      >
-        <div class="absolute inset-0 opacity-20 mix-blend-overlay" style="background-image: url('/hero-bg.png'); background-size: cover; background-position: center; filter: grayscale(100%);" />
-        <div class="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)] via-[var(--color-primary)]/90 to-black/80"></div>
-        
-        <div class="relative z-10 py-20 px-8 md:px-20 text-center flex flex-col items-center">
-          <div class="w-20 h-20 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-8 border border-white/20">
-            <Heart class="w-10 h-10 text-[var(--color-accent)]" />
+    <section class="px-4 py-20">
+      <div class="container-main overflow-hidden rounded-[2rem] bg-slate-900 p-10 text-white md:p-14">
+        <div class="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
+          <div class="max-w-2xl">
+            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-teal-300">Prêt à commander</p>
+            <h2 class="mt-3 text-3xl font-extrabold leading-tight md:text-4xl">Offrez une expérience digne de vos proches</h2>
+            <p class="mt-3 text-white/70">Passez à une logistique moderne, élégante et fiable avec TchadBox.</p>
           </div>
-          <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-6">Prêt à faire un heureux ?</h2>
-          <p class="text-xl text-white/70 font-light mb-10 max-w-2xl">Rejoignez des centaines de familles qui se font confiance pour leurs transferts de produits vers le Tchad.</p>
-          
-          <NuxtLink to="/catalogue" class="px-10 py-5 bg-white text-gray-900 font-black rounded-2xl hover:bg-gray-100 transition-all shadow-[0_0_40px_rgba(255,255,255,0.2)] text-xl active:scale-95">
-            Créer ma première commande
+          <NuxtLink to="/catalogue" class="btn-primary">
+            Démarrer maintenant
+            <ArrowRight class="ml-2 h-4 w-4" />
           </NuxtLink>
         </div>
       </div>
     </section>
-
   </div>
 </template>
 
 <script setup lang="ts">
-import { 
-  ShoppingBag, Play, Shield, Truck, Camera, 
-  ArrowRight, Star, MapPin, MessageCircle, Package, CreditCard, BookOpen, Gift,
-  Wheat, Heart, Users, Clock, CheckCircle
+import {
+  ArrowRight,
+  Package,
+  CreditCard,
+  Truck,
+  Camera,
+  Wheat,
+  HeartPulse,
+  GraduationCap,
+  Hammer,
 } from 'lucide-vue-next'
 import ProductCard from '~/components/product/ProductCard.vue'
 import ProductSkeleton from '~/components/product/ProductSkeleton.vue'
 
-// 1. Hero Carousel (Cinematic Titles)
 const heroSlides = [
   {
     image: '/hero-bg.png',
-    title: 'Le meilleur pour<br/><span class="text-gradient-gold drop-shadow-lg">votre famille.</span>'
+    titleText: 'Le meilleur pour votre famille, sans compromis.',
   },
   {
     image: '/hero-slide2.png',
-    title: 'La joie de<span class="text-gradient-gold drop-shadow-lg"><br/>recevoir.</span>'
+    titleText: 'Transformez chaque commande en moment de joie.',
   },
   {
     image: '/hero-slide3.png',
-    title: 'Un service<br/><span class="text-gradient-gold drop-shadow-lg">d\'excellence.</span>'
+    titleText: 'Une livraison premium pensée pour la diaspora.',
   },
 ]
 
@@ -235,7 +209,6 @@ onMounted(() => {
 })
 onUnmounted(() => { if (slideInterval) clearInterval(slideInterval) })
 
-// 2. AI Recommendations
 const recommendedProducts = ref<any[]>([])
 
 const fetchRecommendedProducts = async () => {
@@ -245,7 +218,6 @@ const fetchRecommendedProducts = async () => {
   if (viewed_ids.length > 0 || viewed_categories.length > 0) {
     try {
       const config = useRuntimeConfig()
-      // 1. Call Python AI Microservice
       const aiResponse = await $fetch<{ recommendations: number[] }>(`${config.public.aiApiUrl}/recommend`, {
         method: 'POST',
         body: {
@@ -257,12 +229,10 @@ const fetchRecommendedProducts = async () => {
       
       let idsToFetch = aiResponse?.recommendations
 
-      // Fallback si serveur Python down
       if (!idsToFetch || idsToFetch.length === 0) {
-        return; // Cache fallback
+        return
       }
 
-      // 2. Get full products from Laravel API using ?ids=
       const { getProducts } = useProducts()
       const laravelResponse = await getProducts({ ids: idsToFetch.join(',') })
       
@@ -283,7 +253,6 @@ const fetchRecommendedProducts = async () => {
   }
 }
 
-// 3. Featured Products
 const featuredProducts = ref<any[]>([])
 const loading = ref(true)
 
@@ -310,12 +279,24 @@ const fetchFeaturedProducts = async () => {
   }
 }
 
-// 4. Timeline
+const highlightStats = [
+  { value: '3-5 jours', label: 'Livraison moyenne à N’Djamena' },
+  { value: '98%', label: 'Clients satisfaits sur le support' },
+  { value: '100%', label: 'Commandes avec suivi transparent' },
+]
+
+const quickCategories = [
+  { title: 'Alimentaire', description: 'Produits du quotidien et courses familiales.', to: '/catalogue?categorie=alimentaire', icon: Wheat },
+  { title: 'Santé', description: 'Soins essentiels pour adultes et enfants.', to: '/catalogue?categorie=sante', icon: HeartPulse },
+  { title: 'Scolarité', description: 'Kits, fournitures et besoins académiques.', to: '/catalogue?categorie=scolarite', icon: GraduationCap },
+  { title: 'Construction', description: 'Matériaux et équipements BTP.', to: '/catalogue?categorie=btp', icon: Hammer },
+]
+
 const steps = [
-  { title: 'Découverte', description: 'Parcourez notre catalogue exclusif.', icon: Package },
+  { title: 'Découverte', description: 'Parcourez un catalogue structuré par besoins.', icon: Package },
   { title: 'Paiement Sécurisé', description: 'Réglez par Carte ou Mobile Money.', icon: CreditCard },
-  { title: 'Logistique Locale', description: 'Livraison express en 3 à 5 jours.', icon: Truck },
-  { title: 'Preuve', description: 'Photo de confirmation certifiée envoyée.', icon: Camera },
+  { title: 'Logistique locale', description: 'Livraison rapide en 3 à 5 jours.', icon: Truck },
+  { title: 'Confirmation', description: 'Preuve photo envoyée après réception.', icon: Camera },
 ]
 
 useHead({ 
@@ -330,27 +311,7 @@ useHead({
 </script>
 
 <style scoped>
-/* Cinematic Animations */
-.animate-slow-zoom {
-  animation: slowZoom 8s cubic-bezier(0.1, 0.5, 0.4, 1) forwards;
-}
-@keyframes slowZoom {
-  from { transform: scale(1.0); }
-  to { transform: scale(1.1); }
-}
-
-.animate-gradient-xy {
-  background-size: 200% 200%;
-  animation: gradientXY 3s ease infinite;
-}
-@keyframes gradientXY {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@keyframes progressFill {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
+.label {
+  @apply text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-accent-dark)];
 }
 </style>
