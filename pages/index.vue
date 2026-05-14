@@ -21,27 +21,28 @@
             />
           </Transition>
         </div>
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(212,135,44,0.15),transparent_45%),radial-gradient(circle_at_90%_10%,rgba(15,23,42,0.45),transparent_40%),linear-gradient(to_bottom,rgba(2,6,23,0.55),rgba(2,6,23,0.65))]"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(212,135,44,0.2),transparent_45%),radial-gradient(circle_at_90%_10%,rgba(15,23,42,0.6),transparent_40%),linear-gradient(to_bottom,rgba(2,6,23,0.7),rgba(2,6,23,0.8))]"></div>
       </div>
 
       <div class="container-main relative z-10 flex min-h-[84vh] items-center">
-        <div class="max-w-3xl text-white">
-          <p class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] backdrop-blur">
-            <span class="h-2 w-2 rounded-full bg-amber-300"></span>
+        <div class="max-w-3xl">
+          <p class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] backdrop-blur-md text-white shadow-2xl">
+            <span class="h-2 w-2 rounded-full bg-amber-400 animate-pulse"></span>
             Dounia Market — Diaspora
           </p>
-          <h1 class="mt-6 text-4xl font-black leading-tight sm:text-5xl md:text-6xl">
+          <h1 class="mt-8 text-4xl font-black leading-[1.1] sm:text-5xl md:text-7xl text-white drop-shadow-2xl">
             {{ heroSlides[currentSlide].titleText }}
           </h1>
-          <p class="mt-5 max-w-2xl text-base text-white/80 md:text-lg">
-            Commandez les meilleurs produits pour vos proches au Tchad. Livraison sécurisée, suivi clair, qualité garantie.
+          <p class="mt-6 max-w-2xl text-lg text-white/90 md:text-xl font-medium leading-relaxed drop-shadow-lg">
+            Commandez les meilleurs produits pour vos proches au Tchad. <br class="hidden md:block" />
+            Livraison sécurisée, suivi clair, qualité garantie.
           </p>
-          <div class="mt-8 flex flex-wrap gap-4">
-            <NuxtLink to="/catalogue" class="inline-flex items-center rounded-xl bg-[var(--color-accent)] px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-[var(--color-accent-hover)] hover:shadow-xl">
-              Explorer le catalogue
-              <ArrowRight class="ml-2 h-4 w-4" />
+          <div class="mt-10 flex flex-wrap gap-5">
+            <NuxtLink to="/catalogue" class="btn-primary !py-4 !px-8 shadow-2xl hover:scale-105 transition-transform">
+              <span>Explorer le catalogue</span>
+              <ArrowRight class="ml-2 h-5 w-5" />
             </NuxtLink>
-            <NuxtLink to="/comment-ca-marche" class="inline-flex items-center rounded-xl border border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
+            <NuxtLink to="/comment-ca-marche" class="inline-flex items-center rounded-xl border border-white/30 bg-white/5 px-8 py-4 text-sm font-bold text-white backdrop-blur-xl transition hover:bg-white/20 hover:border-white/50 active:scale-95 shadow-xl">
               Voir comment ça marche
             </NuxtLink>
           </div>
@@ -68,24 +69,24 @@
       </div>
     </section>
 
-    <section class="py-20">
+    <!-- Categories Section (Luxury Grid) -->
+    <section class="relative z-20 -mt-16 bg-white pt-12 pb-20 rounded-t-[4rem] shadow-[0_-20px_40px_rgba(0,0,0,0.05)]">
       <div class="container-main">
-        <div class="mb-10 flex flex-col justify-between gap-5 md:flex-row md:items-end">
-          <div>
-            <p class="label">Univers clés</p>
-            <h2 class="heading-section mt-2">Trouver rapidement l’essentiel</h2>
-          </div>
-        </div>
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-6">
           <NuxtLink
-            v-for="cat in quickCategories"
-            :key="cat.title"
-            :to="cat.to"
-            class="group rounded-3xl border border-slate-200 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-lg"
+            v-for="cat in categories"
+            :key="cat.id"
+            :to="`/categories/${cat.handle}`"
+            class="group relative overflow-hidden rounded-3xl border border-gray-100 bg-[#fdfcfb] p-8 text-center transition-all duration-500 hover:-translate-y-2 hover:border-amber-200 hover:bg-white hover:shadow-[0_20px_40px_rgba(212,135,44,0.08)]"
           >
-            <component :is="cat.icon" class="h-6 w-6 text-[var(--color-accent-dark)]" />
-            <h3 class="mt-4 text-lg font-bold text-slate-900">{{ cat.title }}</h3>
-            <p class="mt-2 text-sm text-slate-600">{{ cat.description }}</p>
+            <div class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:bg-amber-50 group-hover:shadow-md">
+              <component :is="cat.icon" class="h-8 w-8 text-amber-600 transition-colors group-hover:text-amber-700" />
+            </div>
+            <h3 class="text-sm font-bold tracking-tight text-gray-900 group-hover:text-amber-900">{{ cat.name }}</h3>
+            <div class="mt-2 flex items-center justify-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+              <span class="text-[9px] font-black uppercase tracking-[0.2em] text-amber-600">Voir</span>
+              <ArrowRight class="h-2 w-2 text-amber-600" />
+            </div>
           </NuxtLink>
         </div>
       </div>
@@ -113,7 +114,11 @@
           </NuxtLink>
         </div>
         <div v-if="loading" class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          <ProductSkeleton v-for="i in 4" :key="`sk-${i}`" />
+          <div v-for="i in 4" :key="i" class="h-[450px] animate-pulse rounded-[2.5rem] bg-gray-50 border border-gray-100 flex flex-col p-6">
+            <div class="w-full aspect-[4/3] bg-gray-100 rounded-2xl mb-6"></div>
+            <div class="h-6 w-3/4 bg-gray-100 rounded-lg mb-4"></div>
+            <div class="h-4 w-1/2 bg-gray-100 rounded-lg mt-auto"></div>
+          </div>
         </div>
         <div v-else class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <ProductCard v-for="(product, i) in featuredProducts" :key="product.id" :product="product" :delay="i * 100" />
