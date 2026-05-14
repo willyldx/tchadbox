@@ -21,23 +21,23 @@
             />
           </Transition>
         </div>
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(13,148,136,0.2),transparent_45%),radial-gradient(circle_at_90%_10%,rgba(15,23,42,0.45),transparent_40%),linear-gradient(to_bottom,rgba(2,6,23,0.55),rgba(2,6,23,0.65))]"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(212,135,44,0.15),transparent_45%),radial-gradient(circle_at_90%_10%,rgba(15,23,42,0.45),transparent_40%),linear-gradient(to_bottom,rgba(2,6,23,0.55),rgba(2,6,23,0.65))]"></div>
       </div>
 
       <div class="container-main relative z-10 flex min-h-[84vh] items-center">
         <div class="max-w-3xl text-white">
           <p class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] backdrop-blur">
-            <span class="h-2 w-2 rounded-full bg-emerald-300"></span>
-            Expérience premium diaspora
+            <span class="h-2 w-2 rounded-full bg-amber-300"></span>
+            Dounia Market — Diaspora
           </p>
           <h1 class="mt-6 text-4xl font-black leading-tight sm:text-5xl md:text-6xl">
             {{ heroSlides[currentSlide].titleText }}
           </h1>
           <p class="mt-5 max-w-2xl text-base text-white/80 md:text-lg">
-            Commandez les meilleurs produits pour vos proches au Tchad avec un suivi clair, une livraison certifiée et une qualité constante.
+            Commandez les meilleurs produits pour vos proches au Tchad. Livraison sécurisée, suivi clair, qualité garantie.
           </p>
           <div class="mt-8 flex flex-wrap gap-4">
-            <NuxtLink to="/catalogue" class="btn-primary !bg-white !text-slate-900 hover:!bg-slate-100">
+            <NuxtLink to="/catalogue" class="inline-flex items-center rounded-xl bg-[var(--color-accent)] px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-[var(--color-accent-hover)] hover:shadow-xl">
               Explorer le catalogue
               <ArrowRight class="ml-2 h-4 w-4" />
             </NuxtLink>
@@ -142,12 +142,12 @@
       <div class="container-main overflow-hidden rounded-[2rem] bg-slate-900 p-10 text-white md:p-14">
         <div class="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
           <div class="max-w-2xl">
-            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-teal-300">Prêt à commander</p>
-            <h2 class="mt-3 text-3xl font-extrabold leading-tight md:text-4xl">Offrez une expérience digne de vos proches</h2>
-            <p class="mt-3 text-white/70">Passez à une logistique moderne, élégante et fiable avec TchadBox.</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.16em] text-amber-300">Prêt à commander</p>
+            <h2 class="mt-3 text-3xl font-extrabold leading-tight md:text-4xl">Offrez le meilleur à ceux que vous aimez</h2>
+            <p class="mt-3 text-white/70">Passez à une logistique moderne, fiable et chaleureuse avec Dounia Market.</p>
           </div>
           <NuxtLink to="/catalogue" class="btn-primary">
-            Démarrer maintenant
+            Découvrir le catalogue
             <ArrowRight class="ml-2 h-4 w-4" />
           </NuxtLink>
         </div>
@@ -300,10 +300,10 @@ const steps = [
 ]
 
 useHead({ 
-  title: 'TchadBox — L\'excellence de la livraison au Tchad',
+  title: 'Dounia Market — Le marché de la diaspora tchadienne',
   meta: [
-    { name: 'description', content: 'Le service de référence pour la diaspora tchadienne. Envoyez des biens de qualité (alimentaire, santé, scolarité, fêtes) à vos proches au Tchad avec preuve de livraison certifiée.' },
-    { property: 'og:title', content: 'TchadBox — L\'excellence de la livraison au Tchad' },
+    { name: 'description', content: 'Dounia Market, le marché de référence pour la diaspora tchadienne. Envoyez des biens de qualité (alimentaire, santé, scolarité) à vos proches au Tchad avec preuve de livraison.' },
+    { property: 'og:title', content: 'Dounia Market — Le marché de la diaspora tchadienne' },
     { property: 'og:description', content: 'Envoyez l\'essentiel à votre famille au Tchad. Livraison rapide, paiement sécurisé et preuve de livraison.' },
     { property: 'og:type', content: 'website' }
   ]

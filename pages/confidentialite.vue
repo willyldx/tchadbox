@@ -22,14 +22,14 @@
         <div class="prose prose-lg max-w-none prose-headings:font-black prose-headings:text-gray-900 prose-heading:tracking-tight prose-p:text-gray-600 prose-p:leading-relaxed prose-a:text-[var(--color-accent)] hover:prose-a:text-[var(--color-accent-hover)] prose-strong:text-gray-900 prose-ul:font-medium prose-ul:text-gray-600">
           
           <p class="lead font-medium text-gray-900 text-xl border-b border-gray-100 pb-8 mb-8">
-            Chez TchadBox, la sécurisation de vos données personnelles est le socle de notre relation de confiance. 
+            Chez Dounia Market, la sécurisation de vos données personnelles est le socle de notre relation de confiance. 
             La présente politique décrit de manière transparente comment nous collectons, cryptons, 
             et protégeons vos informations ainsi que celles de vos destinataires au Tchad.
           </p>
 
           <h2>1. Cadre Légal et Responsabilité</h2>
           <p>
-            Le traitement de vos données est assuré exclusivement par la direction de TchadBox, certifiée en conformité avec les standards du commerce électronique sécurisé. Vous pouvez joindre le responsable de la protection des données à : <strong>contact@tchadbox.com</strong>.
+            Le traitement de vos données est assuré exclusivement par la direction de Dounia Market, certifiée en conformité avec les standards du commerce électronique sécurisé. Vous pouvez joindre le responsable de la protection des données à : <strong>contact@Dounia Market.com</strong>.
           </p>
 
           <h2>2. Données strictement collectées</h2>
@@ -44,7 +44,7 @@
           <h3>2.2 Données de transaction inviolables</h3>
           <ul>
             <li>L'historique de vos expéditions pour votre suivi</li>
-            <li>Les métadonnées de paiement (<strong>Note : TchadBox n'a jamais accès à votre carte bancaire</strong>, tout est directement géré par cryptage asymétrique via Paystack).</li>
+            <li>Les métadonnées de paiement (<strong>Note : Dounia Market n'a jamais accès à votre carte bancaire</strong>, tout est directement géré par cryptage asymétrique via Paystack).</li>
           </ul>
 
           <h3>2.3 Données de fiabilité technique</h3>
@@ -65,7 +65,7 @@
           <h2>4. Sous-traitants Ultra-Sécurisés</h2>
           <p>Vos données sont isolées et uniquement partagées en flux chiffrés avec l'infrastructure indispensable au fonctionnement :</p>
           <ul>
-            <li><strong>Infrastructure Cloud TchadBox</strong> : Vos informations personnelles sont encapsulées sur nos Serveurs Privés Virtuels (VPS) sous juridiction Européenne (RGPD).</li>
+            <li><strong>Infrastructure Cloud Dounia Market</strong> : Vos informations personnelles sont encapsulées sur nos Serveurs Privés Virtuels (VPS) sous juridiction Européenne (RGPD).</li>
             <li><strong>Réseau Frontal</strong> : Amazon Web Services (AWS) pour la sécurisation des connexions et la lutte contre les attaques cybernétiques.</li>
             <li><strong>Traitement Financier</strong> : Paystack, garantissant le chiffrement PCI-DSS de bout en bout de vos devises et cartes bancaires.</li>
             <li><strong>Cellule Terrain (Tchad)</strong> : Seules les données d'acheminement (nom et numéro de téléphone du destinataire) sont débloquées pour notre équipe logistique d'intervention locale.</li>
@@ -78,7 +78,7 @@
             <li><strong>Droit d'Accès</strong> : Obtenez une copie complète des logs liés à votre compte.</li>
           </ul>
           <p>
-            Actionnez vos droits en écrivant à <strong>contact@tchadbox.com</strong>. Traitement garanti sous 48 heures ouvrées.
+            Actionnez vos droits en écrivant à <strong>contact@Dounia Market.com</strong>. Traitement garanti sous 48 heures ouvrées.
           </p>
 
           <h2>6. Conservation Militaire des Données</h2>
@@ -104,8 +104,8 @@
 import { ChevronRight as ChevronRightIcon } from 'lucide-vue-next'
 
 useSeoMeta({
-  title: 'Politique de Confidentialité | TchadBox',
-  description: 'Procédures de sécurité, de cryptage et de gestion de vos données personnelles par TchadBox.',
+  title: 'Politique de Confidentialité | Dounia Market',
+  description: 'Procédures de sécurité, de cryptage et de gestion de vos données personnelles par Dounia Market.',
 })
 
 const currentDate = computed(() => {

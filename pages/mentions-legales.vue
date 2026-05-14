@@ -12,7 +12,7 @@
         Mentions Légales
       </h1>
       <p class="text-lg text-gray-500 font-medium">
-        Informations légales relatives à la plateforme tchadbox.com
+        Informations légales relatives à la plateforme Dounia Market.com
       </p>
     </section>
 
@@ -22,16 +22,16 @@
         <div class="prose prose-lg max-w-none prose-headings:font-black prose-headings:text-gray-900 prose-heading:tracking-tight prose-p:text-gray-600 prose-p:leading-relaxed prose-a:text-[var(--color-accent)] hover:prose-a:text-[var(--color-accent-hover)] prose-strong:text-gray-900 prose-ul:font-medium prose-ul:text-gray-600">
           
           <h2>1. Éditeur du Site</h2>
-          <p>La plateforme tchadbox.com est éditée et gérée de manière exclusive par :</p>
+          <p>La plateforme Dounia Market.com est éditée et gérée de manière exclusive par :</p>
           <ul>
-            <li><strong>Raison sociale :</strong> TchadBox</li>
+            <li><strong>Raison sociale :</strong> Dounia Market</li>
             <li><strong>Forme juridique :</strong> [À compléter]</li>
             <li><strong>Capital social :</strong> [À compléter]</li>
             <li><strong>Siège social :</strong> [Adresse à compléter], France</li>
             <li><strong>SIRET :</strong> [À compléter]</li>
             <li><strong>RCS :</strong> [À compléter]</li>
             <li><strong>TVA Intracommunautaire :</strong> [À compléter]</li>
-            <li><strong>Email de contact :</strong> contact@tchadbox.com</li>
+            <li><strong>Email de contact :</strong> contact@Dounia Market.com</li>
           </ul>
 
           <h2>2. Directeur de la Publication</h2>
@@ -40,7 +40,7 @@
           </p>
 
           <h2>3. Hébergement des Infrastructures</h2>
-          <p>Afin de garantir une sécurité maximale et une vitesse optimale, la plateforme TchadBox est hébergée sur des infrastructures cloud de l'industrie :</p>
+          <p>Afin de garantir une sécurité maximale et une vitesse optimale, la plateforme Dounia Market est hébergée sur des infrastructures cloud de l'industrie :</p>
           <ul>
             <li><strong>Frontend & Edge Network :</strong> Amazon Web Services (AWS) — Amazon.com Inc. (P.O. Box 81226, Seattle, WA 98108-1226, Centres de données européens)</li>
             <li><strong>Backend & Bases de Données :</strong> Grappe de Serveurs Privés Virtuels (VPS) localisée exclusivement en Union Européenne, garantissant la pleine conformité RGPD et la souveraineté des données.</li>
@@ -49,11 +49,11 @@
           <h2>4. Propriété Intellectuelle</h2>
           <p>
             L’intégralité du contenu de ce site (charte graphique, photographies, vidéos, logos, icônes, animations, 
-            code informatique, etc.) est la propriété exclusive de TchadBox et bénéficie de la protection conférée par les lois françaises et internationales 
+            code informatique, etc.) est la propriété exclusive de Dounia Market et bénéficie de la protection conférée par les lois françaises et internationales 
             relatives à la propriété intellectuelle.
           </p>
           <p>
-            Toute reproduction, représentation, extraction, modification ou publication des éléments constitutifs de TchadBox, 
+            Toute reproduction, représentation, extraction, modification ou publication des éléments constitutifs de Dounia Market, 
             quel que soit le procédé matériel ou digital utilisé, est strictement interdite sans autorisation écrite formelle de la direction.
           </p>
 
@@ -63,7 +63,7 @@
           </p>
           <p>
             Vos données ne sont ni vendues ni cédées à des courtiers. Vous bénéficiez d’un droit d’accès, de rectification, 
-            et de suppression immédiate. Pour l'exercer, adressez votre requête à : <strong>contact@tchadbox.com</strong>.
+            et de suppression immédiate. Pour l'exercer, adressez votre requête à : <strong>contact@Dounia Market.com</strong>.
           </p>
           <p>
             Pour de plus amples informations sur nos processus de sécurisation, consultez notre 
@@ -77,7 +77,7 @@
 
           <h2>7. Responsabilités</h2>
           <p>
-            TchadBox effectue un audit régulier de l'ensemble de la chaine logistique et de son offre numérique. Toutefois, des erreurs typographiques, des omissions techniques ou des dysfonctionnements du réseau intercontinental peuvent survenir hors de l'emprise de la direction. L'utilisation du service vaut acceptation de nos conditions commerciales.
+            Dounia Market effectue un audit régulier de l'ensemble de la chaine logistique et de son offre numérique. Toutefois, des erreurs typographiques, des omissions techniques ou des dysfonctionnements du réseau intercontinental peuvent survenir hors de l'emprise de la direction. L'utilisation du service vaut acceptation de nos conditions commerciales.
           </p>
 
           <h2>8. Droit Applicable</h2>
@@ -92,7 +92,7 @@
             Pour toute injonction ou requête administrative :
           </p>
           <ul>
-            <li>Par email sécurisé : <strong>contact@tchadbox.com</strong></li>
+            <li>Par email sécurisé : <strong>contact@Dounia Market.com</strong></li>
             <li>En ligne : <NuxtLink to="/contact">Formulaire de demande légale</NuxtLink></li>
           </ul>
         </div>
@@ -105,8 +105,8 @@
 import { ChevronRight as ChevronRightIcon } from 'lucide-vue-next'
 
 useSeoMeta({
-  title: 'Mentions Légales | TchadBox',
-  description: 'Mentions légales et détails concernant l\'éditeur et l\'hébergeur de la plateforme TchadBox.',
+  title: 'Mentions Légales | Dounia Market',
+  description: 'Mentions légales et détails concernant l\'éditeur et l\'hébergeur de la plateforme Dounia Market.',
 })
 </script>
 

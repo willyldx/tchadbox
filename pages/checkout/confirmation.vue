@@ -142,7 +142,7 @@
       <!-- Support -->
       <div class="text-center mt-10">
          <p class="text-sm font-bold uppercase tracking-widest text-gray-400 inline-flex items-center gap-2">
-           <ShieldCheckIcon class="w-4 h-4" /> Plateforme sécurisée TchadBox
+           <ShieldCheckIcon class="w-4 h-4" /> Plateforme sécurisée Dounia Market
          </p>
       </div>
     </div>
@@ -228,8 +228,8 @@ onUnmounted(() => {
 })
 
 useSeoMeta({
-  title: `Reçu | Commande ${orderId.value} - TchadBox`,
-  description: 'Votre reçu de commande officiel protégé par TchadBox.',
+  title: `Reçu | Commande ${orderId.value} - Dounia Market`,
+  description: 'Votre reçu de commande officiel protégé par Dounia Market.',
 })
 </script>
 

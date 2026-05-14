@@ -44,6 +44,6 @@ const goBack = () => {
 }
 
 useHead({
-  title: 'Accès refusé - TchadBox'
+  title: 'Accès refusé - Dounia Market'
 })
 </script>

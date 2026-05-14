@@ -284,7 +284,7 @@
         </div>
 
         <div class="flex justify-between items-center mt-6">
-          <UButton color="gray" variant="ghost" icon="i-lucide-download" to="/template_import_tchadbox.csv" target="_blank" download class="text-xs">
+          <UButton color="gray" variant="ghost" icon="i-lucide-download" to="/template_import_Dounia Market.csv" target="_blank" download class="text-xs">
             Modèle CSV
           </UButton>
           <div class="flex gap-3">
@@ -538,7 +538,7 @@ onMounted(() => {
 })
 
 useHead({
-  title: 'Stocks - Admin TchadBox'
+  title: 'Stocks - Admin Dounia Market'
 })
 </script>
 

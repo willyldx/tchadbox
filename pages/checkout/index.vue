@@ -7,7 +7,7 @@
       <!-- Header (Mobile & Desktop) -->
       <header class="mb-10 lg:mb-14">
         <NuxtLink to="/" class="flex items-center gap-3 w-max">
-          <img src="/logo.png" alt="TchadBox" class="h-10 w-auto" />
+          <img src="/logo.png" alt="Dounia Market" class="h-10 w-auto" />
         </NuxtLink>
         
         <!-- Breadcrumbs / Steps -->
@@ -233,7 +233,7 @@
     </div>
 
     <!-- RIGHT COLUMN: Order Summary (Sticky Sidebar) -->
-    <div class="w-full lg:w-[45%] xl:w-[40%] bg-[radial-gradient(circle_at_top,rgba(13,148,136,0.08),transparent_40%),#f8fafc] border-b lg:border-b-0 lg:border-l border-gray-100 px-6 sm:px-12 lg:px-16 xl:px-24 py-12 lg:py-16 order-1 lg:order-2">
+    <div class="w-full lg:w-[45%] xl:w-[40%] bg-[radial-gradient(circle_at_top,rgba(212,135,44,0.08),transparent_40%),#f8fafc] border-b lg:border-b-0 lg:border-l border-gray-100 px-6 sm:px-12 lg:px-16 xl:px-24 py-12 lg:py-16 order-1 lg:order-2">
       <!-- Order Summary -->
       <div class="lg:sticky lg:top-12">
         <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-8 border-b border-gray-200 pb-4">Résumé des achats</h2>
@@ -310,8 +310,8 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: 'Passage en caisse sécurisé | TchadBox',
-  description: 'Tunnel de paiement hautement crypté TchadBox.',
+  title: 'Passage en caisse sécurisé | Dounia Market',
+  description: 'Tunnel de paiement sécurisé Dounia Market.',
 })
 
 const router = useRouter()

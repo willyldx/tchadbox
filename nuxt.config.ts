@@ -41,12 +41,12 @@ export default defineNuxtConfig({
   app: {
     pageTransition: { name: 'page', mode: 'out-in' },
     head: {
-      title: 'TchadBox - Envoyez des cadeaux au Tchad',
+      title: 'Dounia Market - Le marché de la diaspora tchadienne',
       htmlAttrs: { lang: 'fr' },
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'TchadBox - La diaspora tchadienne envoie des biens à sa famille. Livraison garantie avec photo à N\'Djamena.' },
+        { name: 'description', content: 'Dounia Market - Envoyez des biens de qualité à votre famille au Tchad. Livraison sécurisée avec preuve photo à N\'Djamena.' },
         { name: 'theme-color', content: '#0F172A' },
       ],
       link: [

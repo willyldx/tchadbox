@@ -18,7 +18,7 @@
         
         <!-- Logo -->
         <div class="pt-10 pb-2 flex justify-center">
-          <img src="/logo.png" alt="TchadBox" class="h-10 sm:h-12 w-auto brightness-0 invert" />
+          <img src="/logo.png" alt="Dounia Market" class="h-10 sm:h-12 w-auto brightness-0 invert" />
         </div>
 
         <div class="px-8 sm:px-10 pb-10 pt-4 space-y-8">
@@ -257,8 +257,8 @@ import {
 definePageMeta({ layout: false, middleware: ['guest'] })
 
 useSeoMeta({
-  title: 'Connexion - TchadBox',
-  description: 'Connectez-vous à votre espace TchadBox sécurisé et sans mot de passe.',
+  title: 'Connexion - Dounia Market',
+  description: 'Connectez-vous à votre espace Dounia Market sécurisé et sans mot de passe.',
 })
 
 const authStore = useAuthStore()

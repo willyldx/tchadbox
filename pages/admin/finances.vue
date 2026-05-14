@@ -7,7 +7,7 @@
           <h1 class="text-2xl font-bold text-gray-900">Finances</h1>
           <UBadge color="amber" variant="soft">👑 CEO Only</UBadge>
         </div>
-        <p class="text-gray-500">Vue d'ensemble des revenus de TchadBox</p>
+        <p class="text-gray-500">Vue d'ensemble des revenus de Dounia Market</p>
       </div>
       <USelectMenu
         v-model="period"
@@ -237,6 +237,6 @@ onMounted(() => {
 })
 
 useHead({
-  title: 'Finances - Admin TchadBox'
+  title: 'Finances - Admin Dounia Market'
 })
 </script>

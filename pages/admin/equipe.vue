@@ -7,7 +7,7 @@
           <h1 class="text-2xl font-bold text-gray-900">Équipe</h1>
           <UBadge color="amber" variant="soft">👑 CEO Only</UBadge>
         </div>
-        <p class="text-gray-500">Gérez les administrateurs de TchadBox</p>
+        <p class="text-gray-500">Gérez les administrateurs de Dounia Market</p>
       </div>
       <UButton @click="showAddModal = true" color="primary" icon="i-lucide-user-plus">
         Ajouter un admin
@@ -222,6 +222,6 @@ onMounted(() => {
 })
 
 useHead({
-  title: 'Équipe - Admin TchadBox'
+  title: 'Équipe - Admin Dounia Market'
 })
 </script>

@@ -322,8 +322,8 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: 'Identité | Conciergerie TchadBox',
-  description: 'Gérez vos données personnelles sécurisées sur TchadBox.',
+  title: 'Identité | Conciergerie Dounia Market',
+  description: 'Gérez vos données personnelles sécurisées sur Dounia Market.',
 })
 
 const authStore = useAuthStore()

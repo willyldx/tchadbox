@@ -214,6 +214,6 @@ onMounted(() => {
 })
 
 useHead({
-  title: 'Mon profil - TchadBox Livreur'
+  title: 'Mon profil - Dounia Market Livreur'
 })
 </script>

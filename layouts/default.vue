@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col pb-16 lg:pb-0 bg-[radial-gradient(circle_at_top,rgba(13,148,136,0.08),transparent_40%)]">
+  <div class="min-h-screen flex flex-col pb-16 lg:pb-0 bg-[radial-gradient(circle_at_top,rgba(212,135,44,0.06),transparent_40%)]">
     <!-- Announcement Bar -->
     <div
       class="text-white py-2.5 transition-all duration-500"
@@ -10,28 +10,28 @@
           <div class="flex items-center gap-4 animate-marquee">
             <div class="flex items-center gap-2">
               <Truck class="w-4 h-4 text-[var(--color-accent)]" />
-              <span>Livraison certifiée à N'Djamena sous 3 à 5 jours — Preuve photo incluse</span>
+              <span>Livraison à N'Djamena sous 3-5 jours — Preuve photo incluse</span>
             </div>
             <span class="text-[var(--color-accent)]">•</span>
               <span>Paiement 100% sécurisé</span>
             <span class="text-[var(--color-accent)]">•</span>
             <div class="flex items-center gap-2">
               <Truck class="w-4 h-4 text-[var(--color-accent)]" />
-              <span>Support Client Tchad & Diaspora</span>
+              <span>Dounia Market — Le meilleur pour vos proches</span>
             </div>
           </div>
           <!-- Repeat for infinite smooth scrolling effect -->
           <div class="flex items-center gap-4 animate-marquee" aria-hidden="true">
             <div class="flex items-center gap-2">
               <Truck class="w-4 h-4 text-[var(--color-accent)]" />
-              <span>Livraison certifiée à N'Djamena sous 3 à 5 jours — Preuve photo incluse</span>
+              <span>Livraison à N'Djamena sous 3-5 jours — Preuve photo incluse</span>
             </div>
             <span class="text-[var(--color-accent)]">•</span>
             <span>Paiement 100% sécurisé</span>
             <span class="text-[var(--color-accent)]">•</span>
             <div class="flex items-center gap-2">
               <Truck class="w-4 h-4 text-[var(--color-accent)]" />
-              <span>Support Client Tchad & Diaspora</span>
+              <span>Dounia Market — Le meilleur pour vos proches</span>
             </div>
           </div>
         </div>
@@ -49,7 +49,7 @@
           <NuxtLink to="/" class="flex-shrink-0 group">
             <img 
               src="/logo.png" 
-              alt="TchadBox" 
+              alt="Dounia Market" 
               class="h-10 sm:h-12 w-auto transition-transform duration-300 group-hover:scale-105"
             />
           </NuxtLink>
@@ -247,14 +247,6 @@
               <CurrencySelector />
             </ClientOnly>
 
-            <button
-              @click="toggleTheme"
-              class="hidden md:flex p-2.5 rounded-xl border border-transparent hover:border-slate-200 hover:bg-slate-100 transition-colors"
-              :title="isDarkLuxury ? 'Passer en mode clair' : 'Passer en mode dark-luxury'"
-            >
-              <component :is="isDarkLuxury ? Sun : MoonStar" class="w-5 h-5 text-gray-600" />
-            </button>
-
             <!-- Cart -->
               <button
                 @click="cartStore.toggleCart"
@@ -328,9 +320,9 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
           <!-- Brand (Visible on Mobile & Desktop) -->
           <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-            <img src="/logo.png" alt="TchadBox" class="h-10 md:h-14 w-auto mb-6" />
+            <img src="/logo.png" alt="Dounia Market" class="h-10 md:h-14 w-auto mb-6" />
             <p class="text-slate-400 text-sm leading-relaxed mb-6">
-              Le lien de confiance de la diaspora tchadienne. Envoyez l'essentiel à vos proches avec l'excellence garantie.
+              Dounia Market relie la diaspora tchadienne à ses proches. Envoyez l'essentiel avec confiance et amour.
             </p>
             <div class="flex gap-3">
               <a v-for="s in socials" :key="s.name" :href="s.url" class="w-10 h-10 rounded-xl bg-white/5 hover:bg-[var(--color-accent)] hover:text-white flex items-center justify-center transition-all duration-300">
@@ -341,7 +333,7 @@
 
           <!-- A PROPOS (Hidden on Mobile) -->
           <div class="hidden md:block">
-            <h4 class="font-bold mb-6 text-white tracking-wide uppercase text-xs opacity-50">TchadBox</h4>
+            <h4 class="font-bold mb-6 text-white tracking-wide uppercase text-xs opacity-50">Dounia Market</h4>
             <ul class="space-y-3">
               <li><NuxtLink to="/a-propos" class="text-slate-400 hover:text-[var(--color-accent)] text-sm font-medium transition-colors">Qui sommes-nous ?</NuxtLink></li>
               <li><NuxtLink to="/comment-ca-marche" class="text-slate-400 hover:text-[var(--color-accent)] text-sm font-medium transition-colors">Comment ça marche</NuxtLink></li>
@@ -371,7 +363,7 @@
                   <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-amber-500/20 group-hover:text-amber-400 transition-all">
                     <Mail class="w-4 h-4" />
                   </div>
-                  <span class="text-sm">contact@tchadbox.com</span>
+                  <span class="text-sm">contact@douniamarket.com</span>
                 </a>
               </li>
               <li>
@@ -390,7 +382,7 @@
       <!-- Bottom Bar -->
       <div class="border-t border-white/10 bg-black/30">
         <div class="container-main py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p class="text-slate-500 text-xs text-center md:text-left">© {{ new Date().getFullYear() }} TchadBox. Tous droits réservés.</p>
+          <p class="text-slate-500 text-xs text-center md:text-left">© {{ new Date().getFullYear() }} Dounia Market. Tous droits réservés.</p>
           <div class="flex items-center gap-4">
             <span class="text-xs text-slate-500 font-bold tracking-widest uppercase">Paiements Sécurisés</span>
             <div class="flex gap-2">
@@ -419,7 +411,7 @@ import {
   Home, Package, HelpCircle, MapPinned, MessageCircle,
   Facebook, Instagram, Twitter, Heart, User, ChevronDown,
   LayoutDashboard, UserCircle, LogOut, UserPlus,
-  LayoutList, Wheat, BookOpen, Hammer, ArrowRight, MoonStar, Sun
+  LayoutList, Wheat, BookOpen, Hammer, ArrowRight
 } from 'lucide-vue-next'
 import { useCartStore } from '~/stores/cart'
 import { useAuthStore } from '~/stores/auth'
@@ -440,7 +432,7 @@ const isScrolled = ref(false)
 const isUserMenuOpen = ref(false)
 const isHelpMenuOpen = ref(false)
 const isCategoryMenuOpen = ref(false)
-const isDarkLuxury = ref(false)
+
 const userMenuRef = ref<HTMLElement | null>(null)
 const helpMenuRef = ref<HTMLElement | null>(null)
 
@@ -473,18 +465,7 @@ async function handleLogout() {
   await authStore.logout()
 }
 
-function applyTheme() {
-  if (!import.meta.client) return
-  document.documentElement.classList.toggle('theme-luxury-dark', isDarkLuxury.value)
-}
 
-function toggleTheme() {
-  isDarkLuxury.value = !isDarkLuxury.value
-  if (import.meta.client) {
-    localStorage.setItem('theme-luxury-dark', String(isDarkLuxury.value))
-  }
-  applyTheme()
-}
 
 onMounted(() => {
   window.addEventListener('scroll', () => {
@@ -497,9 +478,7 @@ onMounted(() => {
   // Fetch live exchange rates
   cartStore.fetchRates()
 
-  const savedTheme = localStorage.getItem('theme-luxury-dark')
-  isDarkLuxury.value = savedTheme === 'true'
-  applyTheme()
+
 })
 
 watch(() => route.path, () => {
@@ -524,7 +503,7 @@ watch(() => route.path, () => {
   background: rgba(255, 251, 245, 0.78);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid rgba(245, 158, 11, 0.15);
+  border-bottom: 1px solid rgba(212, 135, 44, 0.15);
   box-shadow:
     0 4px 24px -2px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 0 rgba(255, 255, 255, 0.7);

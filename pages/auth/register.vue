@@ -18,7 +18,7 @@
         
         <!-- Logo -->
         <div class="pt-10 pb-2 flex justify-center">
-          <img src="/logo.png" alt="TchadBox" class="h-10 sm:h-12 w-auto brightness-0 invert" />
+          <img src="/logo.png" alt="Dounia Market" class="h-10 sm:h-12 w-auto brightness-0 invert" />
         </div>
 
         <div class="px-8 sm:px-10 pb-12 pt-6">
@@ -28,7 +28,7 @@
 
           <h1 class="text-2xl font-extrabold text-white mb-4 tracking-tight">Créer un compte</h1>
           <p class="text-white/70 font-medium text-sm mb-8 leading-relaxed max-w-[280px] mx-auto">
-            Chez TchadBox, la simplicité est reine. Votre compte est créé <strong class="text-white font-bold">automatiquement</strong> lors de votre première connexion. Aucun formulaire complexe !
+            Chez Dounia Market, la simplicité est reine. Votre compte est créé <strong class="text-white font-bold">automatiquement</strong> lors de votre première connexion. Aucun formulaire complexe !
           </p>
 
           <NuxtLink to="/auth/login" class="w-full relative group overflow-hidden rounded-xl p-[2px] transition-all shadow-[0_4px_20px_rgba(245,158,11,0.2)] block border border-[var(--color-accent)]/50">
@@ -62,8 +62,8 @@ import { UserPlus, Mail, ArrowLeft } from 'lucide-vue-next'
 definePageMeta({ layout: false, middleware: ['guest'] })
 
 useSeoMeta({
-  title: 'Créer un compte - TchadBox',
-  description: 'Créez votre compte TchadBox facilement grâce à notre système magique sans mot de passe.',
+  title: 'Créer un compte - Dounia Market',
+  description: 'Créez votre compte Dounia Market facilement grâce à notre système magique sans mot de passe.',
 })
 
 // Redirect if already logged in

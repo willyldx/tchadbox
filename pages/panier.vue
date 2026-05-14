@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-[radial-gradient(circle_at_top,rgba(13,148,136,0.08),transparent_45%),#f8fafc] min-h-screen pt-32 pb-24">
+  <div class="bg-[radial-gradient(circle_at_top,rgba(212,135,44,0.08),transparent_45%),#f8fafc] min-h-screen pt-32 pb-24">
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
       <!-- Minimalist Header -->
       <div class="flex items-center gap-3 text-sm font-medium text-gray-500 mb-6">
@@ -27,7 +27,7 @@
         </div>
         <h2 class="text-3xl font-black text-gray-900 mb-4 tracking-tight">Votre panier est vide</h2>
         <p class="text-gray-500 font-medium mb-12 max-w-md mx-auto leading-relaxed">
-          Garssez votre panier avec les essentiels, et laissez TchadBox s'occuper de la livraison sécurisée jusqu'à N'Djamena.
+          Remplissez votre panier, et laissez Dounia Market s'occuper de la livraison sécurisée jusqu'à N'Djamena.
         </p>
         <NuxtLink to="/catalogue" class="inline-flex items-center justify-center gap-3 px-10 py-4 bg-gray-900 text-white font-bold rounded-xl hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl">
           <ArrowRight class="w-5 h-5 opacity-70" /> Sélectionner des produits
@@ -194,5 +194,5 @@ const trustBadges = [
   { icon: Camera, label: 'Preuve photo garantie' },
 ]
 
-useHead({ title: 'Mon Panier | TchadBox' })
+useHead({ title: 'Mon Panier | Dounia Market' })
 </script>

@@ -273,8 +273,8 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: 'Mon Espace | Conciergerie TchadBox',
-  description: 'Gérez votre logistique et vos commandes via votre espace privé.',
+  title: 'Mon Espace | Dounia Market',
+  description: 'Gérez vos commandes et votre profil depuis votre espace privé.',
 })
 
 const authStore = useAuthStore()

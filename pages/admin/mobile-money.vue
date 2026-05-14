@@ -137,7 +137,7 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: 'Logs Mobile Money - Admin TchadBox',
+  title: 'Logs Mobile Money - Admin Dounia Market',
 })
 
 const { adminMobileMoneyLogs } = useBackendApi()

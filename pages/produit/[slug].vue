@@ -34,7 +34,7 @@
         <!-- Product Images -->
         <div class="space-y-6">
           <!-- Main Image -->
-          <div class="relative aspect-[4/3] sm:aspect-square bg-[radial-gradient(circle_at_20%_20%,rgba(13,148,136,0.12),transparent_45%),#f8fafc] rounded-[2rem] overflow-hidden group border border-gray-100 ring-1 ring-slate-900/5">
+          <div class="relative aspect-[4/3] sm:aspect-square bg-[radial-gradient(circle_at_20%_20%,rgba(212,135,44,0.12),transparent_45%),#f8fafc] rounded-[2rem] overflow-hidden group border border-gray-100 ring-1 ring-slate-900/5">
             <img
               :src="selectedImage || product.thumbnail"
               :alt="product.title"
@@ -108,7 +108,7 @@
             </div>
 
             <!-- Price Block -->
-            <div class="p-6 bg-[radial-gradient(circle_at_top_left,rgba(13,148,136,0.08),transparent_50%),#f8fafc] rounded-3xl border border-gray-100 ring-1 ring-slate-900/5">
+            <div class="p-6 bg-[radial-gradient(circle_at_top_left,rgba(212,135,44,0.08),transparent_50%),#f8fafc] rounded-3xl border border-gray-100 ring-1 ring-slate-900/5">
               <div class="flex flex-col gap-1">
                 <div class="flex items-baseline gap-4">
                   <span class="text-4xl sm:text-5xl font-black text-[var(--color-primary)] tracking-tighter">{{ cartStore.formatPrice(currentPrice) }}</span>
@@ -276,7 +276,7 @@
             </p>
 
             <!-- Premium Features Grid -->
-            <h3 class="text-sm font-bold text-gray-400 uppercase tracking-[0.2em] mb-6">L'Engagement TchadBox</h3>
+            <h3 class="text-sm font-bold text-gray-400 uppercase tracking-[0.2em] mb-6">L'Engagement Dounia Market</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div class="p-6 bg-white rounded-2xl border-2 border-gray-50 hover:border-gray-200 transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] group">
                 <Icon name="ph:star-four-duotone" class="w-8 h-8 text-[var(--color-accent)] mb-4 group-hover:scale-110 transition-transform" />
@@ -492,8 +492,8 @@ const discountPercent = computed(() => {
 
 // SEO
 useSeoMeta({
-  title: () => product.value ? `${product.value.title} - TchadBox` : 'Produit - TchadBox',
-  description: () => product.value?.description || 'Découvrez ce produit sur TchadBox',
+  title: () => product.value ? `${product.value.title} - Dounia Market` : 'Produit - Dounia Market',
+  description: () => product.value?.description || 'Découvrez ce produit sur Dounia Market',
 })
 
 // Fetch product

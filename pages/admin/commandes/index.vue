@@ -370,7 +370,7 @@ onMounted(() => {
 })
 
 useHead({
-  title: 'Commandes - Admin TchadBox'
+  title: 'Commandes - Admin Dounia Market'
 })
 </script>
 

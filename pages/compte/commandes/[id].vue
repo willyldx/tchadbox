@@ -421,7 +421,7 @@ const timeline = computed(() => {
 
 // SEO
 useSeoMeta({
-  title: () => order.value ? `Dossier ${order.value.displayId} - TchadBox` : 'Dossier Logistique - TchadBox',
+  title: () => order.value ? `Dossier ${order.value.displayId} - Dounia Market` : 'Dossier Logistique - Dounia Market',
 })
 
 const { userOrderDetail } = useBackendApi()

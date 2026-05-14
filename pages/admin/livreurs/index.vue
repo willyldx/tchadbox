@@ -269,7 +269,7 @@ onMounted(() => {
 })
 
 useHead({
-  title: 'Livreurs - Admin TchadBox'
+  title: 'Livreurs - Admin Dounia Market'
 })
 </script>
 

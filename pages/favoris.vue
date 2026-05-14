@@ -109,7 +109,7 @@
         </div>
         <div>
           <p class="text-sm font-bold text-gray-900">Synchronisation active</p>
-          <p class="text-sm text-gray-500 font-medium mt-1">Vos favoris sont sauvegardés en toute sécurité sur votre compte client TchadBox.</p>
+          <p class="text-sm text-gray-500 font-medium mt-1">Vos favoris sont sauvegardés en toute sécurité sur votre compte Dounia Market.</p>
         </div>
       </div>
 
@@ -184,8 +184,8 @@ import {
 } from 'lucide-vue-next'
 
 useSeoMeta({
-  title: 'Mes favoris | TchadBox',
-  description: 'Retrouvez tous vos produits favoris sur TchadBox.',
+  title: 'Mes favoris | Dounia Market',
+  description: 'Retrouvez tous vos produits favoris sur Dounia Market.',
 })
 
 const favoritesStore = useFavoritesStore()

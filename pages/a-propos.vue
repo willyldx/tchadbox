@@ -8,7 +8,7 @@
           La distance n'est <br/> plus une barrière.
         </h2>
         <p class="text-xl md:text-2xl text-gray-500 font-medium leading-relaxed max-w-3xl">
-          TchadBox est née d'une volonté simple : permettre à la diaspora tchadienne d'envoyer le meilleur à leurs proches restés au pays, sans friction, sans mauvaise surprise et avec une livraison garantie à N'Djamena.
+          Dounia Market est née d'une volonté simple : permettre à la diaspora tchadienne d'envoyer le meilleur à leurs proches restés au pays, sans friction, sans mauvaise surprise et avec une livraison garantie à N'Djamena.
         </p>
       </div>
     </section>
@@ -19,7 +19,7 @@
       <div class="absolute inset-0 flex items-center justify-center">
         <!-- Placeholder for a brand image -->
         <div class="w-24 h-24 rounded-full border border-gray-700 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <Icon name="ph:anchor-simple-bold" class="w-8 h-8 text-white" />
+          <Globe class="w-8 h-8 text-white" />
         </div>
       </div>
     </section>
@@ -84,10 +84,12 @@
 </template>
 
 <script setup lang="ts">
+import { Globe } from 'lucide-vue-next'
+
 useHead({
-  title: 'Qui sommes-nous | TchadBox',
+  title: 'Qui sommes-nous | Dounia Market',
   meta: [
-    { name: 'description', content: 'Découvrez la mission de TchadBox : simplifier l\'envoi de cadeaux et de biens de première nécessité vers N\'Djamena pour la diaspora.' }
+    { name: 'description', content: 'Découvrez la mission de Dounia Market : simplifier l\'envoi de cadeaux et de biens de première nécessité vers N\'Djamena pour la diaspora.' }
   ]
 })
 </script>

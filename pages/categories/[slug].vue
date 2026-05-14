@@ -128,8 +128,8 @@ const currentCategoryName = computed(() => {
 
 // SEO
 useSeoMeta({
-  title: () => `${currentCategoryName.value} - Achat en ligne TchadBox`,
-  description: () => `Découvrez nos meilleurs produits dans la catégorie ${currentCategoryName.value} avec livraison à N'Djamena sur TchadBox.`,
+  title: () => `${currentCategoryName.value} - Achat en ligne Dounia Market`,
+  description: () => `Découvrez nos meilleurs produits dans la catégorie ${currentCategoryName.value} avec livraison à N'Djamena sur Dounia Market.`,
 })
 
 // State

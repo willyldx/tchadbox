@@ -129,7 +129,7 @@
           <div class="relative z-10">
             <h2 class="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">Prêt à envoyer un sourire ?</h2>
             <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto font-medium">
-              Rejoignez des centaines de familles qui font déjà confiance à TchadBox pour le lien avec leurs proches.
+              Rejoignez des centaines de familles qui font déjà confiance à Dounia Market pour le lien avec leurs proches.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
               <NuxtLink to="/catalogue" class="inline-flex flex-col items-center justify-center px-10 py-5 bg-[var(--color-accent)] text-white font-bold rounded-2xl hover:bg-[var(--color-accent-hover)] transition-all shadow-[0_8px_30px_rgb(16,185,129,0.3)]">
@@ -208,10 +208,10 @@ const faqs = [
 ]
 
 useHead({ 
-  title: 'Comment ça marche ? — TchadBox',
+  title: 'Comment ça marche ? — Dounia Market',
   meta: [
-    { name: 'description', content: 'Découvrez comment envoyer facilement des produits essentiels à votre famille au Tchad avec le service premium TchadBox.' },
-    { property: 'og:title', content: 'Comment fonctionne TchadBox ?' }
+    { name: 'description', content: 'Découvrez comment envoyer facilement des produits essentiels à votre famille au Tchad avec le service premium Dounia Market.' },
+    { property: 'og:title', content: 'Comment fonctionne Dounia Market ?' }
   ]
 })
 </script>

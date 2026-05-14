@@ -24,22 +24,22 @@
           <h2>Article 1 — Objet</h2>
           <p>
             Les présentes Conditions Générales de Vente (ci-après « CGV ») définissent les droits et obligations 
-            de la société TchadBox (ci-après « le Prestataire ») et de toute personne physique ou morale 
-            (ci-après « le Client ») passant commande sur la plateforme sécurisée tchadbox.com.
+            de la société Dounia Market (ci-après « le Prestataire ») et de toute personne physique ou morale 
+            (ci-après « le Client ») passant commande sur la plateforme sécurisée Dounia Market.com.
           </p>
           <p>
-            TchadBox est une plateforme de commerce en ligne haut de gamme spécialisée dans la vente et l’acheminement 
+            Dounia Market est une plateforme de commerce en ligne haut de gamme spécialisée dans la vente et l’acheminement 
             de biens essentiels et qualitatifs depuis l’international vers le Tchad, destinée principalement à la diaspora 
             souhaitant garantir le meilleur à ses proches sur place.
           </p>
 
           <h2>Article 2 — Produits et Services</h2>
           <p>
-            Les produits proposés sont ceux expressément référencés sur le site tchadbox.com au moment de la 
+            Les produits proposés sont ceux expressément référencés sur le site Dounia Market.com au moment de la 
             consultation. Chaque produit fait l’objet d’une fiche descriptive détaillée.
           </p>
           <p>
-            TchadBox s'engage à expédier des produits strictement neufs, originaux et correspondants aux meilleurs standards. Les photographies illustrant les produits sont de haute fidélité. Toutefois, de légères variations de packaging peuvent exister selon les arrivages à N'Djamena.
+            Dounia Market s'engage à expédier des produits strictement neufs, originaux et correspondants aux meilleurs standards. Les photographies illustrant les produits sont de haute fidélité. Toutefois, de légères variations de packaging peuvent exister selon les arrivages à N'Djamena.
           </p>
 
           <h2>Article 3 — Tarification Transparente</h2>
@@ -64,7 +64,7 @@
           </ul>
           <p>
             L’intégralité des transactions est certifiée, cryptée (SSL 256-bit) et opérée par notre partenaire financier Paystack. 
-            Aucune information bancaire en clair n’est stockée sur les serveurs de TchadBox.
+            Aucune information bancaire en clair n’est stockée sur les serveurs de Dounia Market.
           </p>
 
           <h2>Article 6 — Logistique et Livraison</h2>
@@ -72,7 +72,7 @@
             Les livraisons en main propre sont assurées prioritairement à N'Djamena (Tchad). Le délai logistique standard (préparation, expédition, douane et livraison) est de <strong>3 à 5 jours ouvrés</strong> à compter de la confirmation du paiement.
           </p>
           <p>
-            <strong>La Preuve TchadBox :</strong> Une photographie certifiant la remise du colis au destinataire final est systématiquement prise par nos agents sur place (sous réserve de consentement) et téléversée dans l'espace client de l'expéditeur, conférant une preuve d'exécution totale du contrat de vente.
+            <strong>La Preuve Dounia Market :</strong> Une photographie certifiant la remise du colis au destinataire final est systématiquement prise par nos agents sur place (sous réserve de consentement) et téléversée dans l'espace client de l'expéditeur, conférant une preuve d'exécution totale du contrat de vente.
           </p>
 
           <h2>Article 7 — Droit de Rétractation</h2>
@@ -85,10 +85,10 @@
 
           <h2>Article 8 — Réclamations</h2>
           <p>
-            Toute réclamation doit être adressée dans un délai stricts de 48 heures suivant la preuve de remise du colis, via notre support prioritaire : <strong>contact@tchadbox.com</strong>.
+            Toute réclamation doit être adressée dans un délai stricts de 48 heures suivant la preuve de remise du colis, via notre support prioritaire : <strong>contact@Dounia Market.com</strong>.
           </p>
           <p>
-            Si le produit s'avère endommagé pendant le fret, TchadBox s'engage à enquêter immédiatement sur simple présentation de preuves photographiques de la part du client ou du destinataire.
+            Si le produit s'avère endommagé pendant le fret, Dounia Market s'engage à enquêter immédiatement sur simple présentation de preuves photographiques de la part du client ou du destinataire.
           </p>
 
           <h2>Article 9 — Confidentialité</h2>
@@ -110,8 +110,8 @@
 import { ChevronRight as ChevronRightIcon } from 'lucide-vue-next'
 
 useSeoMeta({
-  title: 'Conditions Générales de Vente | TchadBox',
-  description: 'Consultez les conditions générales de vente (CGV) de TchadBox. Une transparence totale sur la livraison vers N\'Djamena.',
+  title: 'Conditions Générales de Vente | Dounia Market',
+  description: 'Consultez les conditions générales de vente (CGV) de Dounia Market. Une transparence totale sur la livraison vers N\'Djamena.',
 })
 
 const currentDate = computed(() => {

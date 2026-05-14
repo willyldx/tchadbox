@@ -346,8 +346,8 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: 'Destinataires | Conciergerie TchadBox',
-  description: 'Gérez vos points de livraisons officiels sur TchadBox.',
+  title: 'Destinataires | Conciergerie Dounia Market',
+  description: 'Gérez vos points de livraisons officiels sur Dounia Market.',
 })
 
 const authStore = useAuthStore()

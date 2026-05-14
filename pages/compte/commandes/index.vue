@@ -208,8 +208,8 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: 'Historique des Logistiques | TchadBox',
-  description: 'Consultez et suivez l\'ensemble de vos expéditions TchadBox.',
+  title: 'Historique des Logistiques | Dounia Market',
+  description: 'Consultez et suivez l\'ensemble de vos expéditions Dounia Market.',
 })
 
 const authStore = useAuthStore()

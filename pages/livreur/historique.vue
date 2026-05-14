@@ -181,6 +181,6 @@ onMounted(() => {
 })
 
 useHead({
-  title: 'Historique - TchadBox Livreur'
+  title: 'Historique - Dounia Market Livreur'
 })
 </script>

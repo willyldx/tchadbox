@@ -3,7 +3,7 @@
     <!-- Hero (Cinematic) -->
     <section class="relative pt-32 pb-40 overflow-hidden text-center flex flex-col items-center justify-center">
       <!-- Background Image with Heavy Cinematic Overlay for perfect text contrast -->
-      <NuxtImg src="/hero-contact.png" alt="Contact TchadBox" class="absolute inset-0 w-full h-full object-cover" loading="eager" quality="80" format="webp" sizes="100vw" />
+      <NuxtImg src="/hero-contact.png" alt="Contact Dounia Market" class="absolute inset-0 w-full h-full object-cover" loading="eager" quality="80" format="webp" sizes="100vw" />
       <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/95" />
       
       <div class="container-main relative z-10 mt-10">
@@ -152,7 +152,7 @@ const form = ref({ name: '', email: '', subject: '', message: '' })
 const isSubmitting = ref(false)
 
 const contactInfo = [
-  { label: 'Email Support', value: 'contact@tchadbox.com', href: 'mailto:contact@tchadbox.com', icon: Mail },
+  { label: 'Email Support', value: 'contact@douniamarket.com', href: 'mailto:contact@douniamarket.com', icon: Mail },
   { label: 'WhatsApp', value: '+33 X XX XX XX XX', href: '#', icon: MessageSquare },
   { label: 'Zone Logistique', value: 'N\'Djamena, Tchad', href: null, icon: MapPin },
 ]
@@ -186,9 +186,9 @@ const submitForm = async () => {
 }
 
 useHead({ 
-  title: 'Contactez-nous | TchadBox',
+  title: 'Contactez-nous | Dounia Market',
   meta: [
-    { name: 'description', content: 'Besoin d\'aide ? Contactez l\'équipe TchadBox. Notre support est disponible pour toute question sur vos commandes vers N\'Djamena.' },
+    { name: 'description', content: 'Besoin d\'aide ? Contactez l\'équipe Dounia Market. Notre support est disponible pour toute question sur vos commandes vers N\'Djamena.' },
   ]
 })
 </script>

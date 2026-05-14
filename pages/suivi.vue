@@ -17,13 +17,13 @@
           v-motion :initial="{ opacity: 0, y: 20 }" :enter="{ opacity: 1, y: 0, transition: { delay: 100 } }"
           class="text-4xl sm:text-5xl font-black text-gray-900 tracking-tight mb-6"
         >
-          Radar Logistique
+          Suivi de commande
         </h1>
         <p 
           v-motion :initial="{ opacity: 0, y: 20 }" :enter="{ opacity: 1, y: 0, transition: { delay: 200 } }"
           class="text-lg font-medium text-gray-500 max-w-lg mx-auto leading-relaxed"
         >
-          Traçabilité sécurisée. Entrez votre référence pour localiser votre bordereau en temps réel.
+          Entrez votre référence pour localiser votre colis en temps réel.
         </p>
       </div>
     </section>
@@ -70,7 +70,7 @@
           <!-- Premium Order Header -->
           <div class="p-8 sm:p-10 border-b border-gray-50 relative z-10 flex flex-col sm:flex-row justify-between items-start gap-6">
             <div>
-              <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Manifeste Logistique</p>
+              <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Votre commande</p>
               <p class="text-3xl font-black text-gray-900 tracking-tight">{{ order.reference }}</p>
               <div v-if="order.recipient_name" class="mt-4 flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-xl inline-flex border border-gray-100">
                  <User class="w-4 h-4 text-gray-400" />
@@ -156,7 +156,7 @@
           <div class="p-8 sm:p-10 border-t border-gray-50 flex justify-center">
             <NuxtLink to="/contact" class="inline-flex items-center justify-center gap-3 px-8 py-4 border-2 border-gray-200 text-gray-900 font-bold rounded-2xl hover:bg-gray-50 hover:border-gray-900 transition-all shadow-sm active:scale-95">
               <MessageCircle class="w-5 h-5 text-gray-400" />
-              Requête au Concierge
+              Contacter le support
             </NuxtLink>
           </div>
         </div>
@@ -172,7 +172,7 @@
           <div class="w-20 h-20 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-6">
             <SearchX class="w-10 h-10 text-red-500" />
           </div>
-           <h3 class="text-2xl font-black text-gray-900 mb-3 tracking-tight">Signal Perdu</h3>
+           <h3 class="text-2xl font-black text-gray-900 mb-3 tracking-tight">Référence introuvable</h3>
            <p class="text-gray-500 font-medium mb-10 max-w-sm mx-auto leading-relaxed">
              Le radar logistique ne détecte aucun bordereau pour "<span class="font-bold text-gray-900">{{ orderNumber }}</span>". Vérifiez l'exactitude de la référence.
            </p>
@@ -229,7 +229,7 @@ onMounted(() => {
   if (orderNumber.value) trackOrder()
 })
 
-useHead({ title: 'Radar Logistique | Conciergerie TchadBox' })
+useHead({ title: 'Suivi de commande | Dounia Market' })
 </script>
 
 <style scoped>
